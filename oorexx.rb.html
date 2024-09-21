@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/oorexcase"
+
+module BHW
+
+    module OORexx 
+      include BHW::Props
+      self.extend(BHW::Writer)
+      self.extend(OORexCase)
+      self.extend(BHW::Interpreted)
+
+      interpreter    "rexx"
+      directory       "oorexx"
+      formal_name     "OORex"
+      source_file_ext "rex" 
+      option          "oorexx"
+      indent          "   "
+      assign          "="
+      home_url        "https://oorexx.org/"
+        
+      self.types = {
+        Default =&gt; {
+          format:  -&gt;(v,m){ "self~" + to_variable_s(m.name)},
+          to_h:   -&gt;(a){ a.lang_name + "~hashCode"},
+          define:  -&gt;(v,n){ self.to_variable_s(n)},
+          to_value: -&gt;(a){ a.to_s},
+        },
+        BHW::Class =&gt; {
+          format:  -&gt;(a){ "self~" + to_variable_s(a)},
+          to_h:   -&gt;(a){ a.lang_name + "~hashCode"},
+          to_value:   -&gt;(v){  
+            [
+             to_class_s(v.class_name.downcase) ,
+             "~new(",
+             v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+             ")"
+            ] * ""
+          },
+    
+        },
+        Char=&gt; {
+          type:       "Str",
+          default:       "\"\"",
+        },
+        String=&gt; {
+          type:       "Str",
+          default:       "\"\"",
+          to_value: -&gt;(a){ "\"#{a}\""},
+        },
+        Integer=&gt; {
+          type:       "Int",
+          default:       0,
+          format:     -&gt;(v,m){ 
+    	if m.pad == false	 
+    	  "format(self~"+ to_variable_s(m) + ",#{m.width})"
+    	else
+    	  [
+               "translate(format(self~",
+               to_variable_s(m),
+               ",#{m.width}), ",
+               to_variable_s(m),
+               ",",
+               m.pad,
+               ",)",
+    	  ].join
+    	end
+          },
+        },
+        Float=&gt; {
+          type:       "Float",
+          default:       "0.0f",
+        },
+        Array =&gt; { :to_value =&gt; -&gt;(a){ ".array~of(" + a.map{|e| to_value(e)}.join(", ") + ")"}, },
+        List =&gt;  { :to_value =&gt; -&gt;(a){ ".array~of(" + a.map{|e| to_value(e)}.join(", ") + ")"}, },
+        Set =&gt;   { :to_value =&gt; -&gt;(a){ ".set~of("   + a.map{|e| to_value(e)}.join(", ") + ")"}, },
+        Tuple =&gt; { :to_value =&gt; -&gt;(a){ ".array~of(" + a.map{|e| to_value(e)}.join(", ") + ")"}, },
+        Hash =&gt;  {
+          to_value:   -&gt;(a){
+            "fromlist .array~of(" + a.map do |k,v| [".list~of(", to_value(k), ",",  to_value(v), ")"].join 
+            end.join(", ") +  ")"
+          },
+        },
+        Map =&gt; {
+          to_value:   -&gt;(a){
+            "fromlist .array~of(" + a.map do |k,v| [".list~of(", to_value(k), ",",  to_value(v), ")"].join 
+            end.join(", ") +  ")"
+          },
+        },
+      }
+    
+    
+    
+    
+      def self.render_main(pg_class, file_type, vars=[], &amp;block)
+    
+      def self.render_main_vars(vars)
+        vars.map do |(var)|
+          [
+           to_define(var.type, var.name),
+           assign,
+           "." + to_value(var.type),
+           terminator,
+          ].join 
+        end.join("\n") + "\n"
+      end
+      
+      def self.print_vars(vars)
+        vars.map do |(var)|
+          [
+           "say ",
+           to_define(var.type,var.name),
+           terminator,
+          ].join 
+        end.join("\n") + "\n"
+      end
+    
+      def self.require_vars(vars)
+        vars.map do |(var)|
+          [
+           "::requires ",
+           to_file_s(var.type.name),
+          ].join 
+        end.join("\n#{indent}") + "\n"
+      end
+    
+    
+      
+&lt;&lt;-MAIN
+    
+#{self.render_main_vars(vars)}
+#{self.print_vars(vars)}
+    
+    
+::routine fromlist
+use arg list
+t = .Table~new
+supplier = list~supplier
+do while supplier~available
+  t[supplier~item[0]] = supplier~item[1]
+  supplier~next
+end 
+return t
+    
+#{self.require_vars(vars.select{|v| v.type.class == BHW::Class})}
+    
+MAIN
+      end
+    
+      def self.render_method(returnType, name, params, static=false)
+      end
+      
+      def self.render_start_of_class(pg_class, file_type=SourceExt)
+        [
+          "::class #{to_class_s(pg_class)} public inherit Comparable",
+          "",
+          pg_class.members.map { |m| "::attribute " + to_variable_s(m)}.join("\n")
+        ].join("\n") + "\n"
+      end
+    
+      def self.render_end_of_class(pg_class, file_type=SourceExt)
+      end
+    
+      def self.render_private(pg_class)
+      end
+    
+      def self.render_constructor(pg_class, file_type=SourceExt)
+        str = "::method init"
+        [
+         str, 
+         if pg_class.members_to_str.size &gt; 0
+           "expose " + pg_class.members_to_str.map{|p| to_variable_s(p)}.join(" ")
+         end,
+         if pg_class.members_param.size &gt; 0
+           "use arg " + pg_class.members_param.map{|p| to_variable_s(p)}.join(",")
+         end,
+         pg_class.members_param.map do |m|	"   self~" &lt;&lt; to_member_s(m) &lt;&lt; " = " &lt;&lt; to_variable_s(m)
+          end.join("\n"),
+          pg_class.members_default.map do |m|
+           "   self~" &lt;&lt; to_member_s(m) &lt;&lt; " = " &lt;&lt; to_value(m.type)
+         end.join("\n"),
+         "\n#{indent}\n"
+        ].compact.join("\n") + "\n"
+    
+      end
+    
+      def self.render_accessors(pg_class, file_type=SourceExt)
+      end
+    
+      def self.render_hash(pg_class)
+        if pg_class.members_to_str.size &gt; 0
+          [
+    	"::method hashCode",
+    	"   return " + pg_class.members_to_str.map do |m| 
+    	  "self~" + to_variable_s(m) +  "~hashCode()"
+    	end.join(" || ")
+          ].join("\n") + "\n"
+        end
+      end
+    
+      def self.render_equals(pg_class)
+        if pg_class.members_to_str.size &gt; 0
+          [
+    	"::method '=='",
+    	"   use arg other",
+    	"   return " + pg_class.members_to_str.map do |m| 
+    	  var = to_variable_s(m)
+    	  "self~#{var} == other~#{var}"
+    	end.join(" &amp; "),
+          ].join("\n") + "\n"
+        end
+      end
+    
+      def self.render_hashable_methods(pg_class, file_type)
+        render_hash(pg_class).to_s + "\n" + render_equals(pg_class).to_s + "\n"
+      end
+    
+      def self.render_methods(pg_class, file_type=SourceExt)
+      end
+    
+      def self.render_compare_methods(pg_class, file_type=SourceExt)
+        if pg_class.members_to_str.size &gt; 0
+          [
+    	"::method compareTo",
+    	"   use arg other",
+    	pg_class.members_to_str.map do |m| 
+    	  var = to_variable_s(m)
+    	  if m.type == Integer
+    	    w = m.width
+    	    "   ret = (translate(format(self~#{var},#{w}),0,' '))~compareTo(translate(format(other~#{var},#{w}),0,' '))" + "\n   " + "if (ret &lt;&gt; 0) then return ret"
+    	  else
+    	    "   ret = self~#{var}~compareTo(other~#{var})" + "\n   " + "if (ret &lt;&gt; 0) then return ret"
+    	  end
+    	end.join("\n") + "\n",
+    	"   return ret"
+          ].join("\n")
+        end
+      end
+    
+      def self.render_to_string(pg_class, file_type=SourceExt)
+        [
+         "::method defaultName",
+         "   return " +  (pg_class.members_to_str.size == 0 ? "\"\"" :   pg_class.members_to_str.map {|m| to_format(m.type, m)}.join("|| \"-\" || ")),
+        ] * "\n" + "\n"
+      end
+    
+    
+      def initialize
+        super
+        indent = " " * indent
+      end
+    
+    end
+  end
+</pre></body></html>

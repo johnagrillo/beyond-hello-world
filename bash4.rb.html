@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module Bash4
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(Interpreted)
+    self.extend(UnderCase)
+
+    interpreter     "bash"
+    directory       "bash4"
+    option          "bash4"
+    formal_name     "Bash4"
+
+    rosetta_url     "Bourne_Again_SHell"
+    home_url        "http://www.gnu.org/software/bash/"
+    wikipedia_url   "Bash_(Unix_shell)"
+    
+
+    source_file_ext "sh"
+    indent           2
+    terminator       ";"
+    assign           "="
+    mode_line        "#!/bin/bash"
+
+    rosetta_url      "Bourne_Again_SHell"
+
+    self.merge_types(base_types,
+                     {
+                       BHW::Class=&gt; { 
+                         to_value:   -&gt;(v){  
+                           "new_" + to_class_s(v.class_name.downcase) + " " + v.members_param.map{|a| to_value(a.type)  }.join(" ") + "\n"
+                         },
+                       },
+                       
+                       Int_AP =&gt;
+                       {
+                         define_init:-&gt;(v,declare=nil){
+                           [
+                             
+                             indent,
+                             declare,
+                             "=",
+                             to_value(v.type),
+                             ";"
+                           ] * ""
+                         }}})
+                       
+
+
+    def self.array_to_s(a,l=0)
+      '"(' + a.flattened.flatten * " " + ')"'
+    end
+
+    def self.hash_to_s(hash,l=0)
+      key_value_list_s(hash, "{}", "", ":",  ",",l)
+    end
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      
+      [
+       vars.select{|(v)| v.type == BHW::Class}.map{|a| ". src/" + to_file_s(pg_class.name) + ".sh\n"} * "\n",
+       vars.map{|(a)| to_variable_s(a.name) + "=" + to_value(a.type)} * "\n",
+       "\n\n",
+       vars.map{|(a)| "echo ${#{to_variable_s(a.name)}}\n"},
+       "\n",
+       "exit 0"
+      ] * ""
+    end
+    
+
+    def self.render_constructor(pg_class,file_type)
+      [
+       "#",
+       "# Declare global variable to return new value",
+       "#",
+       "declare -A NEW_" + to_class_s(pg_class).upcase,
+       "new_#{to_class_s(pg_class)} (){",
+       pg_class.members_param.each_with_index.map{|p,i| "    " + to_parameter_s(p) + "=$#{i+1}"} * "\n",
+
+       "NEW_" + to_class_s(pg_class).upcase + "=(",
+       pg_class.members_param.map{|m| "    [\"" + to_member_s(m) + "\"]=$" + to_parameter_s(m) },
+       pg_class.members_default.select{|a| a.scope == Instance }.map{|m| "    [\"" + to_member_s(m) + "\"]=" + to_value(m.type)},
+       ")",
+       "}\n",
+      ]
+    end
+
+    def self.render_to_string(pg_class,file_type)
+    end
+
+    def self.render_methods(pg_class,file_type)
+    end
+
+    
+    def self.run_cmd_str(file)
+      "#{interpreter} #" + "{BIN}/\#{#{file}}.sh"
+     end
+
+  end
+end
+</pre></body></html>

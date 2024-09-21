@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module Self
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(CamelCase)  
+
+    #self.extend(Interpreted)  cannot run from command line
+    
+    directory       "self" 
+    source_file_ext "self"
+    formal_name     "Self"
+
+    option          "self"
+    assign          "="
+    indent          "    "
+    home_url        "https://selflanguage.org/"
+    
+    self.types = {
+      Default=&gt; {
+        include:   nil,
+        to_h:      -&gt;(a){ "hash(#{to_member_s(a)})" },
+        to_s:      -&gt;(a){ to_member_s(a)},
+        format:    "%s",
+        to_cmp:    -&gt;(a){ "cmp(#{to_member_s(a)},rhs.#{to_variable_s(a)})"},
+        define:   -&gt;(v,n){ self.to_variable_s(n)  },
+        to_value:  -&gt;(a,s=nil,l=0){ a.to_s},
+        default:      "init",
+      },
+      
+      BHW::Class=&gt; { 
+        to_value:   -&gt;(v){  
+          [
+           to_class_s(v.class_name.downcase) ,
+           ":new(",
+           v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+           ");"
+          ] * ""
+        },
+        
+      },
+      
+      Char=&gt; {
+        default:       "\"\"",
+      },
+      String=&gt; {
+        default:    "''",
+        format:     "%s",
+        to_value:   proc{|a| "'#{a}'"},
+      },
+      Integer=&gt; {
+        default:    0,
+        format:     -&gt;(a){ a.pad() == false ? "%#{a.width}d" : "%#{a.pad}#{a.width}d" }
+      },
+      Float=&gt; {
+        default:    0.0,
+        format:     "%f",
+      },
+    }.merge(
+            [Array, List, Set, Tuple].reduce({}) do |h,cls|
+              h.merge(cls =&gt; {
+                        to_value:  -&gt;(a,scope=nil,l=0){ self.self_list_s(a,l)},
+                        default:   -&gt;(a){ self.self_list_s(a.value)},
+                      })
+            end
+            ).merge(
+                    [Hash,Map].reduce({}) do |h,cls|
+                      h.merge(cls =&gt; {
+                                to_value:  -&gt;(a,s=nil,l=0){ self.self_hash_s(a,l=0)},
+                                default:   -&gt;(a,s=nil){self.self_hash_s(a.value)},
+                              })
+                    end
+                    )
+    
+    
+    def self.self_list_s(val,l)
+      delimited_list_s(val, ["(",") asList"], "&amp;",l )
+    end
+    
+    def self.self_hash_s(hash,l=0)
+      start =      "(orderedDictionary copy)"
+      if hash.map == nil
+        start + ""
+      else
+        levels = hash.map {|key,value| " at: " + to_value(key) + " Put: " + to_value(value) + ")"}
+        ("(" * levels.size) + start + levels * ""
+      end
+    end
+    
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      [
+       vars.select{|v| v.type.class == BHW::Class}.map{|v| "require(\"src/" + to_file_s(v.type.name) + "\")\n"},
+       "",
+       render_main_vars(vars,""),
+       "\n",
+       vars.map{|v| "print(" + to_variable_s(v) + ")\n"}
+      ] * ""
+    end
+    
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+      
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       "globals _AddSlotsIfAbsent: (| applications* = () | )",
+       "globals applications _AddSlotsIfAbsent: ( | #{to_class_s(pg_class)} = () | )",
+       "#{to_class_s(pg_class)} _Define: (|",
+      ] * "\n"
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      "|)\n"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      [
+       pg_class.members_param.map{|m| "    " + to_variable_s(m) + " = " + to_parameter_s(m) + "."},
+       pg_class.members_default.select{|a| a.scope == Instance }.map{|m| "    " + to_variable_s(m) + " = " + to_default(m) + "."},
+       "\n\n",
+       
+      ]  * "\n"
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      ""
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      ""
+    end
+    
+    def self.render_to_string_local(pg_class, file_type=SourceExt)
+      ""
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+      ""
+    end
+    
+    def self.render_method(returnType, name, params, static=false)
+      ""
+    end
+
+    def self.run_cmd_str(file)
+      "cat \#{file}.self"
+    end
+     
+    def self.compile_cmd_str(file)
+      "cat \#{file}.self"
+    end
+     
+    def self.run_cmd_shell_str(file)
+      "cat #{file}.self"
+    end
+     
+     
+
+    # def self.scons_rules(project,classes)
+    #   ""
+    # end
+    
+    # def self.makefile_rules(project,classes)
+    #   ""
+    # end
+    
+    # def self.rake_run_test(cls,builddir)
+    #   "ls"
+    # end
+
+  end
+end
+
+
+=begin
+    globals _AddSlotsIfAbsent: ( | applications* = () | )
+    globals applications _AddSlotsIfAbsent: ( | oneOfAKindExample = () | )
+    oneOfAKindExample _Define: ( |
+        pi        =  (1 &amp; 1 &amp; 3)asList add:10.
+        printPi   =  (pi printLine).
+        aVariable &lt;- 17.		  
+    | )
+=end
+
+</pre></body></html>

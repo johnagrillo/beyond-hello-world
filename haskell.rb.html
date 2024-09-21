@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/haskellcase"
+module BHW
+  module Haskell
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(HaskellCase)
+    self.extend(Compiled)
+    self.extend(Linked)
+    
+    directory              "haskell"
+    option                 "haskell"
+    formal_name            "Haskell"
+    
+    source_file_ext        "hs"
+    object_file_ext        "o"
+    tmp_ext                "hi"
+    exec_file_ext          "exe"
+    indent                 "    "
+    assign                "="
+    mode_line             "-- -*-haskell-*-- --"
+    home_url              "https://www.haskell.org/"
+      
+    self.types = {
+      Default=&gt; {
+        to_s:      -&gt;(a){ to_variable_s(a)},
+        include:  nil,
+        define:   -&gt;(v,n){ to_variable_s(n)},   
+        to_value: proc{|a| a.to_s},
+      },
+      BHW::Class =&gt; {
+        type:      -&gt;(a){ a.type.name.camel_case_capitalize },
+        include:   -&gt;(a){ a.type.name.camel_case_capitalize },
+        format:    "%s",
+        default:      -&gt;(a){ "(#{a.type.name.camel_case_capitalize}.new)" },
+        to_s:      -&gt;(a){ "(show #{to_variable_s(a)})"},
+        to_value:   -&gt;(v){
+          [
+           to_class_s(v.class_name),
+           ".new ",
+           v.members_param.map{|a| to_value(a.type) }.join(" ")
+          ].join
+        },
+        
+      },
+      Char=&gt; {
+        type:       "Char",
+        default:       "' '",
+        format:      "%c",
+      },
+      String=&gt; {
+        type:       "String",
+        default:       "\"\"",
+        format:      "%s",
+        to_value:   proc{|a| "\"#{a}\""}
+      },
+      Integer=&gt; {
+        type:       "Int",
+        default:       0,
+        format:     -&gt;(v,m){ m.pad == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" }
+      },
+      Float=&gt; {
+        type:       "Float",
+        default:       0.0,
+        format:      "%f"
+      },
+    }.merge( [[Array, :list_type_s, :square_bracket_list],
+              [List,  :list_type_s,  :square_bracket_list],
+              [Set ,  :set_type_s, :set_list_s],
+              [Tuple,:tuple_type_s, :tuple_list_s],
+              [Hash, :hash_type_s, :key_value_delimited_list_s],
+              [Map , :hash_type_s, :key_value_delimited_list_s],
+             ].reduce({}) do|h, (cls,typer,lister)|
+               h.merge(cls =&gt; {
+                         to_value:   -&gt;(a,scope=Instance,b=nil){ self.send(lister,a)},
+                         type:       -&gt;(a){ self.send(typer,a)},
+                         to_k:       -&gt;(a){"key"},
+                         format:     -&gt;(a){"%s"}
+                       })
+             end
+             )
+    
+    
+    #list_delims          "[]"
+    def self.square_bracket_list(array,sep=",")
+      self.delimited_list_s(array, "[]", sep)
+    end
+    
+    
+    def self.key_value_delimited_list_s(hash)
+      "(" + key_value_list_s(hash, ["Data.Map.fromList [", "]"], "()", ",",  ",") + ")"
+    end
+    
+    def self.set_list_s(hash)
+      "(" + delimited_list_s(hash, ["Data.Set.fromList [", "]"]) + ")"
+    end
+    
+    def self.tuple_list_s(hash)
+      "(" + hash.map{|a| to_value(a) }.join(",") +  ")"
+    end
+    
+    def self.list_type_s(a)
+      "[" + array_type(a) + "]"
+    end
+    
+    def self.tuple_type_s(a)
+      "(" + tuple_type(a) + ")"
+    end
+    
+    def self.set_type_s(a)
+      "Set " +  set_type(a)
+    end
+    
+    def self.hash_type_s(a)
+      "(Map " + hash_type(a, " ") + ")"
+    end
+    
+    
+    
+    def self.let_vars(vars)
+      vars.map do |v|
+        [
+         "let ",
+         to_define(v.type,v.name),
+         " = ",
+         to_value(v.type),
+        ].join
+      end.join("\n    ")
+    end
+    
+    
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+&lt;&lt;-MAIN
+    
+import Data.Map
+import Data.Set
+    
+#{vars.select{|v| v.type.class == BHW::Class}.map{|v| "import "  + to_class_s(v.type.name) + "\n"}.join()}
+main :: IO ()
+main = do
+    
+    #{let_vars(vars)}
+    
+    #{vars.map{|v| "putStrLn (show "  + to_variable_s(v.name) + ")\n"}.join('    ')}
+    return ()
+MAIN
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      lang_name = to_class_s(pg_class.name)
+      
+      [
+       "module #{lang_name} where\n\n",
+       "import Text.Printf\n",
+       "import Data.Map\n",
+       "import Data.Set\n",
+       pg_class.includes(self).map{|i| "import #{i}\n"}.join,
+       if pg_class.factory == true 
+         "import Factory\n"
+       end,
+       "\n",
+       [
+        "data #{to_class_s(pg_class)} = #{to_class_s(pg_class)} {\n",
+        pg_class.members_instance.map {|m|  "  #{to_member_s(m)} :: #{to_type(m.type)}"}.join(",\n"),
+        "\n}",
+        " deriving(Eq,Ord)" ,
+        "\n"
+       ].join
+      ].join
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      [
+       "new :: " + pg_class.members_param.map{|p| to_type(p.type)}.push(to_class_s(pg_class)).join(" -&gt; "),
+       "new " + pg_class.members_param.map{|p| to_parameter_s(p)}.join(" ") + " = " + to_class_s(pg_class),
+       pg_class.members_instance.map{|m| "  " + (m.is_param? ? to_parameter_s(m)  : to_value(m.type)) }.join("\n"),
+       "\n\n",
+      ]
+    end
+    
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       render_get_key(pg_class),
+       [
+        "instance Show #{to_class_s(pg_class)} where",
+        "  show #{to_variable_s(pg_class)} =",
+        "    #{to_class_s(pg_class)}.getKey " + 
+        pg_class.members_to_str.map {|m| 
+          "(#{to_variable_s(m)} #{to_variable_s(pg_class)})"
+        }.join("\n           ")
+       ].join("\n")
+      ].join("\n")
+    end
+    
+    def self.render_get_instance
+      [
+       "getInstance :: Factory #{class_name} -&gt; " + pg_class.members_param.map{|p| to_type(p)}.join(" -&gt; ") + " -&gt; (Factory #{class_name},#{class_name})",
+       "getInstance factory " + pg_class.members_param.map{|p| to_variable_s(p)}.join(" ") + "=",
+       "  checkInstance factory $ #{class_name} " + pg_class.members_param.map{|p| to_variable_s(p)}.join(" ")
+      ].join("\n")
+    end
+    
+    def self.render_get_key(pg_class)
+      [
+       "getKey :: " + pg_class.members_to_str.map{|p| to_type(p.type)}.push("String").join(" -&gt; "),
+       
+       "getKey " + pg_class.members_to_str.map{|p| to_variable_s(p)}.join(" ") + "=",
+       (indent*2) + "printf " + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m.type,m)), l[1].push(to_string(m.type,m))]
+       end.each_with_index.map do |m,i| 
+         (i == 0) ? ("\"" + m.join("-") + "\"") : (m.join(" "))
+       end.join(" "),
+      ].join("\n") + "\n"
+    end
+    
+    def self.render_factory_methods
+      [
+       render_get_instance,
+      ]
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+    end
+
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "ghc -c \#{#{src_file}} -o \#{#{dest_file}}"
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      "ghc \#{#{src_file}} -o \#{#{dest_file}}"
+    end
+
+    def self.run_cmd_str(file)
+      "./\#{#{file}}"    
+    end
+
+
+
+  # def self.compile(obj,srcs,srcdir=".", builddir=".")
+  #   [
+  #    "ghc --make ",
+  #    srcs.map{|s| srcdir + "/" + s} * " ",
+  #    "-o #{builddir}/#{obj}",
+  #   ] * " "
+  # end
+
+  # def self.rakefile_compile_task(cls)
+  #   [
+  #    "task :compile =&gt; [] do",
+  #    "  sh \"ghc --make #" + "{SRC}  -odir #" + "{OBJDIR}\"",
+  #    "end",
+  #   ] * "\n" + "\n"
+  # end
+
+  # def self.rakefile_test_task(cls)
+  #   [
+  #    "task :test =&gt; [] do",
+  #    "  sh \"ghc --make #" + "{SRC} test/Test.hs -o #" + "{OBJDIR}/test\"",
+  #    "  sh \"build/test\"",
+  #    "end",
+  #   ] * "\n" + "\n"
+  #  end
+
+
+#   def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+#     "ghc --make #{testdir}/#{test} #{srcdir}/#{src} -o #{builddir}/#{out} -outputdir #{builddir}".ergo do |c|
+#       c
+#     end
+#   end
+
+#   def self.rake_run_test(file,buildir)
+#     file
+#   end
+
+#   def self.rake_compile()
+#     ""
+#   end
+
+#   def self.makefile_rules(project,classes)
+#     source = to_file_s(project) + "." +  source_file_ext
+#     exe    = to_file_s(project) + "." +  "exe"
+# #compile:
+# #\t$(foreach src,$(SRC), ${GHC} --make $(src);)
+    
+# &lt;&lt;RULES
+# # run:
+# #\t./#{exe} \${FILES}
+# RULES
+
+#   end
+
+#   def self.rakefile_rules(project,classes)
+
+#   end
+
+#   def self.ant_rules(project,classes)
+#   end
+
+#   def self.scons_rules(project,classes)
+#     [
+#      'env = Environment( tools = ["default", "ghc"])',
+#      classes.map{|c| "env.HaskellObject(\"#{c.camel_case_capitalize}.hs\")"}.join("\n")
+#     ] * "\n" + "\n"
+
+#    end
+
+
+  end
+  
+end
+</pre></body></html>

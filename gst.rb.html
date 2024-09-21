@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/gstcase"
+module BHW
+  module Gst
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(GstCase)
+    self.extend(Interpreted)
+    
+    directory             "gst" 
+    option                "gst" 
+    formal_name          "(GNU)Smalltalk"
+    
+    source_file_ext       "st"
+    indent                 2
+    mode_line              '"-*-smalltalk-*-"'
+    
+    rosetta_url          ""
+    home_url             "https://www.gnu.org/software/smalltalk/"
+    wikipedia_url        ""
+    interpreter          "gst"
+
+    
+    def self.array_to_s(a,l=0)
+      #"Array from: {" +  a.map {|elem| to_value(elem) }.join(".") + "}"
+      a.to_s.gsub("[", "#(").gsub("]",")").gsub('"', "'").gsub(",","")
+    end
+    
+    def self.set_to_s(s)
+      "Set from: {" + s.map {|elem| to_value(elem) }.join(".") + "}"
+    end
+    
+    def self.hash_to_s(h,l=0)     
+      "Dictionary from: {" + h.map{|key,value| to_value(key) + "-&gt;" + to_value(value) }.join(".") + "}"
+    end
+    
+    self.merge_types(base_types,
+                     {
+                       BHW::Class =&gt; {
+                         include:  -&gt;(a){ to_file_s(a.type.name)},
+                         to_value:   -&gt;(v){  
+                           [
+                            to_class_s(v.class_name.downcase) ,
+                            " new",
+                            v.members_param.each_with_index.map do |a,i| 
+                              [
+                               (to_variable_s(a.name)  if i &gt; 0),
+                               to_value(a.type),
+                              ] * ":"
+                            end.join(" "),
+                            " ",
+                            ""
+                           ] * ""
+                         },
+                       },
+                       String   =&gt; {
+                         to_value: -&gt;(a){ "'#{a}'"},
+                         default:  -&gt;(a){ "''"},
+                       },
+                     })
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      pg_class.members_param.ergo do |params|
+        [
+         "Object subclass: " + to_class_s(pg_class) + "[",
+         "    |",
+         pg_class.members.map{|m| "        " + to_member_s(m) }.join("\n"),
+         "    |",
+         "    " + to_class_s(pg_class) + " class [",
+         [
+          "        new",
+          params.count&gt;0 ? ":" : "",
+          " ",
+          params[0]!=nil ? (to_variable_s(params[0].name)+"_ ") : "",
+          if params.count &gt; 1
+            params[1..-1].each_with_index.map{|p,i| to_variable_s(p.name) + ":" + to_variable_s(p.name) +"_"  }.join(" ") 
+          end,
+          " [",
+         ] * "",
+         
+         [
+          "            ^ ((super new) init",
+          params.count&gt;0 ? ":" : "",
+          " ",
+          params[0]!=nil ? (to_variable_s(params[0].name)+"_ ") : "",
+          if params.count &gt; 1
+            params[1..-1].each_with_index.map{|p,i| to_variable_s(p.name) + ":" + to_variable_s(p.name) +"_"  }.join(" ") 
+          end,
+          " )",
+         ] * "",
+         
+         "        ]",
+         "    ]",
+         ""
+        ] * "\n"
+      end
+    end
+    
+    def self.render_end_of_class(pg_class, file_type)
+      "]\n"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      
+      func = "    init"
+      
+      if pg_class.members_param.slice(0) != nil
+        func = func + ": " + to_variable_s(pg_class.members_param.slice(0)) + "_"
+      end
+      
+      if pg_class.members_param.length &gt; 0
+        pg_class.members_param[1..-1].each_with_index do|a,i| 
+          func = func +  " " + to_variable_s(a) + ":" + to_variable_s(a) + "_ "
+        end
+      end
+        
+      rest  = pg_class.members_param[1..-1]
+      
+      [
+       func + "[",
+       pg_class.members_param.map {|a| "        " + to_variable_s(a) + ":= " + to_variable_s(a) + "_."},
+       pg_class.members_default.select{|a| a.scope == Instance}.map {|a|  "        " + to_variable_s(a) + ":= " + to_value(a.type) + "."}.compact,     "    ]"
+      ].join("\n") 
+      
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "    displayOn: stream [",
+       "        &lt;category: 'printing'&gt;",
+       pg_class.members_to_str.map{|m|  "        " + to_member_s(m.name) + " displayOn:stream" } * ".\n        '-' displayOn:stream.\n",
+       "    ]"
+      ]
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+      
+    end
+    
+    
+    def self.render_main(pg_class, file_type, vars=[], &amp;block) 
+      
+      def self.initialize(vars)
+        vars.map do |var| 
+          [
+           self.to_variable_s(var),
+             ":=",
+           self.to_value(var.type),
+           "."
+          ].join
+        end.join("\n")
+      end
+      
+      def self.print_vars(vars)
+        vars.map do |var| 
+          [
+           self.to_variable_s(var),
+           " ",
+           "displayNl ",
+           "."
+          ] * ""
+        end * "\n"
+      end
+      
+      &lt;&lt;-MAIN
+#{self.initialize(vars)}
+#{self.print_vars(vars)}
+    MAIN
+    end
+
+
+    def self.run_cmd_str(dest_file)
+      "gst ./\#{file}.st"
+    end
+
+#     def self.execute_file(file, srcdir=".",builddir)
+#       [
+#        "gst #{srcdir}/#{file}"
+#       ] * " "
+#     end
+    
+#     def self.rakefile_rules(project,classes)
+#     end
+    
+#     def self.rake_run_test(files,builddir)
+#       "gst " + files.join(" ")
+#     end
+    
+#     def self.makefile_rules(project,classes)
+#       source_file = to_file_s(project) + "." + source_file_ext 
+      
+#       &lt;&lt;RULES
+# # run:\n
+# \t${GST} #{source_file}
+# RULES
+#     end
+    
+#     def self.ant_rules(project,classes)
+#     end
+    
+#     def self.scons_rules(project,classes)
+#     end
+    
+  end
+end
+</pre></body></html>

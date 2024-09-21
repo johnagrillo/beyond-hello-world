@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/falconcase"
+module BHW
+  module Falcon
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(FalconCase)
+    self.extend(Compiled)
+    self.extend(Interpreted)
+    
+    directory       "falcon"
+    source_file_ext "fal" 
+    object_file_ext "fam"
+    option          "falcon"
+    formal_name     "Falcon"
+
+    indent          "   "
+    assign          "="
+    mode_line       "//-*-falcon-*-"
+
+    rosetta_url    "Falcon"
+    home_url       "http://www.falconpl.org/"
+    wikipedia_url  "Falcon_(programming_language)"
+
+    interpreter    "falcon"
+
+    
+    self.merge_types(base_types,
+                     {
+                       Default =&gt; {
+                         to_cmp:  -&gt;(a){ [
+                                          "#{@indent*2}ret = self.#{to_variable_s(a)}.compare(rhs.#{to_variable_s(a)})",
+                                          "#{@indent*2}if ret != 0",
+                                          "#{@indent*3}return ret",
+                                          "#{@indent*2}end\n",
+                                         ].join("\n")
+                         },
+                         define:  -&gt;(v,n){  to_variable_s(n) },
+                         to_value: proc{|a|a.to_s},
+                         default:     nil,
+                         type:     nil,
+                       },
+                       
+                       BHW::Class =&gt; {
+                         to_cmp:  -&gt;(a){ [
+                                          "#{@indent*2}ret = self.#{to_variable_s(a)}.compare(rhs.#{to_variable_s(a)})",
+                                          "#{@indent*2}if ret != 0",
+                                          "#{@indent*3}return ret",
+                                          "#{@indent*2}end\n",
+                                         ].join("\n")
+                         },
+                         include:  -&gt;(a) {  a.name  },
+                         to_value:   -&gt;(v){  
+                           [
+                            to_class_s(v.class_name) ,
+                            "(",
+                            v.members_param.map{|a| to_value(a.type)   }.join(","),
+                            ");"
+                           ] * ""
+                         },
+                       },
+                       Char=&gt; {
+                         default:       "\"\"",
+                       },
+                       String=&gt; {
+                         default:       "\"\"",
+                         to_value: proc{|a| "\"#{a}\""}
+                       },
+                       Integer=&gt; {
+                         default:       0,
+                       },
+                       Float=&gt; {
+                         default:       0.0,
+                       },
+                     })
+
+    def self.array_to_s(a,l=0)
+      self.square_bracket_list_s(a,",",l)
+    end
+
+    def self.hash_to_s(h,l=0)
+      self.key_value_list_s(h, "[]", "", "=&gt;",  ",")
+    end
+
+    def self.render_method(returnType, name, params, static=false)
+      start = "  def self." +  (static==true ? "self." : "") + name + "("
+      [
+       start,
+          params.map{|m| variable_name(m)}.join(",\n" + (" "  * start.length) ),
+       ")",
+       "\n",
+       yield,
+          "\n",
+       "  end",
+       "\n"
+      ].join
+    end
+    
+    
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      #includes {|i| "require " &lt;&lt; i &lt;&lt; "\n"}
+      #PG.external_classes.each{|c| "require \"#{c.lang_name}\"\n"} 
+      [
+       "export",
+       [
+    	
+        "class #{Falcon.to_class_s(pg_class.name)}(",
+        pg_class.members_param.map{|p| to_variable_s(p)}.join(","),
+        ")"
+       ].join,
+       pg_class.members.map do |p|
+         @indent + "_" +  to_variable_s(p) + " = " +
+           if p.is_default?
+             to_value(p.type)
+           else
+             to_variable_s(p) 
+           end
+       end.join("\n")
+      ].join("\n") + "\n"
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      "end\n"    
+    end
+    
+    def self.render_private_constructor
+      #"  private \n" + render_constructor(pg_class)
+    end
+    
+    
+    def self.render_private
+      #"  private\n"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      pg_class.members.map do |m|
+        [
+         if m.has_reader? 
+           "   function __get_#{to_member_s(m)}(): return self._#{to_member_s(m)}" 
+         end,
+         if m.has_writer?	
+           "   function __set_#{to_member_s(m)}(v): self._#{to_member_s(m)}=v"
+         end,
+         if m.has_reader? &amp;&amp; m.has_writer?
+           "\n"
+         end
+        ].compact.join("\n")
+      end
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "   function toString()",
+       "      return @\"" + pg_class.members_to_str.map do |m| 
+         
+         [
+          "$(self._",
+          to_variable_s(m),
+          
+          if m.width &gt; 0
+            ":" + m.width.to_s + "r"
+          end,
+          if m.pad() != false
+            "p" + m.pad()
+          end,
+          ")",
+         ].join
+       end.join("-") + "\"",
+       "   end",
+      ].join("\n") + "\n"
+    end
+    
+    
+    def self.render_hashable_methods(pg_class,file_type) 
+      [
+       "   function compare(rhs)",
+       pg_class.members.map do |m,i| 
+         to_compare(m.type,m.name)
+       end.join(),
+       "   return ret",
+       "   end"
+      ].join("\n")
+    end
+    
+    
+    
+    def self.render_main(pg_class, file_type, vars=[], &amp;block)
+&lt;&lt;-MAIN
+#{vars.select{|v| v.type.class == BHW::Class}.map {|v| to_include(v.type)}.flatten.map{|i| "load" + " " +to_file_s(i)}.join("\n") }
+#{self.render_main_vars(vars,"")}
+#{vars.map{|v| "&gt; " + to_define(v.type,v.name)}.join("\n") }
+    
+    MAIN
+    end
+
+    def self.compile_cmd_str(src_file,dest_file)
+      "falcon -c -o \#{#{dest_file}}  \#{#{src_file}}"
+    end
+
+#       def self.render_methods(pg_class, file_type=SourceExt)
+#       end
+    
+    
+#       def self.render_compare_methods(pg_class, file_type=SourceExt)
+#       end
+    
+#   def self.compile(obj,srcs,srcdir=".", builddir=".")
+#     [
+#      "(",
+#      srcs.map{|s| "falcon -c -o #{builddir}/#{s.gsub("fal","fam")} #{srcdir}/#{s}"}.join("&amp;&amp;"),
+#      ")",
+#     ] * " "
+
+
+#   end
+
+#   def self.execute_file(file, srcdir=".",builddir)
+#      [
+#       "falcon #{builddir}/#{file}" 
+#      ] * " "
+    
+#   end
+
+
+
+#   def self.rakefile_rules(project,classes)
+#   end
+
+#   def self.rake_compile()
+#     "falcon -c -o "
+#   end
+
+#   def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+#     [
+#      "falcon -c -o #{builddir}/#{src.split('.')[0]}.fam #{srcdir}/#{src}",
+#      "falcon -c -o #{builddir}/#{out}.fam #{testdir}/#{test}" 
+#     ] * "\n"
+    
+#   end
+
+#   def self.rake_run_test(file,builddir)
+#     "falcon #{file}.fam" 
+#   end
+
+#   def self.makefile_rules(project,classes)
+#     out_obj = to_file_s(project) + "." + object_file_ext 
+# &lt;&lt;RULES
+# # run:
+# #\t${FALCON} #{out_obj} ${FILES}
+# RULES
+#   end
+
+#   def self.ant_rules(project,classes)
+#   end
+
+#   def self.scons_rules(project,classes)
+#   end
+
+
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+
+    end
+  end
+</pre></body></html>

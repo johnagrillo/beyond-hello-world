@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/uniconcase"
+
+
+
+module BHW
+
+  module Unicon
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(UniconCase)
+    self.extend(Compiled)
+    
+    formal_name      "Unicon"
+    directory        "unicon"
+    source_file_ext  "icn" 
+    option           "unicon"
+    indent           "    "
+    object_file_ext  "u"
+    exec_file_ext    "exe"
+    assign           ":="
+    mode_line        "#-*-unicon-*-"
+    home_url         "http://www.unicon.org/"
+    
+    self.merge_types(base_types,
+                     {
+                       Primitive =&gt; {
+                         to_h:      -&gt;(a){ to_variable_s(a)},
+                         to_s:      -&gt;(a){ to_variable_s(m)},
+                         format:    -&gt;(v,a){ to_variable_s(a)},
+                         to_value:  -&gt;(a,s=nil,l=nil){ a.to_s},
+                       },
+                       Default =&gt; {
+                         to_h:      -&gt;(a){ to_variable_s(a) + "~hashCode"},
+                         to_s:      -&gt;(a){ to_variable_s(a)},
+                         define:   -&gt;(v,n){ to_variable_s(n)},
+                         to_value:  -&gt;(a){ a.to_s},
+                       },
+                       BHW::Class =&gt; {
+                         to_h:      -&gt;(a){ to_variable_s(a) + "~hashCode"},
+                         to_s:      -&gt;(a){ to_variable_s(a) + ".to_string()"},
+                         format:    -&gt;(a){ to_variable_s(a) + ".to_string()"},
+                         to_value:   -&gt;(v){  to_class_s(v.class_name.downcase) + "( " + v.members_param.map{|a| to_value(a.type)  }.join(",") + ")" },
+                       },
+                       Char=&gt; {
+                         default:       "\"\"",
+                         primitive:  true,
+                       },
+                       String=&gt; {
+                         format:     -&gt;(v,m){ to_variable_s(m)},
+                         to_value:   proc{|a| "\"#{a}\""},
+                         default:    "\"\""
+                       },
+                       Integer=&gt; {
+                         primitive:  true,
+                         default:       0,
+                         format:      -&gt;(v,a){ 
+                           if a.pad == false
+                             "sprintf(\"%#{a.width}d\",#{to_variable_s(a)})"
+                           else
+                             "sprintf(\"%#{a.pad()}#{a.width}d\",#{to_variable_s(a)})"
+                           end
+                         },
+                       },
+                       Float=&gt; {
+                         primitive:  true,
+                         default:       0.0,
+                       }
+                     })
+    
+    def self.array_to_s(a,l=0)
+      self.square_bracket_list_s(a,",",l)
+    end
+
+    def self.hash_to_s(h,l=0)
+      key_value_list_s(h, 
+                       ["fromlist([", "])"],
+                       "[]",
+                       ",",
+                       ",")
+    end
+    
+    def self.render_main(pg_class, file_type,vars=[], &amp;block) 
+&lt;&lt;-MAIN
+procedure main (arglist)
+    #{render_main_vars(vars)}
+    #{vars.map{|v| "write(" + to_string(v,v.name) + ")"} * "\n#{indent}"}
+    exit(0)
+end
+    
+#
+# list to table(hash)
+#
+    
+procedure fromlist(args)
+    t := table()
+    every item := !args do {
+	t[item[1]] := item[2]
+    }
+    return t
+end
+    
+MAIN
+    end
+    
+    def self.render_method(returnType, name, params, static=false)
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       "link printf",
+       "class #{to_class_s(pg_class)} (",
+       pg_class.members.map {|m| to_variable_s(m)}.join(",\n")
+      ].join("\n") + "\n  )\n"
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      [
+       "  initially(" + pg_class.members_param.map{|p| "_" + to_variable_s(p)}.join(",") + ")",
+       pg_class.members_param.map do |m|
+         "   " &lt;&lt; to_member_s(m) &lt;&lt; " := _" &lt;&lt; to_variable_s(m) 
+       end.join("\n"),
+       pg_class.members_default.map do |m|
+         "   " &lt;&lt; to_member_s(m)  &lt;&lt; " := " &lt;&lt; to_value(m.type)
+       end.join("\n"),
+       "\n#{indent}\n"
+      ].join("\n") + "\n" + "end"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      pg_class.members.map do |m|
+        [
+         if m.has_reader? 
+           [
+            "  method #{to_reader_s(m)}()",
+            "    return #{to_variable_s(m)}",
+            "  end",
+           ].join("\n")
+         end,
+         
+         if m.has_writer?	
+           [
+            "  method #{to_writer_s(m)}(_#{to_variable_s(m)})" ,
+            "    #{to_variable_s(m)} := _#{to_parameter_s(m)}",
+            "  end"
+           ]
+         end,
+         if m.has_reader? &amp;&amp; m.has_writer?
+           "\n"
+         end
+        ].join("\n") 
+      end.join + "\n"
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "  method to_string()" ,    
+       "    return " + pg_class.members_to_str.map{|m| to_format(m.type, m)}.join(" || \"-\" || "),
+       "  end"
+      ].join("\n") + "\n"
+    end
+    
+    def self.compile_cmd_str(src_file, dest_file)
+      "unicon -s \#{#{src_file}} -o \#{#{dest_file}}"
+    end
+
+#     def self.makefile_rules(task,classes)
+#       script_file = to_file_s(task)
+#       exe_file = to_file_s(task) + ".exe"
+      
+#       &lt;&lt;RULES
+#     run:
+#     #\t${UNICON_PATH} ./#{script_file} ${FILES}
+# RULES
+#     end
+
+#   def self.compile(obj,srcs,srcdir=".", builddir=".")
+#     ([
+#      "(cd #{builddir} &amp;&amp; ",
+#      "cp -f " +  srcs.map{|s| "../#{srcdir}/#{s}" } * " ",
+#      ". &amp;&amp; unicon -s -o#{obj} #{obj.gsub('u','icn')} 2&gt;/dev/null)"
+#     ] * " ").ergo do |cmd|
+#       cmd
+#     end
+#   end
+
+
+#   def self.makefile_rules(project,classes)
+#     ""
+#   end
+
+#   def self.rake_compile()
+#     "unicon -c -o"
+#   end
+
+#   def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+#     "(cd #{builddir} &amp;&amp; cp -f ../#{srcdir}/#{src} ../#{testdir}/#{test} . &amp;&amp; unicon -s -otest #{test} #{src} 2&gt;/dev/null)"
+#   end
+
+#   def self.rake_run_test(file,builddir)
+#     file
+#   end
+
+
+#   def self.rakefile_rules(project,classes)
+#     ""
+#   end
+
+#   def self.ant_rules(project,classes)
+#     ""
+#   end
+
+#   def self.scons_rules(project,classes)
+#     ""
+#   end
+
+
+  end
+end
+</pre></body></html>

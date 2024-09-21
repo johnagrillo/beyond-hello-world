@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>#let v = vec![1, 2, 3];
+require_relative "./mod/snakecase"
+
+module BHW
+  module Swift
+    include BHW::Props
+    self.extend(Typed)
+    self.extend(SnakeCase)
+    self.extend(BHW::Writer)
+    self.extend(Compiled)
+    
+    directory       "swift"
+    option          "swift"
+
+    rosetta_url          "Swift"
+    home_url             "http://swift.org/"
+    wikipedia_url        "Swift"
+
+    formal_name          "Swift"
+
+    source_file_ext "swift"
+    indent           "    "
+    terminator       ";"
+    assign           "="
+    mode_line        "//-*-rust-*-"
+    #subdir          "src"
+    
+    self.merge_types(base_types,
+                     typed_types,
+                     {
+                       Primitive =&gt; {  
+                         define:   -&gt;(v,n,s=nil){ to_variable_s(n) + " " + to_type(v)},
+                         include:  nil,
+                         to_value:-&gt;(v,scope=nil){ v.to_s},
+                       },
+                       
+                       Default  =&gt; {  # classes as members
+                         define:  -&gt;(v,n){  "let _" + to_variable_s(n) + " " + to_type(v)  },
+                         include: nil,
+                         to_s:     -&gt;(n){ to_variable_s(n)},
+                       },
+                       
+                       BHW::Class =&gt; {     
+                         type:  -&gt;(v){ "struct #{v.type.name.camel_case_capitalize} * "}, 
+                         to_value:   -&gt;(v){  
+                           [
+                            "src.new",
+                            to_class_s(v.class_name.downcase) ,
+                            "(",
+                            v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+                            ");"
+                           ] * ""
+                         }
+                       },
+                       Integer     =&gt; { type:  "Int",     },
+                       Float      =&gt; { type:  "float64",  },
+                       Char       =&gt; { type:  "char",   format:     "%c",},
+                       String=&gt; {
+                         type:       "String",
+                         to_value:  proc{|v| '"' + v.to_s + '"'},
+                         format:     "%s",
+                       },
+                     }
+                       .merge( IntClasses.reduce({}){|h,cls|
+                                 
+                                 if cls.ap?  # rust does not ap
+                                   h
+                                 else
+                                   unsigned = cls.signed? ? "": "U"
+                                   type = if cls.bits == 8
+                                            "Int8"
+                                          elsif cls.bits == 16
+                                            "Int16"
+                                          elsif cls.bits == 32
+                                            "Int32"
+                                          elsif cls.bits == 64
+                                            "Int64"
+                                          elsif cls.bits == "Word"
+                                            "Int"
+                                          end
+                                   
+                                   h.merge(cls =&gt; {
+                                             primitive:  true,
+                                             type:       "#{unsigned}#{type}",
+                                             default:    "0",
+                                            format:     -&gt;(v,m){ m.pad() == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" },
+                                           })
+                                 end
+                               }
+                             ).merge([
+                                [Array,  "",  :array_type ],
+                                [List,   "",    :array_type ],
+                                [Set,    "set",     :set_type ],
+                              ].reduce({}) do |h,(cls,stl,typer)|
+                                h.merge(cls =&gt; {
+                                          type:      -&gt;(a)  { stl + "[" + self.send(typer,a)  + "; " + a.size.to_s + "]" },
+                                          define:    -&gt;(v,n){ stl + " [ " + self.send(typer,v)  + " ] * " + to_variable_s(n) },
+                                          to_value:  -&gt;(a,scope=nil){ " [" +  a.map {|e| to_value(e).to_s }.join(",") + "]"},
+                                        }
+                                       )
+                              end
+                             ).merge(
+                         [
+                           [Array,  "",  :array_type ],
+                           [List,   "",    :array_type ],
+                           [Set,    "set",     :set_type ],
+                         ].reduce({}) do |h,(cls,stl,typer)|
+                           h.merge(cls =&gt; {
+                                     type:      -&gt;(a)  { stl + "[" + self.send(typer,a) + "]" },
+                                   define:    -&gt;(v,n){ stl + " [ " + self.send(typer,v)  + " ] * " + to_variable_s(n) },
+                                   to_value:  -&gt;(a,scope=nil){ " [" +  a.map {|e| to_value(e).to_s }.join(",") + "]"},
+                                 })
+                       end)
+                       .merge( [Tuple].reduce({}) {|h,cls| h.merge(cls =&gt; { to_value: -&gt;(a,b=nil,l=0) { paren_bracket_list_s(a,",",l)}})})
+                       .merge([
+                               [Hash,  "HashMap"], 
+                               [Map,   "HashMap"],
+                             ].reduce({}) do |h,(cls,stl)|
+                               h.merge(cls =&gt; {
+                                         type:      -&gt;(a){  " [ " + hash_type(a,":") + " ] " },
+                                         define:    -&gt;(v,n){  " [ " + hash_type(v) + " ] * #{to_variable_s(n)}"},
+                                         include:   -&gt;(a){"std::collections::" + stl + ";" },
+                                         to_value:   -&gt;(a,b=nil,c=nil){ 
+                                           [ "[", 
+                                             a.map{|k,v| " %s:%s"%[to_value(k), to_value(v)]}.join(",\n    "),
+                                             "]",
+                                           ].join()
+                                         }})
+                              end)	
+                     
+                     
+                     
+                    )
+    
+	def self.key_value_delimited_list_s(hash)
+        key_value_list_s(hash, "{}", "", ":",  ",")
+      end
+    
+    
+
+
+    def self.array_to_s(a,l=0)
+      self.array_to_type_s(a)  +  squigly_bracket_list_s(a) 
+    end
+
+    def self.array_to_type_s(a)
+      "[]" + array_type(a)
+    end
+
+    def self.hash_to_s(h,l=0)
+      self.hash_to_type_s(h)  +  key_value_list_s(h, "{}", "", ":", ",")
+    end
+
+    def self.hash_to_type_s(h)
+      "map[" + hash_type_key(h) + "]" + hash_type_value(h)
+    end
+
+    def self.tuple_to_s(t,l=0)
+      "{" + t.map{|b| to_value(b)} *"," + "}" 
+    end
+    
+    def self.tuple_to_type_s(t)
+      t.map{|a| to_type(a)} * "_"  + "_tuple" 
+    end
+
+
+    def self.render_main(pg_class, file_type, vars=[], &amp;block)
+
+      [
+       
+       vars.map{|v| "#{indent}let "  + to_variable_s(v.name) + " : " + to_type(v.type) + " = " + to_value(v.type) + terminator} * "\n",
+       
+       #namefmt.Println(\"#{v}\")"} * "\n",
+       "",
+       
+       vars.map{|v| "#{indent}print(#{to_variable_s(v.name)})"} * "\n",
+       
+      ] * "\n"
+    end
+    
+    def self.render_method(ret, name, params,file_type)
+    end
+    
+    
+    def self.render_start_of_class(pg_class,file_type)
+      
+      
+      def self.typer(name, item, tuples=Set.new, indent=0)
+        if item.instance_of? Array
+          typer(name, item[0], tuples, indent+1)
+        elsif item.instance_of? Hash
+          typer(name, item[1], tuples, indent+1)
+        elsif item.instance_of? Tuple
+          tuples.add(item)
+        else
+          tuples
+        end
+      end
+      
+      def self.render_struct_from_tuples(tuples)
+        if (tuples.size &gt; 0) 
+          [
+           "//",
+           "// structs for tuples",
+           "//",
+           tuples.map do |tuple|
+             [
+              "type " + tuple.map{|a| to_type(a)} * "_"  + "_tuple struct {",
+              tuple.each_with_index.map {|f,i| 
+                indent + to_variable_s("f#{i}") + " " + to_type(f)
+              }* "\n",
+              "}"
+             ] * "\n"
+           end,
+          ]
+        else
+          ""
+        end
+      end
+      
+      tuples = Set.new()
+      pg_class.members.map do |m|
+        tuples += typer(m.name, m.type)
+      end 
+      
+      [
+       'package src',
+       'import "fmt"',
+       
+       self.render_struct_from_tuples(tuples),
+       
+       'type ' + to_class_s(pg_class) + ' struct {',
+       "#{indent}fmt.Stringer",
+       pg_class.members_instance.map{|m| indent + to_variable_s(m.name) + " " + to_type(m.type)} *  "\n",
+       '}',
+       
+      ] * "\n"
+    end
+    
+    def self.render_end_of_class(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class,file_type)
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_constructor(pg_class,file_type)
+      [
+       "func New#{to_class_s(pg_class)}(" +
+       pg_class.members_param.map{|p| to_define(p.type,p.name) + "," }.join("\n") + ")" + "*#{to_class_s(pg_class)}{\n",
+       
+       "#{indent}return &amp;#{to_class_s(pg_class)}{",
+       pg_class.members.select {|m|  m.scope == Instance}.map {|m| 
+         (indent*2) + to_variable_s(m.name) + ":" + if m.is_param?
+                                                 to_variable_s(m.name) + ","
+                                               else
+                                                 to_value(m.type) + ","
+                                               end
+       } * "\n",
+       indent + "}",
+       "}"
+      ].join("\n")
+    end
+    
+    def self.render_destructor(pg_class, file_type)
+    end
+    
+    def self.render_accessors(pg_class, file_type)
+    end
+    
+    
+    def self.render_to_string(pg_class,file_type)
+      [
+       "func (in * #{to_class_s(pg_class)} ) String() string {",
+       pg_class.members_to_str.select{|m| m.type.to_s =~ /PG/}.map{|a| "  char " + to_variable_s(a) + "_buf[200];"}.join("\n"),
+       "\n",
+       "#{indent} return fmt.Sprintf(",
+       pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m.type,m)), l[1].push( "in." + to_string(m.type, m.name))]
+       end.ergo do |formats,vars| 
+         if formats.size == 0
+           '"%s",""'
+         else
+           "\"" + formats.join("-") + "\"," + vars.join(",")
+         end
+       end,
+       ");",
+       "}",
+      ].join
+    end
+    
+    
+    def self.render_methods(pg_class,file_type)
+      
+    end
+
+
+    def self.run_cmd_str(file)
+      "GOPATH=`pwd` go run ./\#{file}.go"
+    end
+
+
+  # def self.execute_file(file, srcdir=".",builddir)
+  #   "GOPATH=`pwd` go run #{srcdir}/#{file}"
+  # end
+
+  # def self.makefile_rules(project,classes)
+  # end
+
+  # def self.scons_rules(project,classes)
+  # end
+
+  # def self.ant_rules(project,classes)
+  # end
+
+  # def self.rake_run_test(files,builddir)
+  #   "GOPATH=`pwd` go run " + files.last
+  # end
+
+    
+    def self.compile_cmd_str(src_file,dest_file)
+      "rustc \#{#{src_file}} -emit -o \#{#{dest_file}}"
+    end
+
+  end
+end
+</pre></body></html>

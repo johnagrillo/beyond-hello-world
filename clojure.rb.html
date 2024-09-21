@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre> module BHW
+   module Clojure
+     include BHW::Props
+     self.extend(BHW::Writer)
+     self.extend(DashCase)
+     self.extend(Interpreted)
+     
+     def self.to_file_s(s)
+       s.camel_case.downcase
+     end
+     
+     def self.to_class_s(s)
+       s.camel_case_capitalize
+     end
+     
+     directory        "clojure" 
+     source_file_ext  "clj"
+     option           "clojure"
+
+     formal_name            "Clojure"
+
+     mode_line        ";;-*-clojure-*-"
+     indent           "    "
+
+     rosetta_url      "Clojure"
+     home_url         "http://clojure.org/"
+     wikipedia_url    "Clojure"
+     
+     self.types = {
+       Primitive =&gt; {   #non class entities, 
+         include:  nil,    
+         to_s:     -&gt;(a){ "(:#{to_variable_s(a)} this)"},
+         to_value: -&gt;(a,l=0){a},
+       },
+       
+       Default  =&gt; {  
+         format:     "%s",
+         to_s:     -&gt;(a){ "(:#{to_variable_s(a)} this)"},
+         define:  -&gt;(v,n=""){ to_variable_s(n)},
+         to_value: -&gt;(a){ a},
+         include:  nil,
+         default:   "\"\"",
+       },
+       BHW::Class =&gt; {
+         format:   "%s",
+         include:  -&gt;(a){ to_file_s(a.type.name)},
+         to_value:  -&gt;(v) {
+           ["(",
+            "src." + to_file_s(v.class_name) +"/make-" + to_class_s(v.class_name),
+            " ",
+            v.members_param.map{|a| to_value(a.type)
+            }.join(" "),
+            ")"
+           ] * ""
+         },
+       },
+       String=&gt; {
+         primitive:  true,
+         to_value: -&gt;(a){ "\"#{a}\""},
+         default:  '""',
+         format:   "%s",      
+       },
+       Char=&gt; {
+         primitive:  true,
+       },
+       Integer=&gt; {
+         primitive:  true,
+         format:     -&gt;(v,a){ a.pad() == false ? "%#{a.width}d" : "%#{a.pad}#{a.width}d" },
+         include:    nil,    
+         default:  '0',
+       },
+       Float=&gt; {
+         format:     "%f",
+         primitive:  true,
+         default:  '0.0',
+       }
+     }.merge([[Array, :clj_array_s],
+              [List , :clj_list_s],
+              [Set  , :clj_set_s],
+              [Hash , :clj_hash_s],
+              [Map  , :clj_hash_s],
+              [Tuple, :clj_array_s]
+             ].reduce({}) do |h,(cls,p)| h.merge( cls =&gt; {to_value:  -&gt;(a,b=Instance,l=0){self.send(p,a,l)}})
+             end)
+     
+     def self.run_cmd_str(file)
+      "java -cp .:/usr/share/java/clojure.jar:/usr/local/lib/pg/clojure/ clojure.main  ./\#{#{file}}.clj"
+     end
+
+    def self.run_cmd_shell_str(file)
+      "java -cp .:/usr/share/java/clojure.jar:/usr/local/lib/pg/clojure/ clojure.main ./#{file}.clj"
+    end
+
+     def self.let_vars(vars)
+       vars.map do |v|
+         [
+          to_define(v.type,v.name),
+          " ",
+          to_value(v.type),
+         ].join
+       end.join("\n      ")
+     end
+     
+     def self.render_main(pg_class,file_type, vars=[],&amp;block)
+&lt;&lt;-MAIN
+    
+(ns test.test
+   #{vars.select{|v| v.type.class == BHW::Class}.map{|v| %Q[(:require [src.#{to_file_s(v.name)}])]}.join("\n  ")})
+(let [#{self.let_vars(vars)}]
+#{indent}#{vars.map{|v| %Q[(println (str #{to_variable_s(v.name)}))]}.join("\n#{indent}")}
+)
+MAIN
+     end
+     
+     def self.render_start_of_class(pg_class, file_type=SourceFile)
+       ns = "src"
+       [
+        #pg_class.inludes(self){|i| "(load \"#{i}\")"}.join("\n"),
+        "(ns #{ns}." + to_class_s(pg_class).downcase + ")" ,
+        
+        "(defrecord " &lt;&lt; to_class_s(pg_class) &lt;&lt; 
+        "[" &lt;&lt; pg_class.members_instance.map { |m| to_member_s(m.name) }.join(" ") &lt;&lt; "]",
+        "  java.lang.Comparable"
+       ].join("\n") + "\n"
+       
+     end
+     
+     def self.render_end_of_class(pg_class, file_type=SoourceFile)
+       [
+        ")",
+        "(defn make-" + to_class_s(pg_class),
+        "[" + pg_class.members_param.map {|a| to_parameter_s(a)} * " " + "]",
+        "(src." + to_file_s(pg_class) + "." + to_class_s(pg_class) + ". " ,
+        pg_class.members_instance.map{|m| "  " + (m.is_param? ? to_parameter_s(m)  : to_value(m.type).to_s) }.join("\n"),  
+        ")",
+        ")"
+       ] * "\n"
+     end
+     
+     def self.render_constructor(pg_class, file_type=SourceFile)
+     end
+     
+     def self.render_to_string(pg_class, file_type=SourceFile)
+       indent = " " * 22;
+       [
+        "  (toString  [this]\n",
+        "             (format ",
+        pg_class.members_param.reduce([[],[]]) do |l,m| 
+          [l[0].push(to_format(m.type,m)), l[1].push(to_string(m.type,m.name))]
+        end.each_with_index.map do |m,i| 
+          i == 0 ? ("\"" + m.join("-") + "\"") : ( indent + m.join("\n#{indent}"))
+        end.join("\n"),
+        "))\n"
+       ].join
+     end
+     
+     def self.render_compare_methods(pg_class, file_type=SourceFile)
+       
+       if pg_class.members.length()==0
+         return ""
+       end
+       [
+        "  (compareTo [this other]",
+        "     (let [func ( fn [obj] (reduce #(conj %1 (%2 obj)) [] (keys obj)))]",
+        "        (.compareTo  (func this) (func other))))",
+       ].join("\n")
+     end
+     
+     
+     def self.render_methods(pg_class, file_type=SourceFile)
+     end
+     
+     
+     def self.clj_array_s(list, l=0)
+
+       dims,_ = list.dims_type
+       spaces = indent * (l+1)
+       [
+        (l&gt;0)?"\n#{spaces}":"",
+        "[",
+        if list == nil
+          ""
+        else
+          list.map{|elem| 
+            if elem.class == Array
+              self.clj_array_s(elem,l+1)
+            else
+              to_value(elem)
+            end
+          }.join(" ")
+        end,
+        "]"
+       ] * ""
+     end
+     
+     def self.clj_list_s(list, delims="[]", sep=" ")
+       [
+        delims[0] ,
+        if list == nil
+          ""
+        else
+          list.map{|elem| 
+            if elem.class == Array
+              self.clj_array_s(elem, delims, sep)
+            else
+              to_value(elem)
+            end
+          }.join(sep + " ")
+        end,
+        delims[1]
+       ] * ""
+     end
+     
+     def self.clj_set_s(list, delims= ["\#{" , "}"], sep=" ")
+       [
+        delims[0] ,
+        if list == nil
+          ""
+        else
+          list.map{|elem| 
+            if elem.class == Array
+              self.clj_square_bracket_list_s(elem, delims, sep)
+            else
+              to_value(elem)
+            end
+          }.join(sep + " ")
+        end,
+        delims[1]
+       ] * ""
+     end
+     
+     def self.clj_hash_s(hash,l=0)
+       key_value_list_s(hash, "{}", " "," "," ")
+     end
+     
+   end
+
+
+
+ end
+
+
+
+</pre></body></html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre># -*- coding: utf-8 -*-
+require_relative "./mod/purecase"
+
+
+
+
+
+module BHW
+
+  module Pure
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(PureCase)
+    self.extend(Compiled)
+    
+    directory              "pure"
+    option                 "pure"
+    formal_name     "Pure"
+
+    source_file_ext        "pure"
+    exec_file_ext          "exe"
+    
+    indent                 "    "
+    assign                "="
+    mode_line             "//-*-pure-*--"
+    home_url "https://purelang.bitbucket.io/"
+    
+    self.types = {
+      Default=&gt; {
+        to_s:      -&gt;(a){ to_variable_s(a)},
+        include:  nil,
+        define:   -&gt;(v,n){ to_variable_s(n)},   
+        to_value: -&gt;(a,scope=nil,l=0){ a.to_s},
+      },
+      BHW::Class =&gt; {
+        type:      -&gt;(a){ a.type.name.camel_case_capitalize },
+        include:   -&gt;(a){ a.type.name.camel_case_capitalize },
+        format:    "%s",
+        default:      -&gt;(a){ "(#{a.type.name.camel_case_capitalize}.new)" },
+        to_s:      -&gt;(a){ "(show #{to_variable_s(a)})"},
+        to_value:   -&gt;(v){
+          [
+           v.class_name.camel_case,
+
+           v.members_param.map{|a| to_value(a.type) }.join(" "),
+
+           ";"
+          ].join
+        },
+        
+      },
+      Char=&gt; {
+        type:       "Char",
+        default:       "' '",
+        format:      "%c",
+      },
+      String=&gt; {
+        type:       "String",
+        default:       "\"\"",
+        format:      "%s",
+        to_value:   proc{|a| "\"#{a}\""}
+      },
+      Integer=&gt; {
+        type:       "Int",
+        default:       0,
+        format:     -&gt;(v,m){ m.pad == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" }
+      },
+      Float=&gt; {
+        type:       "Float",
+        default:       0.0,
+        format:      "%f"
+      },
+    }.merge( [[Array, :list_type_s, :square_bracket_list],
+              [List,  :list_type_s,  :square_bracket_list],
+              [Set ,  :set_type_s, :set_list_s],
+              [Tuple,:tuple_type_s, :tuple_list_s],
+              [Hash, :hash_type_s, :key_value_delimited_list_s],
+              [Map , :hash_type_s, :key_value_delimited_list_s],
+             ].reduce({}) do|h, (cls,typer,lister)|
+               h.merge(cls =&gt; {
+                         to_value:   -&gt;(a,b=nil,l=0){ self.send(lister,a,l)},
+                         type:       -&gt;(a){ self.send(typer,a)},
+                         to_k:       -&gt;(a){"key"},
+                         format:     -&gt;(a){"%s"}
+                       })
+             end
+             )
+    
+    
+    #list_delims          "[]"
+    def self.square_bracket_list(array,l)
+      self.delimited_list_s(array, "[]", ",", l)
+    end
+    
+    
+    def self.key_value_delimited_list_s(hash,l=0)
+      "dict [" + key_value_list_s(hash, [""], "", "=&gt;",  ",") + "]"
+    end
+    
+    def self.set_list_s(hash)
+      "(" + delimited_list_s(hash, ["set [", "]"]) + ")"
+    end
+    
+    def self.tuple_list_s(hash,l=0)
+      "(" + hash.map{|a| to_value(a) }.join(",") +  ")"
+    end
+    
+    def self.list_type_s(a)
+      "[" + array_type(a) + "]"
+    end
+    
+    def self.tuple_type_s(a)
+      "(" + tuple_type(a) + ")"
+    end
+    
+    def self.set_type_s(a)
+      "Set " +  set_type(a)
+    end
+    
+    def self.hash_type_s(a)
+      "(Map " + hash_type(a, " ") + ")"
+    end
+    
+    def self.let_vars(vars)
+      vars.map do |v|
+        [
+         "let ",
+         to_define(v.type,v.name),
+         " = ",
+         to_value(v.type),
+         ";"
+        ].join
+      end.join("\n")
+    end
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      &lt;&lt;-MAIN
+using system;    
+#{vars.select{|v| v.type.class == BHW::Class}.map{|v| "using "  + to_class_s(v.type.name) + ";\n"}*"" + "\n"}
+#{let_vars(vars)}
+
+#{vars.map{|v| "puts #{to_variable_s(v.name)};\n"}*""} 
+MAIN
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      "using system,dict,set;\n" +
+
+      "type " + 
+        pg_class.name.camel_case + 
+        "( " +
+        pg_class.name.camel_case_capitalize + 
+        " " + 
+        pg_class.members_instance.map{|p| to_parameter_s(p)}.join(" ") + 
+        ");\n"
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      pg_class.name.camel_case + 
+        " " +
+        pg_class.members_param.map{|p| to_parameter_s(p)}.join(" ") + 
+        " = " + to_class_s(pg_class) +  " " +
+        pg_class.members_instance.map{|m| "(" + (m.is_param? ? to_parameter_s(m)  : to_value(m.type)) + ")"}.join(" ") + 
+        ";\n"
+    end
+    
+    #
+    # can only call sprintf with one format and argument
+    #
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      "to_string (" + pg_class.name.camel_case_capitalize + 
+        " " +
+        pg_class.members_instance.map{|p| to_parameter_s(p)}.join(" ") + 
+        ") =\n    " + 
+        '    join "-" [' + 
+        pg_class.members_to_str.map {|m|  'sprintf "' + to_format(m.type, m)  + '"'  + " " + to_variable_s(m)} * (",\n" + " " * 18) + "];"
+    
+    end
+    
+    def self.render_get_instance
+    end
+    
+    def self.render_get_key(pg_class)
+    end
+    
+    def self.render_factory_methods
+      [
+       render_get_instance,
+      ]
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+    end
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "pure -c \#{#{src_file}} -o \#{#{dest_file}}"
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      ""
+    end
+
+
+  # def self.execute_file(file, srcdir=".",builddir)
+  #   "#{srcdir}/#{file}"    
+  # end
+
+  # def run(file, srcdir=".",builddir)
+  #   "pure #{file}"
+  # end
+
+  # def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+  #   "pure -I./src -c #{testdir}/#{test} -o#{builddir}/#{out}"
+  # end
+
+  # def self.rake_run_test(file,buildir)
+  #   "#{file}"
+  # end
+
+  # def self.rake_compile()
+  #   ""
+  # end
+
+  # def self.makefile_rules(project,classes)
+  # end
+
+  # def self.rakefile_rules(project,classes)
+
+  # end
+
+  # def self.ant_rules(project,classes)
+  # end
+
+  # def self.scons_rules(project,classes)
+  #   [
+  #    'env = Environment( tools = ["default", "ghc"])',
+  #    classes.map{|c| "env.HaskellObject(\"#{c.camel_case_capitalize}.hs\")"}.join("\n")
+  #   ] * "\n" + "\n"
+
+  #  end
+
+
+  end
+end
+
+
+=begin
+type point (Point x y);
+
+This introduces the type symbol point and specifies that this type consists of terms of the form Point x y. We can now equip this data type with an operation point to construct a point from its coordinates, two operations xcoord and ycoord to retrieve the coordinates, and an operation move to change the coordinates to the given values:
+
+point x y = Point x y;
+xcoord (Point x y) = x;
+ycoord (Point x y) = y;
+move (Point _ _) x y = Point x y;
+
+Next we might define a function translate which shifts the coordinates of a point by a given amount in the x and y directions as follows:
+
+translate x y p::point = move p (xcoord p+x) (ycoord p+y);
+
+Note the use of point as a type tag on the p variable. By these means, we can ensure that the argument is actually an instance of the point data type we just defined. The type tag acts just like an extra guard of the equation defining translate, but all the necessary type checking is done automatically during pattern matching. This is often more convenient (and, depending on the implementation, the compiler may generate more efficient code for a type tag than for an ordinary guard).
+
+The translate function can be invoked as follows:
+
+&gt; let p::point = point 3 3;
+&gt; p; translate 1 2 p;
+Point 3 3
+Point 4 5
+
+One important point to note here is that translate can be defined without knowing or assuming anything about the internal representation of the point data type. We have defined point as a concrete data type in this example, making its constructor and internal structure visible in the rest of the program. This is often convenient, but the Point constructor might just as well be hidden by making it a private member of some namespace (cf. Namespaces), so that all accesses to the data structure would have to be done through the provided operations. Such a data type is also known as an abstract data type (ADT).
+
+Note
+
+As we&rsquo;ve already seen, Pure has some powerful capabilities which enable you to write functions to inspect and manipulate terms in a completely generic fashion. Thus the internal structure of term data is never truly opaque in Pure and it is always possible to break the &ldquo;abstraction barrier&rdquo; provided by an ADT. But if the user of an ADT plays such dirty tricks to wreak havoc on the internal representation of an ADT, he gets what he deserves.
+
+Pure provides some additional facilities to ease the handling of abstract data types. Specifically, instead of defining point as a concrete data type using a type rule, we might also specify it as an interface type which merely lists the supported operations as follows:
+
+interface point with
+  xcoord p::point;
+  ycoord p::point;
+  move p::point x y;
+end;
+
+We can implement this type the same way as before:
+
+point x y = Point x y;
+xcoord (Point x y) = x;
+ycoord (Point x y) = y;
+move (Point _ _) x y = Point x y;
+
+The definition of the translate function is also unchanged:
+
+translate x y p::point = move p (xcoord p+x) (ycoord p+y);
+
+The difference is that now the structure of members of the type is not made explicit anywhere in the definition of the type. Instead, the compiler figures out which data matches the point tag on its own. We can check the actual term patterns making up the point type with the show interface command:
+
+&gt; show interface point
+type point (Point x y);
+
+As you can see, the compiler derived our previous definition of the type. But in fact translate will now work with any data type which implements the point interface (i.e., provides the xcoord, ycoord and move operations), so we may swap out the underlying data structure on a whim. For instance, if we&rsquo;d like to use vectors instead of constructor terms, all we have to do is to provide a corresponding construction function and implement the interface operations:
+
+vpoint x y = {x,y};
+xcoord {x,y} = x;
+ycoord {x,y} = y;
+move {_,_} x y = {x,y};
+
+After these definitions the new data representation works just fine with existing point operations such as translate:
+
+&gt; show interface point
+type point (Point x y);
+type point {x,y};
+&gt; let p::point = vpoint 3 3;
+&gt; p; translate (1,2) p;
+{3,3}
+{4,5}
+
+This separation of interface and implementation of a data structure is an important ingredient of software engineering techniques. More examples and detailed explanations of Pure&rsquo;s notions of type predicates and interface types can be found in the Type Rules and Interface Types sections.
+=end
+
+</pre></body></html>

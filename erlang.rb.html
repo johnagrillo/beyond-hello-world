@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/erlangcase"
+
+module BHW
+  ###################################################
+  # Erlang Writer
+  ###################################################
+
+    
+  ###########################################################################
+  #
+  # Record Definition in header file
+  #
+  #  -record(swim,{swimmer=undefined,
+  #                meet=undefined,
+  #                team=undefined,
+  #                seedtime=0,
+  #                event=undefined,
+  #                eventnumber=0,
+  #                points=0.0,
+  #                finaltime=0,
+  #                course="",
+  #                code="",
+  #                place=0}).
+  #
+  ###########################################################################
+  
+  ###########################################################################
+  #
+  # Import the header file
+  #   -include("swim.hrl").
+  #
+  ###########################################################################
+  
+  ###########################################################################
+  #
+  # Exports
+  # -export([
+  #          new/5,
+  #          ...
+  #         ]).
+  #
+  ###########################################################################
+  
+  
+  ###################################################
+  module Erlang
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(ErlangCase)    
+    self.extend(Compiled)
+    self.extend(Interpreted)
+    
+    directory       "erlang"
+    header_file_ext "hrl"
+    source_file_ext "erl"
+    formal_name     "Erlang"
+
+    object_file_ext "beam"
+    assign          "="
+    terminator      ","
+    indent          "    "
+    mode_line       "%-*-erlang-*-"
+    option         "erlang"
+
+    rosetta_url    "Erlang"
+    home_url       "http://www.erlang.org"
+    wikipedia_url  "Erlang"
+    interpreter    "escript"
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "erlc -o \#{File.dirname(#{dest_file})}  \#{#{src_file}}"
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      "cp \#{#{src_file}}  \#{#{dest_file}}"
+    end
+
+    def self.run_cmd_str(dest_file)
+      "escript \#{#{dest_file}}"
+    end
+
+    # def self.compile(obj,srcs,srcdir=".", builddir=".")
+    #   [
+    #    "erlc -o #{builddir}",
+    #    srcs.map{|a| srcdir + "/" + a} * " ",
+    #   ] * " "
+    # end
+    
+    # def self.execute_file(file, srcdir=".",builddir)
+    #   [
+    #    "(cd #{builddir} &amp;&amp; escript #{file})"
+    #   ] * " "
+    # end
+
+
+    # def self.rakefile_rules(project,classes)
+    # end
+    
+    # def self.rakefile_compile_task(cls)
+    #   [
+    #    "SRC.each do |srcfile|",
+    #    "  objfile = File.join(OBJDIR, File.basename(srcfile).ext('#{file_types[ObjectExt]}'))",
+    #    "  task :compile =&gt; [objfile]",
+    #    "  file objfile =&gt; [srcfile] do",
+    #    "    sh \"erlc -o build #"+"{srcfile}\"" ,
+    #    "  end",
+    #    "end",
+    #   ] * "\n" + "\n"
+    # end
+    
+    # def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+    #   "erlc -o #{builddir} #{srcdir}/#{src};erlc -o #{builddir} #{testdir}/#{test}" 
+    # end
+    
+    # def self.rake_run_test(file,builddir)
+    #   "(cd build &amp;&amp; escript #{File.basename(file)}.beam)"
+    # end
+    
+    
+    # def self.makefile_rules(project,classes)
+    #   beam_file  = to_file_s(project) + "." + object_file_ext
+    # end
+    
+    # def self.ant_rules(project,classes)
+    # end
+    
+    # def self.scons_rules(project,classes)
+    #   [
+    #    'env = Environment( tools = ["default", "erl"])',
+    #    #classes.map{|c| "env.Erlang(\"#{c.under_case}.erl\")"}.join("\n")
+    #   ] * "\n" + "\n"
+    # end
+    
+    
+    self.merge_types(base_types,
+                     {
+                       Default =&gt; {
+                         format:   "~s",
+                         to_s:  -&gt;(n,p){ "This##{p.under_case}.#{to_element_s(n)}"},
+                       },
+                       BHW::Class =&gt; {
+                         to_s:      -&gt;(a){ "#{to_class_s(a.type.name)}:to_string(This##{a.parent_method.name.under_case}.#{to_element_s(a)})"},
+                         to_value:   -&gt;(v){  
+                           [
+                            to_class_s(v.class_name.downcase) ,
+                            ":new(",
+                            v.members_param.map{|a| to_value(a.type)   }.join(","),
+                            ")"
+                           ] * ""
+                         },
+                       },
+                       Char=&gt; {
+                         default:       "''",
+                       },
+                       String=&gt; {
+                         format:   "~s,"
+                       },
+                       Integer=&gt; {
+                         format:     -&gt;(v,m){ m.pad ? "~#{m.width}..#{m.pad}B" : "~#{m.width}B" },
+                       },
+                       Float=&gt; {
+                         format:     "~f",
+                       }})
+    def self.array_to_s(a,l=0)
+      self.square_bracket_list_s(a,",")
+    end
+
+    def self.set_to_s(set)
+      self.delimited_list_s(set, ["sets:from_list([", "])"])
+    end
+    
+    def self.tuple_to_s(tuple,l=0)
+      "{" + tuple.map{|a| to_value(a) }.join(",") + "}"
+    end
+
+    def self.hash_to_s(hash,l=0)
+      self.key_value_list_s(hash, ["dict:from_list([", "])"], "{}", ",",  ",")
+    end
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      #{vars.map {|v| "io:format(\" #{to_format(v)}\\n\", ["+to_class_s(v.name) + ":to_string(" + to_variable_s(v.name) + ")])"}.join(",\n#{indent}")+ "."}      
+
+      &lt;&lt;-MAIN
+%-*-erlang-*-
+-module #{to_class_s(pg_class)}.
+-export([main/1]).
+main(_) -&gt; 
+
+    #{render_main_vars(vars)}
+    
+    #{vars.map {|v| "io:format(\"#{to_format(v.type,v)}\\n\", ["+to_variable_s(v.name) + "])"}.join(",\n#{indent}")+ "."}      
+    
+        MAIN
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       "%-*-erlang-*-\n",
+       
+       if file_type == HeaderExt
+         [
+          "-record(#{to_class_s(pg_class.name)},\n        {",
+          pg_class.members.map{ |m| "#{to_member_s(m)}=#{to_value(m.type)}" }.join(",\n         "),
+          "})."
+         ].join
+       else
+         [
+          "-module(#{to_class_s(pg_class)}).\n",
+          if pg_class.main != true
+            "-include(\"#{to_class_s(pg_class)}.hrl\").\n\n"
+          end,
+          "-export([\n",
+          
+          [
+           "new/"+pg_class.members_param.size.to_s,
+           "to_string/1",
+           *pg_class.pg_methods.map {|m| to_member_s(m) + "/" + (m.params.length+1).to_s}
+          ].compact.join(",\n"),
+          "\n]).\n"
+         ].join
+       end
+      ].join
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      if file_type==SourceExt
+        str = "  new("
+        [
+         str,
+         pg_class.members_param.map{|p| to_parameter_s(p)}.join(sprintf(",\n%*s",str.length,"")),
+         ") -&gt; \n",
+         "#" + to_class_s(pg_class.name)  + "{",
+         pg_class.members_param.map{|m| "    " + to_member_s(m) + " = " + to_parameter_s(m)}.join(",\n"),
+         #pg_class.members_default.map{|m| "    " + to_member_s(m) + " = " + to_default(m) &lt;&lt; "\n"},
+         "}.\n\n",
+        ].join
+      end
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      
+      if file_type == SourceExt
+        [
+         
+         "to_string (" + (pg_class.members_param.size &gt;0 ? "This" : "_")  + ") -&gt;\n",
+         "    lists:flatten(\n",
+         "        io_lib:format(",
+         pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+           [l[0].push(to_format(m.type,m)), l[1].push(to_string(m.type, m.name, m.parent.name))]
+         end.ergo do |(f,v)|
+           "\"" + f.join("-") + "\"\," +  "[" + v.join(",") + "]"
+         end
+        ].join + ")).\n"
+      end
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    
+  end
+end
+</pre></body></html>

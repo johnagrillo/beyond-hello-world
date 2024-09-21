@@ -1,0 +1,357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/fantomcase"
+module BHW
+  module Fantom 
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(FantomCase)    
+    self.extend(Compiled)
+    self.extend(Interpreted)
+    
+    directory "fantom"
+    source_file_ext "fan"    
+
+    rosetta_url    "Fantom"
+    home_url       "http://www.fantom.org/"
+    wikipedia_url  "Fantom_(programming_language)"
+
+    option "fantom"
+    formal_name "Fantom"
+    indent "    "
+    assign ":="
+
+    mode_line        "//-*-fan-*-"
+    subdir           "src"
+
+    interpreter      "fan"
+    
+    self.types = {
+      Default=&gt; {
+        format:     -&gt;(a,b){ "#{to_variable_s(b)}.toStr"},
+        define:    -&gt;(v,n){ self.to_type(v) + " " + self.to_variable_s(n)},
+        to_value: proc{|a| a.to_s},
+        
+      },
+      BHW::Class =&gt; {
+        type:       -&gt;(a){ a.name.camel_case_capitalize},
+        format:     -&gt;(a){ "#{to_variable_s(a)}.toStr"},
+        to_value:   -&gt;(v){  
+          [
+           to_class_s(v.class_name) ,
+           "(",
+           v.members_param.map{|a| to_value(a.type)   }.join(","),
+           ");"
+          ] * ""
+        },
+        
+      },
+      Char=&gt; {
+        type:       "Str",
+        default:       "\"\"",
+      },
+      String=&gt; {
+        type:       "Str",
+        default:       "\"\"",
+        to_value: proc{|a| "\"#{a}\""}
+      },
+      Integer=&gt; {
+        type:       "Int",
+        default:       0,
+        format:     -&gt;(v,a){ 
+          if a.pad == false 
+            to_variable_s(a.name) + ".toStr.padl(#{a.width}, ' ')"
+          else
+            to_variable_s(a.name) + ".toStr.padl(#{a.width}, '#{a.pad}')"
+          end
+        },
+      },
+      Float=&gt; {
+        type:       "Float",
+        default:       "0.0f",
+        to_value:  proc{|a| a.to_s + "f"},
+      }
+    }.merge([ [Array, -&gt;(a){ array_type(a) + "[]"}, :square_bracket_list_s],
+              [List,  -&gt;(a){ array_type(a) + "[]"}, :square_bracket_list_s],  
+              [Set,   -&gt;(a){ set_type(a) + "[]"},   :square_bracket_list_s],  
+              [Tuple, -&gt;(a){ "Obj"},                   :square_bracket_list_s],  
+              [Hash,  -&gt;(a){ "[" + hash_type(a,":") + "]"}, :key_value_delimited_list_s],
+              [Map,   -&gt;(a){ "[" + hash_type(a,":") + "]"}, :key_value_delimited_list_s],
+            ].reduce({}) {|h,(cls,typer,lister)|
+              h.merge(cls =&gt; { 
+                        type:       -&gt;(a){ typer.call(a)},
+                        to_value:   -&gt;(a,scope=Instance,l=0){ self.send(lister,a,",",l)},
+                      })
+            })
+
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      &lt;&lt;-MAIN
+public class #{to_class_s(pg_class)}
+{
+    public static Void main(Str[] args)
+    {
+        #{render_main_vars(vars,indent*2)}
+
+        #{vars.map{|v| %Q[echo(#{to_variable_s(v.name)})]} * "\n#{indent*2}"}
+    }
+ }
+    MAIN
+      
+    end
+    
+    
+    def self.render_method(returnType, name, params, static=false)
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       "public " + (pg_class.hashable ? "const " : " ") +  "class #{to_class_s(pg_class)} {",
+       
+       pg_class.members.map do |m| 
+         [
+    	  indent + "private " + (pg_class.hashable ? "const " : " ") + to_type(m.type) + " " + to_variable_s(m),
+    	  #if m.type.user_defined? == false
+          ":=" + to_value(m.type)
+          #end
+         ].join
+         
+       end.join("\n")
+      ].join("\n") + "\n"
+    end
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      "}\n"    
+    end
+    
+    def self.render_private_constructor
+    end
+    
+    
+    def self.render_private
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      str = "#{indent}new make("
+      [
+       str + 
+       pg_class.members_param.map{|p| to_type(p.type) + " _" + to_variable_s(p)}.join(",") + ")",
+       "#{indent}{",
+       pg_class.members_param.map do |m|
+         (indent*2) &lt;&lt; to_variable_s(m) &lt;&lt; " = _" &lt;&lt; to_variable_s(m)
+       end.join("\n"),
+       pg_class.members_default.map do |m|
+         (indent*2) &lt;&lt; to_variable_s(m) &lt;&lt; " = " &lt;&lt; to_value(m.type)
+       end.join("\n"),
+       "\n#{indent}}\n"
+      ].join("\n") + "\n"
+      
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_hash(pg_class)
+      if pg_class.members_to_str.size &gt; 0
+        class_name = to_variable_s(pg_class)
+        [
+         indent + "override public Int hash()\n    {\n",
+         indent * 2 &lt;&lt; "return ",
+         pg_class.members_to_str.map do |m| 
+           to_variable_s(m) +  ".hash"
+         end.join("+"),
+         "\n#{indent}}\n",
+        ].join
+      end
+    end
+    
+    def self.render_equals(pg_class)
+      if pg_class.members_to_str.size &gt; 0
+        class_name = to_class_s(pg_class)
+        class_var = to_variable_s(pg_class)
+        [
+         indent + "override public Bool equals(Obj? obj)\n    {\n",
+         indent * 2 + "if (this == obj) return true\n",
+         indent * 2 + "#{class_name} #{class_var} := (#{class_name})obj\n",
+         indent * 2 &lt;&lt; "return ",
+         pg_class.members_to_str.map do |m| 
+           var = to_variable_s(m)
+           "#{var}.equals(#{class_var}.#{var})"
+         end.join(" &amp;&amp;\n" + (indent * 3)),
+         "\n#{indent}}\n"
+        ].join
+      end
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type)
+      render_hash(pg_class).to_s + "\n" + render_equals(pg_class).to_s + "\n"
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+      if pg_class.members_to_str.size &gt; 0
+        class_name = to_class_s(pg_class)
+        class_var = to_variable_s(pg_class)
+        [
+         indent + "\override Int compare(Obj obj)\n",
+         indent + "{\n",
+         (indent * 2) + "that := (#{class_name})obj\n",
+         (indent * 2) + "Int ret\n",
+         pg_class.members_to_str.map do |m| 
+           var = to_variable_s(m)
+           indent * 2 + "ret = #{var} &lt;=&gt; that.#{var}" + "\n" + indent * 2 + "if (ret !=0) return ret"
+         end.join("\n") + "\n",
+         indent * 2 + "return ret\n#{indent}}\n"
+        ].join
+      end
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      
+      pg_class.members_to_str.ergo do |mems|
+        [ indent + "override public Str toStr()",
+          indent + "{",
+          (indent*2) + "return " + (mems.size &gt; 0 ? mems.map {|m| to_format(m.type,m)}.join("+ \"-\" + ") : "\"\""),
+          indent + "}\n",
+        ].join("\n")
+      end
+    end
+    
+    def self.key_value_delimited_list_s(hash,sep,l=0)
+      key_value_list_s(hash, "[]", "", ":",  sep,l=0)
+    end
+    
+
+    def self.compile_cmd_str(src_file, dest_file)
+       name = src_file.split('.').first
+      "fan build.fan" 
+     end
+
+    def self.rakefile_rules(task,classes)
+      %Q[
+File.open("build.fan", "w") do |f|
+f.write(&lt;&lt;EOF
+class Build : build::BuildPod
+{
+  new make()
+  {
+    podName = "#{task}"
+    summary = "#{task} pod"
+    depends = ["sys 1.0"]
+    srcDirs = [`./src/`]
+  }
+}
+EOF
+)
+end
+]
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      ""
+    end
+
+    def self.run_cmd_str(dest_file)
+      "fan \#{file}::\#{file.capitalize}"
+    end
+
+    def self.run_cmd_shell_str(dest_file)
+      pod = File.split(dest_file).last
+      "fan #{pod}::#{pod.capitalize}"
+
+    end
+
+#     def self.execute_file(file, srcdir=".",builddir)
+#       name = file.split('.').first
+#       "fan " + name + "::" + name.gsub("_"," ").camel_case_capitalize
+#     end
+
+#     def self.compile(obj,srcs,srcdir=".", builddir=".")
+
+#       name = obj.split('.').first
+#       File.open("build.fan", "w") do |f|
+#         f.write(&lt;&lt;EOF
+# class Build : build::BuildPod
+#   {
+#     new make()
+#     {
+#       podName = "#{name}"
+#       summary = "#{name} pod"
+#       depends = ["sys 1.0"]
+#       srcDirs = [`./src/`]
+#     }
+#   }
+#   EOF
+#   )
+#      end
+#      "fan build.fan" 
+#    end
+
+#   def self.makefile_rules(project,classes)
+#     run = project.under_case + "::" + project.camel_case_capitalize
+# &lt;&lt;RULES
+# # FANTOM = falcon
+# compile:
+# \tFAN_HOME=${FAN_HOME} ${FAN} build.fan
+# run:
+# #\tFAN_HOME=${FAN_HOME} ${FAN} #{run} ${FILES}
+# RULES
+#   end
+
+#   def self.rake_compile()
+#     ""
+#   end
+
+#   def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+
+#     fan = [
+#            "",
+#            "class Build : build::BuildPod",
+#            "{",
+#            "  new make()",
+#            "  {",
+#            '     podName = "demo"',
+#            '     summary = "demo pod"',
+#            '     depends = ["sys 1.0"]',
+#            '     srcDirs = [\`./src/\`, \`./test/\`]',
+#            "  }",
+#            "}",
+#            ""
+#           ] * "\n"
+
+#     [
+#      "cat &gt; build.fan &lt;&lt; EOF",
+#      fan,
+#      "EOF",
+#      "fan build.fan",
+#     ] * "\n" + "\n"
+#   end
+  
+#   def self.rake_run_test(cls,builddir)
+#     "fan demo::Main" + File.basename(cls).split("_")[1..-1].map{|a| a.capitalize} * ""
+#   end
+
+
+#   def self.makefile_rules(project,classes)
+#     out_obj = to_file_s(project).to_s + "." + self.object_file_ext.to_s
+# &lt;&lt;RULES
+# # run:
+# #\t${FALCON} #{out_obj} ${FILES}
+# RULES
+#   end
+
+#   def self.ant_rules(project,classes)
+#   end
+
+#   def self.scons_rules(project,classes)
+#   end
+
+
+
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+
+    
+  end
+end
+</pre></body></html>

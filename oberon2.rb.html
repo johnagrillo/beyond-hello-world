@@ -1,0 +1,446 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module Oberon2
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(CamelCase)
+    self.extend(Compiled)
+    
+    def self.to_class_s(s)
+      s.camel_case_capitalize
+    end
+    
+    def self.to_parameter_s(s)
+      s.camel_case
+    end
+    
+    def self.to_variable_s(s)
+      s.camel_case
+    end
+    
+    @supported_types = Set.new([Integer, Float, String, Char, Array, BHW::Class])
+    
+    class &lt;&lt; self
+      attr_accessor :supported_types
+    end
+    
+    directory             "oberon2" 
+    option                "oberon2" 
+
+    formal_name     "Oberon2"
+
+    source_file_ext       "m"
+    object_file_ext       "obj"
+    exec_file_ext         "exe"
+    intermediate_file_ext "c"
+    indent                 "   "
+    home_url      "https://en.wikipedia.org/wiki/Oberon-2"
+
+    self.merge_types( {
+                 Default =&gt; {
+                   include:  nil,
+                   define:  -&gt;(v,n){  "#{self.to_variable_s(n)}:#{to_type(v)}"  },
+                   to_value: -&gt;(a,b=nil){a.to_s},
+                   to_s:     -&gt;(n){ to_member_s(n) + ".to_string"},
+                   type:     -&gt;(v) {"type"},
+                   define_init: -&gt;(v,n=nil) {
+                     (indent*2) + "t.#{self.to_variable_s(v)}  := #{to_value(v.type)};\n"  
+                   },
+                 },
+                 
+                 BHW::Class =&gt; {
+                   include:  -&gt;(a){ to_file_s(a.type.name)},
+                   type:     -&gt;(v,c){ to_class_s(c.type.name)},
+                   to_value: -&gt;(v,n,c){  
+                     [
+                      ".make",
+                      if c.type.members_param.count &gt; 0
+                        "(" + 
+                          c.type.members_param.map{|a| to_value(a.type)   }.join(",") +
+                          ");"
+                      end
+                     ] * ""
+                   },
+                 },
+                 
+                 Char     =&gt; {:type =&gt;"CHARACTER"},
+                 String   =&gt; {
+                   type: "String",
+                   to_value: -&gt;(a){ "\"#{a}\""},
+                   default:  -&gt;(a){ "\"\""},
+                   to_s:     -&gt;(n){ to_member_s(n)},
+                 },
+                 KeyString=&gt; {:type =&gt;"STRING"},
+                 Integer   =&gt; {
+                   to_value:  -&gt;(a){ a.to_s},
+                   type: "INTEGER", 
+                   default:   0,
+                 },
+                 Float    =&gt; {:type =&gt;"REAL", :default =&gt;  0.0},
+                 Argc     =&gt; {:type =&gt;"INTEGER"},
+                 Argv     =&gt; {:type =&gt;"ARRAY[STRING]"},
+                 Stream   =&gt; {:type =&gt;"TEXT_FILE_READ"},
+                 Tuple    =&gt; {
+                   :type  =&gt; -&gt;(v){ v.map{|e| e.class.to_s} * ""  + "Tuple" },
+                   to_value: -&gt;(a,b=nil){"tuple"},
+                 },
+                      }.merge([[Array, "ARRAY",    :array_type,     :array_definer,    :array_init,   :array_define_init],
+                        [List,  "ARRAY",    :array_type,     :array_definer,    :array_init,   :array_define_init],
+                        [Set,   "Set",      :set_type,       :set_definer,      :array_init,   :set_define_init],
+                        [Hash,  "HASH",     :hash_type,      :hash_definer,     :hash_init,    :hash_define_init],
+                        [Map,   "HASH",     :hash_type,      :hash_definer,     :hash_init,    :hash_define_init],
+                       ].reduce({}) {|h,(cls,base,typer,definer,initer,define_initer)|
+                         h.merge(cls =&gt; {
+                                   define:      -&gt;(v,n,c=nil){self.send(definer,v,n)},
+                                   type:        -&gt;(a,b=nil) { self.send(typer,a)},
+                                   to_value:    -&gt;(a,b=nil) { self.send(initer,a,typer)},
+                                   define_init: -&gt;(a,b=nil) { self.send(define_initer,a,typer)},
+                                 })
+                       }
+                       ),{})
+    
+
+    def self.array_init(array,typer)
+      ""
+    end
+
+
+    def self.array_type(a,b=nil)
+      "ARRAY " + " " + a.size.to_s   + " OF " + to_type(a[0]).to_s
+    end
+    
+    
+    def self.array_define_init(m,b=nil,c=nil)
+
+      flattened = m.type.flattened.map{|a| a}
+      
+      first = flattened.first
+      dims,type = m.type.dims_type        
+      [
+       "\n" + indent * 2 + "(* #{m.type.to_a[0..10].inspect} *)\n",
+       supported_types.include?(type.class) ? "" : (indent*2)+"(* #{type.class} not supported ",   
+       flattened.map do |(i,v)|
+         if m.type.class == Tuple
+           v.each_with_index.map do |tv,ti|  end
+         else
+           if v.class == Hash
+             v.flattened.map{|a| 
+               (indent*2) + "t.#{to_member_s(m.name)}#{i.map{|i|"[#{i}]"} *""}#{a[0].map{|i|"[#{to_value(i)}]"} *""} := #{to_value(a[1])}"
+             } 
+           else
+             (indent*2) + "t.#{to_member_s(m.name)}#{i.map{|i| "[#{i}]" }*""} := #{to_value(v)};"
+           end
+         end
+       end,
+       supported_types.include?(type.class) ? "" : (indent*2)+"*)",   
+      ] * "\n" + "\n"
+    end
+    
+    def self.array_definer(a,b=nil,c=nil)
+      dims,type = a.dims_type
+      # only Array and List collection types are supported
+      [
+       supported_types.include?(type.class) ? "" : "(*",
+       "#{self.to_variable_s(b)}:#{to_type(a)}",
+       supported_types.include?(type.class) ? "" : "*)",         
+      ] * ""
+    end
+    
+    def self.hash_type(a,b=nil,c=nil)
+      "HASH[ " + to_type(a.keys[0]).to_s + "," + to_type(a.values[0]).to_s + "]"
+    end
+    
+    def self.hash_definer(a,b=nil,c=nil)
+      "(*  *)"
+    end
+    
+    def self.hash_init(a,b=nil,c=nil)
+      "(*  *)"
+    end
+    
+    def self.hash_define_init(m,b=nil,c=nil)
+      flatened = m.type.flattened
+      [
+       "\n" + indent + "(*" + m.type.flattened.to_a[0..5].to_s + "\n",
+       m.type.flattened.map do |(i,v)|
+         indent + "t.#{to_member_s(m.name)}#{i.map{|i| "[#{to_value(i)}]" }*""}=#{to_value(v)};\n"
+       end,
+       indent + "*)"
+      ]
+    end
+    
+    def self.set_type(a,b=nil,c=nil)
+      "(*  *)"
+    end
+
+    def self.set_definer(a,b=nil,c=nil)
+      "(*  *)"
+    end
+
+    def self.set_define_init(a,b=nil,c=nil)
+      "(*  *)"
+    end
+    
+    
+    def self.render_main(pg_class, file_type, vars=[], &amp;block)
+      
+      def self.local(vars)
+        vars.map do |var| 
+          [
+           "        ",
+           self.to_variable_s(var),
+           ":",
+           self.to_type(var.type,var),
+           ";"
+          ].join
+        end.join("\n")
+      end
+      
+      def self.initialize(vars)
+        
+        # vars.map do |var| 
+        #   [
+        #    "        create ",
+        #    self.to_variable_s(var),
+        #    self.to_value(var.type,var.name,var),
+        #   ].join
+        # end.join("\n")
+
+         vars.map do |var| 
+          [
+           "        ",
+           self.to_variable_s(var),
+           " := " ,
+           self.to_value(var.type),
+           ";"
+          ].join
+        end.join("\n")
+
+
+      end
+      
+      def self.printvars(vars)
+
+        sub = { 
+          String =&gt; -&gt;(v){"String(" + v + ")"},
+          Integer =&gt; -&gt;(v){"Int(" + v + ",2)"},
+          Float  =&gt; -&gt;(v){"Real(" + v + ")"},
+          Array  =&gt; -&gt;(v){"String(" + "\"Array\"" + ")"},
+          List  =&gt; -&gt;(v){"String(" + "\"List\"" + ")"},
+          Hash  =&gt; -&gt;(v){"String(" + "\"Hash\"" + ")"},
+        }
+
+        vars.map do |var| 
+          puts var.type.class
+          "  Out."+ sub[var.type.class].(self.to_variable_s(var)) + ";Out.Ln();"
+        end.join("\n")
+      end
+      
+      &lt;&lt;-MAIN
+MODULE #{self.to_class_s(pg_class)};
+IMPORT Out;
+TYPE
+    String = ARRAY 256 OF CHAR;
+
+VAR
+#{local(vars)}
+
+BEGIN
+#{initialize(vars)}
+
+#{printvars(vars)}
+END #{to_class_s(pg_class)}.
+MAIN
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      
+      def self.typer(name, item, tuples=Set.new, indent=0)
+        if item.instance_of? Array
+          typer(name, item[0], tuples, indent+1)
+        elsif item.instance_of? Hash
+          typer(name, item[1], tuples, indent+1)
+        elsif item.instance_of? Tuple
+          tuples.add(item)
+        else
+          tuples
+        end
+      end
+      
+      
+      def self.render_struct_from_tuples(tuples)
+        if (tuples.size &gt; 0) 
+          [
+           tuples.map do |tuple|
+             [
+              "   " + tuple.map{|a| a.class.to_s } * ""  + "Tuple = RECORD ",
+              tuple.each_with_index.map {|f,i| 
+                "     " + 'to_define(f, "f#{i}")' + ";"
+              } * "\n",
+              "   END;",
+             ] * "\n"
+           end,
+          ]
+        else
+          ""
+        end
+      end
+      
+      tuples = Set.new()
+      pg_class.members.map do |m|
+        tuples += typer(m.name, m.type)
+      end 
+      
+      [  
+       "(*-oberon-*-*)",
+       "MODULE #{to_class_s(pg_class)};",
+       "TYPE",
+       indent + "String = ARRAY 256 OF CHAR;",
+       self.render_struct_from_tuples(tuples),
+       indent + "T = POINTER TO TDesc;",
+       indent + "TDesc = RECORD",
+       pg_class.members_instance.map {|m| (indent * 2) + to_variable_s(m.name) + " : " + to_type(m.type).to_s &lt;&lt; ";"},
+       indent + "END;"
+      ] * "\n"
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      "END #{to_class_s(pg_class)}.\n"
+    end
+    
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      if pg_class.main
+        return ""
+      end
+      
+      str = indent+"PROCEDURE New*("
+      [
+       str,
+       pg_class.members.reject{|m| m.init == Default}.map { |p|
+         to_parameter_s(p.name) + ":" + to_type(p.type)
+       }.join(sprintf(";\n%*s",str.length,"")),
+       ")",
+       "  : T;\n",
+       indent * 2 + "VAR t:T;\n",
+       indent + "BEGIN\n",
+       indent * 2 + "NEW(t);\n",
+       
+       pg_class.members_param.map do |m|indent * 2 + "t." &lt;&lt; to_member_s(m.name) &lt;&lt; " := " &lt;&lt; to_parameter_s(m.name) &lt;&lt; ";\n" end,
+       pg_class.members_instance_default.map{|m| to_define_init(m) },
+       indent * 2 + "RETURN t;\n",
+       "\n",
+       indent + "END New;\n"
+      ].join
+      
+    end 
+    
+    #####################################################
+    #
+    # setters / getters
+    #
+    #####################################################
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+    end
+    
+    #####################################################
+    #
+    # to String
+    #
+    #####################################################
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_members(pg_class,file_type=SourceExt)
+    end
+
+
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "obc \#{#{src_file}} -o \#{#{dest_file}}"
+    end
+
+
+  # def self.compile(obj,srcs,srcdir=".", builddir=".")
+  #   [
+  #    "(cd build &amp;&amp; obc ",
+  #    srcs.map{|s| "../#{srcdir}/#{s}"} * " ",
+  #    "-o #{obj})"
+  #   ] * " "
+  # end
+
+  # def self.rake_compile()
+  #   ""
+  # end
+
+  # def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+  #   "(cd build &amp;&amp; obc ../#{srcdir}/#{src} ../#{testdir}/#{test} -o #{out})"
+  # end
+
+  # def self.rake_run_test(file,builddir)
+  #   file
+  # end
+
+  # def self.makefile_rules(project,classes)
+  # end
+
+  # def self.rakefile_rules(project,classes)
+  # end
+
+  # def self.ant_rules(project,classes)
+  # end
+
+  # def self.scons_rules(project,classes)
+  # end
+
+    
+  end
+end
+
+=begin
+
+           if m.type.class == Tuple
+             "(*TUPLE*)\n"
+           elsif m.type.kind_of?(Map) || m.type.kind_of?(Hash) 
+             indent * 2 + "(*t." &lt;&lt; to_member_s(m.name) &lt;&lt; " := " &lt;&lt; to_value(m.type) &lt;&lt; "*);\n"                    
+           elsif m.type.kind_of?(Array) || m.type.kind_of?(Set) 
+    
+             dims,type = m.type.dims_type
+    
+             [
+              "\n" + indent * 2 + "(* #{m.type.to_a[0..10].inspect} *)\n",
+              
+              m.type.flattened.map do |(i,v)|
+                if type.class == Tuple
+                  v.each_with_index.map do |tv,ti|
+                    (indent * 2) + "t.#{to_member_s(m.name)}#{i.map{|i| "[#{i}]" }*""}.f#{ti}:=#{to_value(tv)};\n"      
+                  end
+                else
+                  (indent * 2) + "t.#{to_member_s(m.name)}#{i.map{|i| "[#{i}]" }*""}:=#{to_value(v)};\n"      
+                end
+              end 
+             ]
+           else
+             indent * 2 + "t." &lt;&lt; to_member_s(m.name) &lt;&lt; " := " &lt;&lt; to_value(m.type) &lt;&lt; ";\n"       
+           end
+         end,
+         pg_class.members_param.map do |m|
+           if m.type == String
+             "      " &lt;&lt; to_member_s(m.name) &lt;&lt; ".right_adjust" &lt;&lt; "\n"
+           end
+         end,
+=end
+</pre></body></html>

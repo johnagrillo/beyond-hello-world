@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/ocamlcase"
+
+module BHW
+  module OCaml
+    
+    include BHW::Props
+    
+    self.extend(BHW::Writer)
+    self.extend(OCamlCase)
+    self.extend(Compiled)
+    
+    option                  "ocaml"
+    directory               "ocaml" 
+
+    formal_name             "OCaml"
+    header_file_ext         "mli"
+    header_object_file_ext  "cmi"
+    source_file_ext         "ml"
+    object_file_ext         "cmo"
+    exec_file_ext           "exe"
+    assign                  "="
+    mode_line               "(*-*-caml-*-*)"
+    render_members_first    true
+    home_url                "https://ocaml.org/"
+    
+    def self.key_value_delimited_list_s(hash)
+      key_value_list_s(hash, 
+                       ["fromlist[", "]"], 
+                       "()", 
+                       ",",  
+                       ";")
+    end
+    
+    self.types = {
+      Primitive =&gt; {
+        include:   nil,
+        to_value:  -&gt;(a,scope=Instance,l=0){ a.to_s},
+      },
+      Default=&gt; {
+        include:  nil,
+        define:  -&gt;(v,n){ "let " + to_variable_s(n)},
+        to_value: -&gt;(a){ a.to_s},
+        to_s:    -&gt;(m) {to_member_s(m)},
+      },
+      BHW::Class =&gt; {
+        type:     -&gt;(a){ a.type.name.under_case},
+        include:  -&gt;(a){ a.type.name.camel_case_capitalize},
+        to_value:   -&gt;(v){  
+          [
+           "new ",
+           to_class_s(v.class_name) ,
+           " ",
+           v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(" "),
+           " "
+          ] * ""
+          
+        },
+      },
+      Char=&gt; {
+        primitive:  true,
+        type:       "char",
+        default:    "\"\"",
+        format:     "%c",
+        to_s:       -&gt;(n){"(Char.escaped #{to_member_s(n)})"}
+      },
+      String=&gt; {
+        type:       "string",
+        default:       "\"\"",
+        to_value:   proc{|a| "\"#{a}\""}
+      },
+      Integer =&gt; {
+        primitive:  true,
+        type:       "int",
+        default:       0,
+        to_s:       -&gt;(m){"(sprintf \"%d\" #{to_member_s(m)})"},
+        
+        #"(sprintf \"%#{m.pad == false ? "" : m.pad}#{m.width}d\" #{to_member_s(m)})"
+      },
+      Float=&gt; {
+        primitive:  true,
+        type:       "float",
+        default:     0.0,
+        to_s:       -&gt;(m){"(sprintf \"%f\" #{to_member_s(m)})"},
+      },
+      
+    }.merge( [Array, List, Set, Tuple].reduce({}) {|h,cls| h.merge(cls =&gt; { to_value: -&gt;(a,b=nil,l=0) { square_bracket_list_s(a, sep=";")}})})
+      .merge( [Tuple].reduce({}) {|h,cls| h.merge(cls =&gt; { to_value: -&gt;(a,b=nil,l=0) { paren_bracket_list_s(a,",",l)}})})
+      .merge( [Hash,Map].reduce({}){|h,cls| h.merge(cls=&gt; {to_value:  -&gt;(a,b=nil,l=0){key_value_delimited_list_s(a)}})})
+    
+    def self.let_vars(vars)
+      vars.map do |v|
+        [
+         to_define(v.type, v.name),
+         " = ",
+         to_value(v.type),
+         " in",
+        ].join
+      end.join("\n")
+    end
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      
+      &lt;&lt;-MAIN
+open Hashtbl;;
+open Printf;;
+#{vars.select{|v| v.type.class == BHW::Class}.map{|v| %Q{open #{to_file_s(v.type.name)};;}}.join("\n")}
+#{let_vars(vars)}
+#{vars.select{|v| v.type.class == BHW::Class}.map{|v| %Q[Printf.printf "%s\\n" (test_#{to_variable_s(v.type.name)})#to_string;]}.join("\n")}
+();;
+MAIN
+    end
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       pg_class.includes(self).push("Printf").push("Util").map{|a| "open " + a + ";;"},
+       if pg_class.main != true
+         [
+          "class #{to_class_s(pg_class.name)} ",
+          if file_type == HeaderExt
+            ": " + pg_class.members_param.map{|p| 
+              to_type(p.type)}.join( " -&gt; " ) + if pg_class.members_param.length &gt; 0
+                                                  " -&gt;";
+                                                end.to_s + " object"
+          else
+            pg_class.members_param.map{|p| to_parameter_s(p) }.join( " " ) +  " = \n  object(self)"
+          end
+         ].join
+       end
+      ].join("\n")
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      "end;;\n"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      ""
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_members(pg_class, file_type=SourceExt)
+      pg_class.members.map do |m|
+        
+        if file_type == HeaderExt
+          # " : " + m.type_str
+        else
+          "    val mutable " + to_member_s(m.name) + " " + if m.init == Param
+                                                             " : " + to_type(m.type) + " = " + to_parameter_s(m.name)
+                                                           else
+                                                             " = " + to_value(m.type)
+                                                           end
+        end
+      end.join("\n")
+    end
+    
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      pg_class.members.map do |m|
+        [
+         if m.has_reader?
+           "    method " &lt;&lt; to_reader_s(m) + if file_type == HeaderExt
+                                               " : " + to_type(m.type)
+                                             else
+                                               " = " + to_member_s(m)
+                                             end
+         end,
+         if m.has_writer?
+           "    method " &lt;&lt; to_writer_s(m.name)  + if file_type == HeaderExt
+                                                     " : " +  to_type(m.type) +  " -&gt; unit"
+                                                   else
+                                                     " l_" +  to_member_s(m) + " = " + to_member_s(m) + " &lt;-" + " l_" &lt;&lt; to_member_s(m)
+                                                   end
+         end
+        ].compact.join("\n")
+      end.join("\n")
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "    method to_string " + if file_type == HeaderExt
+                                   ": string"
+                                 else
+                                   "="
+                                 end,
+       if file_type == SourceExt
+         "      String.concat \"-\" [" + pg_class.members_to_str.map {|m| to_string(m.type,m.name) }.join(";\n" + (" " * 25)) + "]\n"
+       end
+      ].join
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_hashable_methods(pg_class, file_type)
+    end
+
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "ocamlc \#{#{src_file}} -o \#{#{dest_file}}"
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      "ls"
+    end
+
+    
+#   def self.compile(obj,srcs,srcdir=".", builddir=".")
+
+#     [
+#      "ocamlc ",
+#      srcs.map{|s| "#{srcdir}/#{s}" } * " ",
+#      "-o #{builddir}/#{obj} &amp;&gt;/dev/null"
+#     ] * " "
+
+    
+#   end
+
+#   def self.rakefile_rules(project,classes)
+#   end
+
+
+#   def self.rake_compile()
+#     "ocamlc -I /usr/local/lib/pg/ocaml -I build -c -o "
+#   end
+
+#   #
+#   # ocaml compiler does not write files to directories
+#   #
+#   def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+    
+#     #src = .ml
+#     srcbase = src.split(".").first
+#     testbase = test.split(".").first
+
+
+#     ([
+
+#       # copy src to build
+#       "cp #{srcdir}/#{src}* #{builddir}  ",
+#       "cp #{testdir}/#{test} #{builddir}  ",
+
+#       #
+#       # compiler has to run in the same directory as src
+#       #
+
+#       [
+#        "(cd #{builddir} ",
+#        "ocamlc -c -I /usr/local/lib/pg/ocaml  #{src}" ,
+#        "ocamlc -c -I /usr/local/lib/pg/ocaml  #{src}" ,
+#        "ocamlc -c -I /usr/local/lib/pg/ocaml #{test} " ,
+#        "ocamlc -o #{testbase} /usr/local/lib/pg/ocaml/Util.cmo #{srcbase}.cmo #{testbase}.cmo   )"
+#       ].join( " &amp;&amp; " )
+#     ] * "\n").ergo do |c|
+#       c
+#     end
+#   end
+
+#   def self.rake_run_test(cls,builddir)
+#     cls
+#   end
+
+#   def self.makefile_rules(project,classes)
+# #     exe_file_name = to_file_s(project)
+# # all:compile run
+# # compile: $(HDROBJS) $(OBJS)
+# # \t$(CAMLC) -o #{exe_file_name} $(OBJS) ${CAML_LINK_OPTS} ${CAML_LINK_OBJS}
+# # &lt;&lt;RULES
+
+# # run:
+# # #\t./#{to_file_s(project)} ${FILES}
+# # RULES
+
+#      ""
+#   end
+
+#   def self.ant_rules(project,classes)
+#   end
+
+#   def self.scons_rules(project,classes)
+#     [
+#      'env = Environment( tools = ["default", "ocaml"], OCAML_CODE=\'native\')',
+#      classes.map{|c| "env.OcamlObject(\"#{c.camel_case_capitalize}.ml\")"}.join("\n")
+#     ] * "\n" + "\n"
+#   end
+    
+  end
+end
+</pre></body></html>

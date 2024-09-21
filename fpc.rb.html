@@ -1,0 +1,611 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/fpccase"
+module BHW
+  #
+  # Free pascal is delphi
+  #
+  # one file with headers and code
+  #
+  #
+  require 'pp'
+  module Fpc 
+    
+    include BHW::Props
+    include BHW::Writer
+    self.extend(BHW::Writer)
+    self.extend(FpcCase)
+    self.extend(Compiled)    
+    
+    directory            "fpc" 
+    option               "fpc" 
+    formal_name          "Free Pascal"
+    
+    rosetta_url          "Free_Pascal"
+    home_url             "http://www.freepascal.org/"
+    wikipedia_url        "Free_Pascal"
+
+    source_file_ext      "pp"
+    exec_file_ext        "exe"
+    
+    #produces both .ppu and .o
+    object_file_ext      "o"
+    tmp_ext              "ppu"
+    
+    assign                "="
+    indent                "    "
+    mode_line             "(*-*-delphi-*-*)"
+    
+    render_members_first    true
+    
+    
+    self.types = {
+      Default =&gt; {
+        format:  "%s",
+        to_s:    -&gt;(a){ to_variable_s(a)},
+        define:  -&gt;(v,n){
+          print v
+          puts
+          print n
+          puts
+          "#{to_variable_s(n)}:#{to_type(v)}"
+
+        },
+        include:  nil,
+        to_value: -&gt;(a){ a.to_s},
+      },
+      BHW::Class =&gt; {
+        type:     -&gt;(a){"#{a.type.camel_case_capitalize}C"},
+        define:   -&gt;(a){"#{to_variable_s(a.name)}:#{a.type.name.camel_case_capitalize}C"},
+        include:  -&gt;(a){"#{a.type.camel_case_capitalize}"},
+        to_s:    -&gt;(a){ to_variable_s(a) + ".toString"},
+        to_value:   -&gt;(v){  
+          [
+           to_class_s(v.class_name.downcase) ,
+           "C.create(",
+           v.members_param.map{|a| to_value(a.type)   }.join(","),
+           ");"
+          ] * ""
+        },
+        
+      },
+      Char=&gt; {
+        type:       "Char",
+      },
+      String=&gt; {
+        type:       "String",
+        to_value: -&gt;(a){ "'#{a}'"}
+      },
+      Integer=&gt; {
+        type:       "Integer",
+        format:     -&gt;(v,m){ 
+          if m.pad == false
+            "%#{m.width}d" 
+          else
+            "%#{m.pad}#{m.width}d" 
+          end
+        },
+        default:   0  
+      },
+      
+      Float=&gt; {
+        type:       "Real",
+        format:     "%f",
+        default:   0.0
+      },
+
+      
+      Array =&gt; {
+        #
+        # dynamic arrays need a size when initialiing inline
+        # 
+        
+        define:  -&gt;(v,n){ 
+          if v== nil
+            "(*Array*)"
+          else
+            "#{self.to_variable_s(n)}: Array[1..%s] of #{to_type(v[0])}"%[v.length]
+          end
+        },
+        
+        type:      -&gt;(a){ "Array[1..#{a.size}] of " + array_type(a) },
+        to_value:  -&gt;(a){ "(" + a.map {|b| to_value(b)}.join(", ")+")" },
+        
+        
+      },
+      List =&gt; {
+        define:     -&gt;(v,n){ "(*List*)"},
+        type:       -&gt;(a){ "List"},
+        to_value:   -&gt;(a){ "List"},
+      },
+      Set =&gt; {
+        define:     -&gt;(v,n){ "(*Set*)" },
+        type:       -&gt;(a){ "Set"},
+        to_value:   -&gt;(a){ "Set"},
+      },
+      Hash =&gt; {
+        define:     -&gt;(v,n){ "(*Hash*)" },
+        type:       -&gt;(a){ "Hash"},
+        to_value:   -&gt;(a){ "Hash"},
+      },
+      Map =&gt; {
+        define:     -&gt;(a){ "(*Map*)" },
+        type:       -&gt;(a){ "Map"},
+        to_value:   -&gt;(a){ "Map"},
+      },
+      Tuple =&gt; {
+        define:     -&gt;(a,b){ "(*Tuple*)" },
+        type:       -&gt;(a){ "String"},
+        to_value:   -&gt;(a){ "'Tuple'"},
+      },
+    }.merge( IntClasses.reduce({}){|h,cls|
+
+               if cls.ap?
+                 
+               else
+                 type =  if cls.bits == 8
+                           cls.signed? ? "shortint" : "byte"
+                         elsif cls.bits == 16
+                           cls.signed? ? "smallint" : "word"
+                         elsif cls.bits == 32
+                           cls.signed? ? "longint": "longword"
+                         elsif cls.bits == 64
+                           cls.signed? ? "int64" : "qword"
+                         elsif cls.bits == "Word"
+                           cls.signed? ? "integer" : "cardinal"
+                         end
+                 puts cls
+                 h.merge(cls =&gt; {
+                           primitive:  true,
+                           type:       "#{type}",
+                           default:    "0",
+                           format:     -&gt;(v,m){ m.pad() == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" },
+                         })
+               end
+               h
+             }
+             
+           ).merge([
+                     [Array,  "",  :array_type ],
+                     [List,   "",    :array_type ],
+                     [Set,    "set",     :set_type ],
+                   ].reduce({}) do |h,(cls,stl,typer)|
+                     h.merge(cls =&gt; {
+                               type:      -&gt;(a)  { stl + "[" + self.send(typer,a)  + "; " + a.size.to_s + "]" },
+                               define:    -&gt;(v,n){ stl + " [ " + self.send(typer,v)  + " ] * " + to_variable_s(n) },
+                               to_value:  -&gt;(a,scope=nil){ " [" +  a.map {|e| to_value(e).to_s }.join(",") + "]"},
+                             })
+                   end)
+    
+    
+    
+    
+    def self.constants(vars)
+      if vars
+        "const\n" + 
+          vars.select do |v| 
+          v.type.class == Array
+        end.map do |v| [
+                        "    ",
+                        self.to_define(v),
+                        "=",
+                        self.to_value(v.value),                      
+                        ";"
+                       ].join
+        end.join("\n")
+      end
+    end
+    
+    
+    def self.render_class(pg_class,file_type,vars=nil)
+      
+      #
+      # pascall uses a single uses and a comma seperated list of unit names
+      #
+      
+      incs = ["sysutils"]
+      pg_class.includes(self) {|i| incs.push(i) }
+      
+      def self.if_or_else(i)
+        if i == 0
+          "if"
+        else
+          "else if"
+        end
+      end
+      
+      
+      [
+       "unit #{to_class_s(pg_class)};",
+       "{$mode objfpc}",
+       "interface",
+       "uses " + incs.compact.join(",") + ";",
+       
+       pg_class.members_class.select {|m| m.type.class == Array}.map do |m|
+         "const\n    " +  to_define(m.type,m.name) + "="  + to_value(m.type) + ";"
+       end * "\n",
+       "type",
+       "   #{to_class_s(pg_class)}C = class",
+       "   private",     
+       pg_class.members_instance.map {|m| 
+         out = to_define(m.type,m.name)
+         if out =~ /\(\*/
+           out
+         else
+           "      _" + to_define(m.type, m.name) + ";"
+         end
+       }.join("\n"),
+       "   public",     
+       pg_class.members_r_or_w.map  do |m|
+         [
+          if m.has_reader?; "      Function " + to_reader_s(m) + ":" + to_type(m.type) + ";\n"; end,
+          if m.has_writer?; "      Procedure " + to_writer_s(m) + "(value:" + to_type(m.type) + ");\n"; end,
+         ].compact.join + "\n"
+       end * "",
+       pg_class.members_r_or_w.map do |m|
+         [
+          "      property " + to_define(m.type,m.name),
+          if m.has_reader?; " read " + to_reader_s(m) ;end,
+          if m.has_writer?; " write " + to_writer_s(m) ;end,
+          ";"
+         ].compact.join
+       end.compact.join("\n") + "\n",
+       self.render_constructor(pg_class),
+       self.render_to_string(pg_class),
+       "end;",
+       
+       "function #{to_class_s(pg_class)}_compare(item1 : Pointer; ",
+       "                               item2 : Pointer) : Integer;",
+       "operator &lt;(l : #{to_class_s(pg_class)}C; r : #{to_class_s(pg_class)}C) : Boolean;inline;",
+       "operator &gt;(l : #{to_class_s(pg_class)}C; r : #{to_class_s(pg_class)}C) : Boolean;inline;",
+       #"operator =(l : #{to_class_s(pg_class)}C; r : #{to_class_s(pg_class)}C) : Boolean;inline;",
+       "implementation",
+       render_constructor_header(pg_class,true),
+       "begin",
+       pg_class.members.map do |p|
+         unless p.is_default?
+           "   _"  + to_variable_s(p.name) + ":=" + to_value(p.type)+";"
+         end
+       end.compact.join("\n"),
+       "end;",
+       "operator &lt;(l : #{to_class_s(pg_class)}C; r : #{to_class_s(pg_class)}C) : Boolean;",
+       "begin",
+       "   Result := False",
+       "end;",
+       "operator &gt;(l : #{to_class_s(pg_class)}C; r : #{to_class_s(pg_class)}C) : Boolean;",
+       "begin",
+       "   Result := False",
+       "end;",
+       "",
+       "function #{to_class_s(pg_class)}_compare(item1 : Pointer; " + "item2 : Pointer) : Integer;",
+       "var",
+       "   citem1 : #{to_class_s(pg_class)}C;",
+       "   citem2 : #{to_class_s(pg_class)}C;",
+       "begin",
+       "   citem1 := #{to_class_s(pg_class)}C(item1);",
+       "   citem2 := #{to_class_s(pg_class)}C(item2);",
+       if pg_class.members_to_str.length &gt; 0
+         pg_class.members_to_str.each_with_index.map{|m,i|
+           mname = to_variable_s(m.name) 
+           [
+            "   #{if_or_else(i)} citem1._" + mname + " &lt; " + "citem2._" + mname + " then",
+            "      Result := -1",
+            "   else if citem1._" + mname + " &gt; " + "citem2._" + mname + " then",
+            "      Result := 1",
+           ].join("\n")
+         }.compact.join("\n")  + "\n   else\n"
+       end,
+       "     Result := 0;\n",
+       "end;",
+       "function #{Fpc.to_class_s(pg_class)}C.toString: ansiString;",
+       "begin",
+       "Result := format(" &lt;&lt; pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m.type,m)), l[1].push("_" + to_string(m.type,m.name))]
+         # 0 is the format specifiers 
+         # 1 is the fields
+       end.each_with_index.map do |m,i| 
+         (i == 0) ? ("'" + m.join("-") + "'") : ("[" + m.join(",") + "]")
+       end.join(",") + ");",
+       "end;",
+       pg_class.members.map do |m| 
+         [
+    	  if m.has_reader?
+    	    [
+             "Function #{to_class_s(pg_class)}C." + to_reader_s(m) + ":" + to_type(m.type) + ";",
+             "begin",
+             "   Result := _" + to_variable_s(m.name) + ";",
+             "end;"
+    	    ].join("\n")
+    	  end,
+    	  if m.has_writer?
+    	    [
+             "Procedure #{Fpc.to_class_s(pg_class.name)}C." + to_writer_s(m) + "(value:" + to_type(m.type) + ");",
+             "begin",
+             "end;",
+    	    ].join("\n")
+    	  end,
+         ].compact.join("\n")
+       end.compact.join("\n"),
+       "end.",
+       "",
+      ].compact.join("\n")
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_constructor_header(pg_class,impl)
+      "      constructor " + 
+        if impl 
+          "#{to_class_s(pg_class)}C."
+        else 
+          "" 
+        end + 
+        "create(" +
+        pg_class.members_param.map {|p|  to_parameter_s(p.name) + ":" + to_type(p.type) }.join(";\n                         ") + 
+        ");"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      render_constructor_header(pg_class,false)
+    end 
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      "       function toString: ansiString;override;"
+    end
+    
+    def self.render_method(ret, name, params)
+      start = name + "("
+      f =  [
+            ret.to_s + "\n",
+            start,
+            params.map{|m| to_define(m) }.join(",\n" + (" "  * start.length) ),
+            ")",
+            if file_type == HeaderExt
+              ";"
+            else
+              "\n{\n" + yield + "\n}" # append 
+            end,
+            "\n"
+           ].join
+      f
+    end
+
+    def self.render_methods(pg_class, file_type=SourceExt)
+      indent = ((pg_class.members.size-1) * 4) + 11;
+      @str = "if"
+      
+      class_name = to_class_s(pg_class)
+      
+      def self.if_or_else(i)
+        if i == 0
+          "if"
+        else
+          "else if"
+        end
+      end
+      
+      [
+       "end;",
+       
+       "function #{class_name}_compare(item1 : Pointer; ",
+       "                                                  item2 : Pointer) : Integer;",
+       
+       "operator &lt;(l : #{class_name}C; r : #{class_name}C) : Boolean;inline;",
+       "operator &gt;(l : #{class_name}C; r : #{class_name}C) : Boolean;inline;",
+       #"operator =(l : #{class_name}C; r : #{class_name}C) : Boolean;inline;",
+       "implementation",
+       render_constructor_header(pg_class,true),
+       "begin",
+       pg_class.members.map do |p|
+         unless  p.is_default?
+           "   _aaa"  + to_variable_s(p.name) + ":=" + to_variable_s(p)+"_;"
+         end
+       end.compact.join("\n"),
+       "end;",
+       "operator &lt;(l : #{class_name}C; r : #{class_name}C) : Boolean;",
+       "begin",
+       "   Result := False",
+       "end;",
+       "operator &gt;(l : #{class_name}C; r : #{class_name}C) : Boolean;",
+       "begin",
+       "   Result := False",
+       "end;",
+       "",
+       "function #{to_class_s(pg_class)}_compare(item1 : Pointer; " + "item2 : Pointer) : Integer;",
+       "var",
+       "   citem1 : #{to_class_s(pg_class)}C;",
+       "   citem2 : #{to_class_s(pg_class)}C;",
+       "begin",
+       "   citem1 := #{to_class_s(pg_class)}C(item1);",
+       "   citem2 := #{to_class_s(pg_class)}C(item2);",
+       pg_class.members_to_str.each_with_index.map{|m,i|
+         mname = to_variable_s(m) 
+         [
+          "   #{if_or_else(i)} citem1." + mname + " &lt; " + "citem2." + mname + " then",
+          "      Result := -1",
+          "   else if citem1." + mname + " &gt; " + "citem2." + mname + " then",
+          "      Result := 1",
+         ].compact.join("\n")
+       }.compact.join("\n")  + "\n   else\n" + "     Result := 0;\n",
+       "end;",
+       "function #{Fpc.to_class_s(pg_class)}C.toString: ansiString;",
+       "begin",
+       "Result := format(" &lt;&lt; pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m)), l[1].push("_"+to_string(m))]
+         # 0 is the format specifiers 
+         # 1 is the fields
+       end.each_with_index.map do |m,i| 
+         (i == 0) ? ("'" + m.join("-") + "'") : ("[" + m.join(",") + "]")
+       end.join(",") + ");",
+       "end;",
+      ].compact.join("\n")
+    end
+    
+    def self.render_members(pg_class, file_type=SourceExt)
+      [
+       
+       pg_class.members.map do |m| 
+         [
+    	  "   private",
+    	  "      _" + to_define(m) + ";",
+    	  if m.has_reader?
+    	    "  public\n      Function " + to_reader_s(m) + ":" + to_type(m) + ";"
+    	  end,
+    	  if m.has_writer?
+    	    "  public\n      Procedure " + to_writer_s(m) + "(value:" + to_type(m) + ");"
+    	  end,
+         ].join("\n")
+       end.compact.join("\n"),
+       
+       "   public",
+       pg_class.members.map do |m| 
+         [
+    	  if m.has_reader? || m.has_writer?
+    	    [
+             "      property " + to_define(m),
+             if m.has_reader?
+               " read " + to_reader_s(m)
+             end,
+             if m.has_writer?
+               " write " + to_writer_s(m)
+             end,
+             ";",
+    	    ].join
+    	    
+    	  end,
+    	  
+         ].compact.join("\n")
+       end.compact.oin("\n"),
+      ].compact.join("\n")
+    end
+    
+    def self.render_members(pg_class, file_type=SourceExt)
+      [
+       pg_class.members.map do |m| 
+         [
+    	  if m.has_reader?
+    	    [
+             "Function #{to_class_s(pg_class)}C." + to_reader_s(m) + ":" + to_type(m) + ";",
+             "begin",
+             "   Result := _" + to_variable_s(m) + ";",
+             "end;"
+    	    ].join("\n")
+    	  end,
+    	  if m.has_writer?
+    	    [
+             "Procedure #{Fpc.to_class_s(pg_class.name)}C." + to_writer_s(m) + "(value:" + to_type(m) + ");",
+             "begin",
+             "end;",
+    	    ].join("\n")
+    	  end,
+         ].compact.join("\n")
+       end.compact.join("\n"),
+       "end."
+      ].compact.join("\n")
+    end
+    
+    #{self.constants(vars.select{|v|v.type.class == Array})}*)
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+
+      define_vars = vars.map do |a| 
+        [
+         to_variable_s(a.name),
+         ":",
+         if a.type.class == BHW::Class
+           to_class_s(a.type.name) +"C"
+         else
+           to_type(a.type)
+         end,
+         ";"
+        ] * ""
+      end.join("\n#{indent}")
+
+      init_vars = vars.map do |v| 
+        [
+         to_variable_s(v.name),
+         " := ",
+         to_value(v.type),
+         ";"
+        ] * ""
+      end.join("\n#{indent}")
+      
+    # {vars.map{|a| "  writeln(" + to_variable_s("test "+a.type.name) + ".toString())"}.join(";\n")};
+
+      uses = ["Dos","sysutils", *(vars.select{|v| v.type.class == BHW::Class}.map{|a| to_file_s(a.type.name)})] * "," + ";"
+&lt;&lt;-MAIN
+program test_#{to_class_s(pg_class)};
+uses #{uses}
+var
+    #{define_vars}
+begin
+    #{init_vars}
+end.
+MAIN
+      end
+
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "fpc -Tlinux -o\#{#{dest_file}} \#{#{src_file}}"
+    end
+
+
+
+
+#   def self.compile(obj,srcs,srcdir=".", builddir=".")
+#     [
+#      "(",
+#      "fpc -o#{builddir}/#{obj} -Tlinux ",
+#      srcs.map{|s| "#{srcdir}/#{s}"},
+#      " 2&gt;/dev/null)",
+#     ] * " "
+
+    
+#   end
+
+#   def self.rakefile_rules(project,classes)
+#   end
+
+#   def self.rake_compile()
+#     "fpc -o"
+#   end
+
+#   def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+#     "fpc -o#{builddir}/#{src.gsub(".pp", ".o")} -Tlinux #{srcdir}/#{src};fpc -CD -o#{builddir}/#{out} -Tlinux #{testdir}/#{test} 2&gt;/dev/null" 
+#   end
+
+#   def self.rake_run_test(file,builddir)
+#     file
+#   end
+
+#   def self.makefile_rules(project,classes)
+#     exe_file = to_file_s(project) + ".exe"
+#     source_file = to_file_s(project) + ".pp"
+# &lt;&lt;RULES
+# # TO_CLEAN=*.exe *.o *.err *.out
+
+# ##{exe_file}:${SRC}
+# #\t${FPC} #{source_file}
+# run:
+# #\t./#{exe_file} ${FILES}
+# RULES
+#   end
+
+
+#   def self.ant_rules(project,classes)
+#   end
+
+#   def self.scons_rules(project,classes)
+#   end
+
+
+
+  end
+end
+</pre></body></html>

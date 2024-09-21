@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module JavaScript
+    include BHW::Props
+    self.extend(CamelCase)
+    self.extend(Typeless)
+    self.extend(Interpreted)
+    
+    def to_file_s(s)
+      s.camel_case
+    end
+    
+    def to_class_s(s)
+      s.camel_case_capitalize
+    end
+    
+    def self.to_member_s(s)
+      "_" + s.camel_case
+    end
+    
+    
+    directory        "javascript" 
+    option           "javascript" 
+    formal_name      "JavaScript"
+    source_file_ext  "js"
+    mode_line        "//-*-javascript-*-"
+    home_url         "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+    interpreter      "node"
+    
+    self.merge_types(base_types,
+                     {
+                       Primitive =&gt; {  
+                         format:   "~a",
+                       },
+                       Default  =&gt; { 
+                         format:  "~a",
+                         to_s:    -&gt;(a){ "(#{to_class_s(a)} this)"},
+                       },
+      
+                       BHW::Class =&gt; {
+                         include:  -&gt;(a){ to_file_s(a.type.name) + ".lisp" },
+                         to_s:     -&gt;(a){ "(#{to_class_s(a.type)}-to-string (#{to_class_s(a)} this))"},
+                         to_value:   -&gt;(v){  
+                           [
+                            to_class_s(v.class_name.downcase) ,
+                            "(",
+                            v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+                            ")"
+                           ] * ""
+                         },
+                       },
+                       
+                       Integer=&gt; {
+                         primitive:  true,
+                         default:       0, 
+                         format:  -&gt;(a){a.pad() == false ? "~#{a.width}d" : "~#{a.width},'#{a.pad}d"},
+                       },
+                       
+                       Float  =&gt; {
+                         primitive:  true,
+                         default:    0.0,       
+                         format:      "~f"  
+                       },
+                       String =&gt; {
+                         primitive:  true,
+                         default:       "\"\"",
+                         to_value: proc{|a| "\"#{a}\""}
+                       },
+                       Char   =&gt; {
+                         primitive:  true,
+                       }})
+
+    def self.array_to_s(a,l=0)
+      self.square_bracket_list_s(a,",",l)
+    end
+
+
+    def self.hash_to_s(h,l=0)
+      self.key_value_list_s(h, "{}", "",":", ",")
+    end
+
+    
+    def self.render_main(pg_class,file_type,vars=[], &amp;block)
+      
+      def self.define_vars(vars)
+        vars.map do |v|
+          [
+           "var ",
+           to_define(v.type, v.name),
+           "= ",
+           to_value(v.type),
+           ";"
+          ].join
+        end * "\n"
+      end
+      
+      def self.print_vars(vars)
+        vars.map do |v|
+          "console.log(" +     to_define(v.type,v.name) + ".toString());"
+        end * "\n"
+      end
+      
+      [
+       vars.select{|v| v.type.class == BHW::Class}.map{|a| File.open("javascript/" + to_file_s(a.type.name) + ".js") {|f| f.read}},
+       self.define_vars(vars),
+       "",
+       self.print_vars(vars)
+      ] * "\n"
+    end
+    
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      pg_class.members_param.ergo do |mems|
+        [
+         "function " + to_class_s(pg_class) + "(" + mems.map {|m| to_member_s(m)}.join(",") + ")",
+         "{",
+         pg_class.members_param.map{|m| "    this." + to_member_s(m) + " = " + to_parameter_s(m)},
+         pg_class.members_default.map{|m| "    this." + to_member_s(m) + " = " + to_value(m.type) },
+         "    return this;",
+         "}",
+         "",
+         to_class_s(pg_class) + ".prototype = {",
+         mems.map do |m|
+           [
+            ("  get " + to_variable_s(m) + "(){ return this." + to_member_s(m)  + ";}" if m.has_reader?),
+            ("  set " + to_variable_s(m) + "(arg){ this." + to_member_s(m)  + "=arg;}" if m.has_writer?),
+           ]
+         end.flatten.compact * ",\n",
+         "}",
+         ""
+        ] * "\n"
+      end
+    end
+    
+    def self.render_get_key(pg_class)
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       to_class_s(pg_class.name) + ".prototype.toString = function() {",
+       
+       "    return " + pg_class.members_to_str.map do |m| 
+         "        this." + to_member_s(m) + ".toString()"
+       end.unshift(%q{""}) * (%q{ + "-" + } + "\n")+ ";",
+       "}"
+      ] * "\n"
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+
+
+    def self.execute_file(file, srcdir=".",builddir)
+      [
+       "node #{srcdir}/#{file}"
+      ] * " "
+    end
+
+
+#   def self.rake_run_test(file,builddir)
+#     "node #{file.last}"
+#   end
+
+#   def self.makefile_rules(project,classes)
+#     script_name = to_file_s(project) + "." + source_file_ext
+
+# #compile:
+# #\t$(foreach src,$(SRC), ${JS} $(src);)
+
+# &lt;&lt;RULES    
+
+# JS=rhino
+# run:
+# RULES
+
+#   end
+
+#   def self.ant_rules(project,classes)
+#   end
+
+#   def self.scons_rules(project,classes)
+#   end
+
+   end
+end
+</pre></body></html>

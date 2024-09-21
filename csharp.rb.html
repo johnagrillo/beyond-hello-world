@@ -1,0 +1,490 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/cscase"
+require_relative "../extend"
+
+module BHW
+  module CSharp
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(CsCase)
+    self.extend(Compiled)    
+    self.extend(Interpreted)
+    
+    directory       "csharp"
+    option          "csharp"
+    formal_name      "C#"
+
+    source_file_ext "cs"
+    indent          "    "
+    assign          "="
+    terminator      ";"
+    mode_line       "//-*-csharp-*-"
+    object_file_ext "net"
+    exec_file_ext   "net"
+    
+    rosetta_url      "C_sharp"
+    wikipedia_url    "C_sharp"
+    interpreter      "mono"
+    home_url         "https://dotnet.microsoft.com/en-us/languages/csharp"
+      
+    
+    self.types = {
+      Default =&gt; {
+        include:  nil,
+        define:  -&gt;(v,n){
+          out =to_variable_s(n)
+          # event is a keyword
+          if out=="event"
+            out = "event_"
+          end
+          
+          "#{to_type(v)} #{out}"
+        },
+        to_h:     -&gt;(a){ "this.#{to_variable_s(a)}.GetHashCode()"},
+        format:   nil,
+        to_value: -&gt;(a,l=0){ a.to_s},
+        default:   nil,
+      },
+      BHW::Class=&gt; {
+        include:  -&gt;(a){ a.type.camel_case_capitalize},
+        type:     -&gt;(a){ a.name.camel_case_capitalize},
+        to_value:  -&gt;(v){  
+          [
+           " new ",
+           to_class_s(v.class_name.downcase) ,
+           "(",
+           v.members_param.map{|a| to_value(a.type) }.join(","),
+           ")"
+          ] * ""
+          
+        },
+        
+      },
+      Char=&gt; {
+        type:       "char",
+        default:       "' '",
+      },
+      String=&gt; {
+        type:       "string",
+        default:       "\"\"",
+        to_value: proc{|a| "\"#{a}\""}
+      },
+      Integer=&gt; {
+        type:       "int",
+        default:       0,
+        format:      -&gt;(v,m){ m.pad() == false ? "," + m.width.to_s : ":" + ("0" * m.width)},
+      },
+      Float=&gt; {
+        
+        type:       "float",
+        default:       "0.0f",
+        to_value: proc{|a| "#{a}f"}
+      },
+      Array   =&gt; {
+        default:    -&gt;(v,n,l=0){ 
+          dims,type = v.dims_type()
+          "new " + to_type(type) + " [" + (dims.map{ ""} * ",") + "] "+ self.squigly_bracket_list_s(v,",",l=0)
+        },
+        
+        define:    -&gt;(a,n){ 
+          dims,type = a.dims_type()
+          to_type(type)  + " [" + (dims.map{ ""} * ",") + "] " + to_variable_s(n)
+        },
+        type:       -&gt;(a){ array_type(a) + "[]" },
+        to_value:   -&gt;(a,scope=Instance,l=0){ self.squigly_bracket_list_s(a,l)},
+      }
+    }.merge(
+      IntClasses.reduce({}){|h,cls|
+        
+        type = if cls.ap?
+                 "System.Numerics.BigInteger"
+               else 
+                 if cls.bits == 8
+                   cls.signed? ? "sbyte" : "byte"
+                 elsif cls.bits == 16
+                   cls.signed? ? "short" : "ushort"
+                 elsif cls.bits == 32
+                   cls.signed? ? "int": "uint"
+                 elsif cls.bits == 64
+                   cls.signed? ? "long" : "ulong"
+                 elsif cls.bits == "Word"
+                   cls.signed? ? "IntPtr" : "UIntPtr"
+                 end
+               end
+        
+        h.merge(cls =&gt; {
+                  primitive:  true,
+                  type:       "#{type}",
+                  default:       "0",
+                  format:     -&gt;(v,m){ m.pad() == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" },
+                }
+               )
+      }).merge([[ List,  "List",        :squigly_bracket_list_s, :array_type, -&gt;(a){ array_type(a)} ],
+                [ Set,   "HashSet",     :squigly_bracket_list_s, :set_type,   -&gt;(a){ set_type(a)}],
+                [ Tuple, "Tuple",       :paren_bracket_list_s, :tuple_type, -&gt;(a){ tuple_type(a)} ],    
+                [ Hash,  "Dictionary",  :key_value_pairs_list_s, :hash_type,  -&gt;(a){ hash_type(a)}],
+                [ Map,   "Dictionary",  :key_value_pairs_list_s, :hash_type,  -&gt;(a){ hash_type(a)}]
+               ].reduce({}) {|h,(cls,name,lister,valuer,typer)|
+                 h.merge(cls =&gt;{
+                           type:       -&gt;(a){ name + " &lt; " + typer.(a) + " &gt; " },
+                           to_value:   -&gt;(a,scope=nil,l=0){ "new " + name + "&lt;" + self.send(valuer,a) +  "&gt;" + self.send(lister, a, ",", l)},
+                           default:   -&gt;(a,b){ "new " + name + "&lt;" + self.send(valuer,a) +  "&gt;" + self.send(lister, a, ",")},
+                        })
+               })
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+&lt;&lt;-MAIN
+using System;
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
+    
+public class test_#{to_class_s(pg_class)}
+{
+    public static void Main(string[] args)
+    {
+        #{render_main_vars(vars,indent*2)}
+        #{vars.map{|v| "Console.WriteLine(" + to_variable_s(v.name) + ");"  }.join("\n#{indent*2}")}
+    }
+}
+MAIN
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       "using System;",
+       "using System.Collections;",
+       "using System.Collections.Generic;",
+       
+       #pg_class.includes(self){|i| "using #{i};"}.join("\n"),
+       "public class #{to_class_s(pg_class.name)} " + (pg_class.hashable ? ": IComparable" : "") + "{",
+      ].join("\n")
+    end    
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      "}"
+    end
+    
+    def self.render_members(pg_class, file_type=SourceExt)
+      pg_class.members.map do |m| 
+        [
+         "  public ",
+         to_define(m.type,m.name),
+         
+         if m.has_reader_and_writer?
+           " { set; get; }"
+         elsif m.has_reader_only?
+           " { get; private set; }"         
+         else
+           ";"
+         end,
+         "\n",
+        ].join
+      end.join
+    end
+    
+    #
+    # handle writing method declaration in both header and source file
+    #
+    def self.render_method_start(method_name,ret,static=false)
+      [
+       (static == true)? "static " : "",
+       ret + " ",
+       method_name,
+      ].join
+    end
+    
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      
+      if pg_class.main != true
+        class_name = to_class_s(pg_class.name)
+        
+        # header =   HyDate (intr,int,int);
+        # source = HyDate::HyDate (int year,int month,int day);
+        
+        construct = class_name
+        
+        [
+         str = "  public #{construct} (",
+         pg_class.members.reject{|m| m.init == Default}.map{|p| to_define(p.type,p.name)}.join(","),
+         ")",
+         
+         [ "\n  {\n",
+           pg_class.members_instance_param.map   {|m| "    " + to_member_s(m) + " = " + to_variable_s(m) + ";\n"}.join,
+           pg_class.members_instance_default.map {|m| "    " + to_member_s(m) + " = " + to_default(m.type,m.name) + ";\n"}.join,
+           "  }\n",
+         ].join
+        ].join
+      end
+    end
+    
+    def self.render_destructor(pg_class, file_tye = SourceExt)
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      var = to_variable_s(pg_class)
+      [
+       indent + "override public string ToString()",
+       "\n  {\n",
+       (indent*2) &lt;&lt; "return System.String.Format(",
+       pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m))]
+       end.ergo do |(f,v)| 
+         [
+          "\"" + f.each_with_index.map{|fs,i2| "{#{i2}#{fs}}"}.join("-") + "\"",
+          if v.size &gt; 0
+            "," + v.join(",")
+          end
+         ] * ""
+       end,
+       ");\n",
+       indent + "}\n",
+      ].join
+    end
+    
+    def self.render_hashable_methods(pg_class, file_type = SourceExt)
+      [
+       "  override public int GetHashCode()",
+       "  {",
+       "    return " + pg_class.members_to_str.map {|m| to_hash(m.type,m.name) }.join(" +\n#{indent*2}") + ";",
+       "  }",
+       "\n",
+       "  override public bool Equals(System.Object obj)",
+       "  {",
+       "    if (obj == null)",
+       "    {",
+       "      return false;",
+       "    }",
+       "    #{to_class_s(pg_class)} #{to_variable_s(pg_class)} = obj as #{to_class_s(pg_class)};",
+       "    if ((System.Object)#{to_variable_s(pg_class)} == null)",
+       "    {",
+       "      return false;",
+       "    }",
+       "    return (this == #{to_variable_s(pg_class)});",
+       "  }\n",
+       "\n",
+       "  public bool Equals(#{to_class_s(pg_class)} obj){",
+       "    if ((object)obj == null){",
+       "      return false;",
+       "    }",
+       "    return (this  == obj);",
+       "  }",
+      ].join("\n")
+      
+      # public override bool Equals(System.Object obj)
+      #     {
+      #         // If parameter is null return false.
+      #         if (obj == null)
+      #         {
+      #             return false;
+      #         }
+      
+      #         // If parameter cannot be cast to Point return false.
+      #         TwoDPoint p = obj as TwoDPoint;
+      #         if ((System.Object)p == null)
+      #         {
+      #             return false;
+      #         }
+      
+      #         // Return true if the fields match:
+      #         return (x == p.x) &amp;&amp; (y == p.y);
+      #     }
+      
+      #     public bool Equals(TwoDPoint p)
+      #     {
+      #         // If parameter is null return false:
+      #         if ((object)p == null)
+      #         {
+      #             return false;
+      #         }
+      
+      #         // Return true if the fields match:
+      #         return (x == p.x) &amp;&amp; (y == p.y);
+      #     }
+    end
+    
+    def self.render_operator_method(pg_class,ret,operator,code,file_type=SourceExt)
+      "  public static #{ret} operator #{operator} (#{to_class_s(pg_class)} lhs, #{to_class_s(pg_class)} rhs)" +
+        "\n  {\n" + code.() + "\n}\n"
+    end
+    
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+      
+      # do we have a string
+      has_string = pg_class.members_to_str.inject(false){|has,m| has || m.type.class == String}
+      
+      #
+      # operators to code
+      # 
+      [ ["&lt;", 
+         -&gt;(){
+           if has_string
+             "    int ret;\n"
+           else
+             ""
+           end + 
+           
+           pg_class.members_to_str.map{|m| 
+             lhs = "lhs." + to_variable_s(m)
+             rhs = "rhs." + to_variable_s(m)
+             if m.type.class == String
+               [
+                (indent*2) + "ret = #{lhs}.CompareTo(#{rhs});",
+                (indent*2) + "if (ret &lt; 0) return true;",
+                (indent*2) + "if (ret &gt; 0) return false;",
+                "\n",
+               ].join("\n")
+             else
+               [
+                (indent*2) + "if (#{lhs} &lt; #{rhs}) return true;",
+                (indent*2) + "if (#{lhs} &gt; #{rhs}) return false;",
+                "\n",
+               ].join("\n")
+             end
+           }.join("\n")  + "\n" + indent + "return false;\n"
+         }
+        ], 
+        
+        ["&gt;",   
+         -&gt;() {
+           
+           if has_string
+             "    int ret;\n"
+           else
+             ""
+           end + 
+           pg_class.members_to_str.map{|m| 
+             lhs = "lhs." + to_variable_s(m)
+             rhs = "rhs." + to_variable_s(m)
+             if m.type.class == String
+               [
+                (indent*2) + "ret = #{lhs}.CompareTo(#{rhs});",
+                (indent*2) + "if (ret &lt; 0) return false;",
+                (indent*2) + "if (ret &gt; 0) return true;",
+                "\n",
+               ].join("\n")
+             else
+               [
+                (indent*2) + "if (#{lhs} &lt; #{rhs}) return false;",
+                (indent*2) + "if (#{lhs} &gt; #{rhs}) return true;",
+                "\n",
+               ].join("\n")
+             end
+           }.join("\n")  + "\n" + indent + "return false;\n"
+         }
+        ], 
+        
+        ["==",  
+         -&gt;() {
+           indent + "return " + 
+           pg_class.members_to_str.map{|m| 
+             "(lhs.#{to_variable_s(m)} == rhs.#{to_variable_s(m)})"
+           }.join(" &amp;&amp;\n#{indent*2}") + ";"
+         } 
+        ],
+        
+        ["!=",  
+         -&gt;(){indent + "    return !(lhs == rhs)" + ";"}
+        ],
+      ].map {|op,code| render_operator_method(pg_class,"bool",op,code)}.join("\n") +
+        
+        
+        [
+         "public int CompareTo (object obj)",
+         "{",
+         "  if (obj == null) return 1;",
+         "    #{to_class_s(pg_class)} other = obj as #{to_class_s(pg_class)};",
+         
+         pg_class.members_to_str.map{|m| 
+           lhs = "this." + to_variable_s(m)
+           rhs = "other." + to_variable_s(m)
+           
+           if m.type.class == String
+             [
+              indent + "  if (#{lhs}.CompareTo(#{rhs}) != 0)",
+              indent + "    return (#{lhs}.CompareTo(#{rhs}));"
+             ].join("\n")
+           else
+             [
+              indent + "  if (#{lhs} &lt; #{rhs}) return -1;",
+              indent + "  if (#{lhs} &gt; #{rhs}) return 1;",
+             ].join("\n")
+           end
+         }.join("\n") + "\n" + indent + "return 0;\n}"
+        ].join("\n")
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    
+    def self.squigly_bracket_list_s(array,sep,l=0)
+      self.delimited_list_s(array, "{}", ",",l)
+    end
+    
+    def self.key_value_pairs_list_s(hash,sep,l=0)
+      key_value_list_s(hash, "{}", "{}", ",",  ",")
+    end
+
+
+    def rakefile_rules(task,classes)
+%Q[LDFLAGS=""
+]
+    end
+
+    def self.compile_cmd_str(src_file,dest_file)
+      "dmcs \#{#{src_file}} -out:\#{#{dest_file}}"
+    end
+
+    def self.link_cmd_str(src_file,dest_file)
+      "cp \#{#{src_file}} \#{#{dest_file}}"
+    end
+
+    # def self.compile(obj,srcs,srcdir=".", builddir=".")
+    #   [
+    #    "dmcs",
+    #    srcs.map{|a| srcdir + "/" + a} * " ",
+    #    "-out:#{builddir}/#{obj}" 
+    #   ] * " "
+    # end
+    
+    # def self.execute_file(file, srcdir=".",builddir)
+    #   "mono #{builddir}/#{file}"
+    # end
+    
+    # def self.rake_compile()
+    #   ""
+    # end
+    
+    # def self.rakefile_rules(project,classes)
+    # end
+    
+    # def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+    #   "dmcs #{srcdir}/#{src} #{testdir}/#{test} -out:#{builddir}/#{out}.net" 
+    # end
+    
+    # def self.rake_run_test(file,builddir)
+    #   "mono #{file}.net"
+    # end
+    
+    # def self.makefile_rules(project,classes)
+    
+    #   # windows needs an exe
+    #   #exe_name = to_file_s(project).downcase + ".exe" 
+    #   # linux does not
+    #   #exe_name = to_file_s(project).downcase
+    # end
+    
+    # def self.ant_rules(project,classes)
+    # end
+    
+    # def self.scons_rules(project,classes)
+    # end
+  end
+end
+</pre></body></html>

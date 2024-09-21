@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module CoffeeScript
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(CamelCase)
+    self.extend(Interpreted)
+    
+    interpreter      "coffee"
+    directory        "coffee" 
+    option           "coffee" 
+    source_file_ext  "coffee"
+    formal_name      "CoffeeScript"
+
+    rosetta_url      "CoffeeScript"
+    home_url         "https://coffeescript.org"  
+    wikipedia_url    "CoffeeScript"
+
+    def to_file_s(s)
+      s.camel_case
+    end
+    
+    def to_class_s(s)
+      s.camel_case_capitalize
+    end
+    
+    def self.to_member_s(s)
+      "_" + s.camel_case
+    end
+    
+
+
+    mode_line        "#-*-coffee-*-"
+
+    self.merge_types(base_types,
+                     {
+                       Primitive =&gt; {  
+                         format:   "~a",
+                         to_value: -&gt;(a,l=0){a.to_s},
+                       },
+                       Default  =&gt; { 
+                         format:  "~a",
+                         to_s:    -&gt;(a){ "(#{to_class_s(a)} this)"},
+                         include:  nil,
+                       },
+
+                       BHW::Class =&gt; {
+                         include:  -&gt;(a){ to_file_s(a.type.name) + ".lisp" },
+                         to_s:     -&gt;(a){ "(#{to_class_s(a.type)}-to-string (#{to_class_s(a)} this))"},
+                         to_value:   -&gt;(v){  
+                           [
+                            to_class_s(v.class_name.downcase) ,
+                            " ",
+                            v.members_param.map{|a| to_value(a.type)   }.join(","),
+                            " "
+                           ] * ""
+                         },
+                       },
+                       
+                       Integer=&gt; {
+                         primitive:  true,
+                         default:       0, 
+                         format:  -&gt;(a){a.pad() == false ? "~#{a.width}d" : "~#{a.width},'#{a.pad}d"},
+                       },
+      
+                       Float  =&gt; {
+                         primitive:  true,
+                         default:    0.0,       
+                         format:      "~f"  
+                       },
+                       String =&gt; {
+                         primitive:  true,
+                         default:       "\"\"",
+                         to_value: -&gt;(a,b=nil,l=0){ "\"#{a}\""}
+                       },
+                       Char   =&gt; {
+                         primitive:  true,
+                         format:  "~a",
+                       }
+                     }
+                   )
+
+    def self.array_to_s(a,l=0)
+      self.delimited_list_s(a, "[]", ",",l)
+    end
+
+
+    def self.hash_to_s(h,l=0)
+      [
+       "{ ",
+       h.map {|k,v| to_value(k) +  ":" +  to_value(v)}.join(","),
+       "}"
+      ].join
+    end
+
+    def self.render_main(pg_class,file_type,vars=[], &amp;block)
+      
+      def self.define_vars(vars)
+        vars.map do |v|
+          [
+           to_define(v.type, v.name),
+           "=",
+           to_value(v.type),
+          ].join
+        end * "\n"
+      end
+      
+      def self.print_vars(vars)
+        vars.map do |v|
+          "console.log " +     to_define(v.type,v.name) + ".toString() "
+        end * "\n"
+      end
+      
+      [
+       vars.select{|v| v.type.class == BHW::Class}.map{|a| File.open("coffee/" + to_file_s(a.type.class_name) + ".coffee") {|f| f.read}},
+       self.define_vars(vars),
+       self.print_vars(vars)
+      ] * "\n"
+    end
+    
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      "class " + to_class_s(pg_class)
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      pg_class.members_param.ergo do |mems|
+        [
+         "  constructor: " + "(" + mems.map {|m| "@" + to_variable_s(m)}.join(",") + ") -&gt;\n",
+         pg_class.members_instance_default.map{|m| "  " + to_variable_s(m) + " : " + to_value(m.type) },
+         "",
+         ""
+        ] * "\n"
+      end
+    end
+    
+    def self.render_get_key(pg_class)
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "  toString: -&gt; ",
+       "    " + pg_class.members_to_str.map{|m| "@" + to_variable_s(m)}.unshift('""').join(" + \",\" + ")
+      ] * "\n" + "\n"
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+  end
+end
+</pre></body></html>

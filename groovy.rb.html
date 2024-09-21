@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module Groovy
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(CamelCase)
+    self.extend(Interpreted)
+    
+    option           "groovy"
+    directory        "groovy" 
+    source_file_ext  "groovy"    
+    formal_name         "Groovy"
+    assign           "="
+    indent           "    "
+
+    rosetta_url          "Groovy"
+    home_url             "https://www.groovy-lang.org/"
+    wikipedia_url        "Groovy_(programming_language)"
+
+    interpreter        "groovy"
+
+    self.merge_types(base_types,
+                       {
+                         Default =&gt; {
+                           include:  nil,
+                           define:  -&gt;(a,n){ "def " + to_variable_s(n)},
+                           format:   "%s",
+                           to_s:     -&gt;(a){ to_variable_s(a) },
+                           to_value: proc{|a|a.to_s},
+                         },
+                         BHW::Class =&gt; {
+                           include:  -&gt;(a){ a.type.name.camel_case_capitalize},
+                           define:  -&gt;(v,n,s=Instance){ "def " + n.camel_case },
+                           to_value:   -&gt;(v){  
+                             [
+                              indent + indent + indent + "new ",
+                              to_class_s(v.class_name.downcase) ,
+                              "(",
+                              v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+                              ");"
+                             ] * ""
+                           },
+                         },
+                         Char     =&gt; {
+                           format:  "%c",
+                           default:  "' '",
+                         },
+                         String   =&gt; {
+                           default:      "\"\"",
+                           to_value:  proc{|a| "\"#{a}\""},
+                         },
+                         Integer  =&gt; {
+                           default:  0,
+                           format:   -&gt;(v,a){
+                             if a.pad = ""
+                               pad = ""
+                             else
+                               pad = a.pad
+                             end
+                             "%#{pad}#{a.width}d"
+                           },
+                         },
+                         Float    =&gt; {
+                           default:  "0.0f",
+                         }})
+
+      def self.array_to_s(a,l=0)
+        delimited_list_s(a, ["[", "]"],",",l)
+      end
+    
+      def self.hash_to_s(h,l=0)
+        key_value_list_s(h, 
+                         ["[", "]"],
+                         "",
+                         ":",
+                         ",")
+      end
+    
+
+      def self.render_main(pg_class, file_type,vars=[], &amp;block) 
+&lt;&lt;-MAIN
+#{render_main_vars(vars,"")}
+#{vars.map{|v| "System.out.println(" + to_variable_s(v.name) + ")";}.join("\n")}
+MAIN
+      end
+    
+      def self.render_start_of_class(pg_class, file_type=SourceExt)
+        "class #{to_class_s(pg_class)}{" 
+      end
+    
+      def self.render_constructor(pg_class, file_type=SourceExt)
+        [
+         indent + to_class_s(pg_class) + "(" + pg_class.members_param.map{|p| to_parameter_s(p)} * "," + "){",
+         pg_class.members_param.map{|m| indent + indent + to_member_s(m) + " = " + to_parameter_s(m) } ,
+         pg_class.members_default.select{|a| a.scope == Instance }.map{|m| indent + indent + to_member_s(m) + " = " + to_value(m.type)},
+         "}",
+         "\n\n",
+        ]
+      end
+    
+    
+      def self.render_members(pg_class, file_type=SourceExt)
+        [
+         pg_class.members_instance.map{|m| indent + "def " + to_member_s(m) } ,
+        ]
+      end
+    
+      def self.render_to_string(pg_class, file_type=SourceExt)
+        [
+          "#{indent}def String toString()",
+          "#{indent}{",
+          
+          "#{indent*2}return String.format(" + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+           [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m))]
+         end.ergo do |(f,v)| 
+           [
+            "\"" + f.join("-") + "\"",
+            if v.count &gt; 0
+              v.join(",")
+            end
+           ].compact.join(",")
+         end + ");",
+    
+          "#{indent}}\n"
+        ].join("\n")
+      end
+    
+      
+      def self.render_compare_methods(pg_class, file_type=SourceExt)
+      end
+    
+    
+      def self.render_end_of_class(pg_class, file_type=SourceExt)
+        "\n}\n"
+      end
+    
+      def self.render_methods(pg_class, file_type=SourceExt)
+      end
+
+
+    def self.run_cmd_str(dest_file)
+      "groovy ./\#{file}"
+    end
+
+
+        
+  # def self.execute_file(file, srcdir=".",builddir)
+  #   [
+  #    "groovy #{srcdir}/#{file}"
+  #   ] * " "
+  # end
+
+  # def self.rakefile_compile_task(cls)
+  # end
+
+  # # def self.rakefile_test_task(cls)
+  # #   [
+  # #    "task :test =&gt; [] do",
+  # #    "  sh \"groovy -classpath src test/Test.groovy\"",
+  # #    "end",
+  # #   ] * "\n" + "\n"
+  # #  end
+
+  # def self.rake_run_test(files,buildir)
+  #   "groovy -classpath src " + files.last
+  # end
+
+
+  # def self.makefile_rules(project,classes)
+  # end
+
+  # def self.rakefile_rules(project,classes)
+  # end
+
+  # def self.ant_rules(project,classes)
+  # end
+
+  # def self.scons_rules(project,classes)
+  # end
+
+    
+    end
+    
+    
+    
+  end
+</pre></body></html>

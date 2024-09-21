@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/pythoncase"
+
+
+module BHW
+
+  module Python 
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(PythonCase)  
+    self.extend(Interpreted)
+
+    interpreter     "python"     
+    directory       "python" 
+    source_file_ext "py"
+
+    formal_name     "Python"
+
+    #object_file_ext "pyc"    #not really compiole
+    option          "python"
+    assign          "="
+    indent          "    "
+    home_url        "https://www.python.org/"
+
+    self.merge_types(base_types,
+                     {
+                       Default=&gt; {
+                         to_h:      -&gt;(a){ "hash(#{to_member_s(a)})" },
+                         to_s:      -&gt;(a){ to_member_s(a)},
+                         format:    "%s",
+                         to_cmp:    -&gt;(a){ "cmp(#{to_member_s(a)},rhs.#{to_variable_s(a)})"},
+                         define:   -&gt;(v,n){ self.to_variable_s(n)  },
+                         to_value:  -&gt;(a,s=nil,l=0){ a.to_s},
+                       },
+                       
+                       BHW::Class=&gt; { 
+                         to_value:   -&gt;(v){  
+                           to_class_s(v.class_name.downcase) + "(" + v.members_param.map{|a| to_value(a.type)  }.join(",") + ");"
+                         },
+                       }})
+
+    def self.array_to_s(a,l=0)
+      square_bracket_list_s(a,",",l)
+    end
+    
+    def self.hash_to_s(h,l=0)      
+      key_value_list_s(h, "{}", "", ":",  ",")
+    end
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      [
+       vars.select{|v| v.type.class == BHW::Class}.map{|v| "from " + to_file_s(v.type.name) + " import *\n"},
+       "",
+       render_main_vars(vars,""),
+       "\n",
+       vars.map{|v| "print(" + to_variable_s(v) + ")\n"}
+      ] * ""
+    end
+    
+    
+    def self.render_hashable_methods(pg_class,file_type)
+      [
+       render_method("", "__cmp__", [Variable.new("rhs", "")]) {
+         pg_class.members_instance.map{|m,i| 
+           "    ret = #{to_compare(m.type,m.name)}\n    if ret != 0:\n      return ret\n"
+         }.join + "    return ret\n"
+       },
+       render_method("", "__eq__", [Variable.new("rhs", "")]) {
+         "    " &lt;&lt; "return " &lt;&lt; pg_class.members_instance.map{|m| "self.#{to_variable_s(m)} == rhs.#{to_variable_s(m)}"}.join(" and ")
+       },
+       render_method("", "__hash__", []) {
+         "    " &lt;&lt; "return " &lt;&lt; pg_class.members_instance.map{|m,i| to_hash(m.type,m.name)}.join(" + ")
+       }
+      ].join("\n")
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+      
+    end
+    
+    #####################################################
+    #
+    # header
+    #
+    #####################################################
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       pg_class.includes(self).map do |i| 
+         if i[0].chr =~ /[A-Z]/ 
+           "from " &lt;&lt; i.downcase &lt;&lt; " import " &lt;&lt; i &lt;&lt; "\n"
+         else
+           "import " &lt;&lt; i.downcase &lt;&lt; "\n"	
+         end
+       end.join(),
+       
+       if pg_class.main != true
+         "class #{to_class_s(pg_class)}(object):\n"
+         # "\n  __slots__ = ["
+         # pg_class.members.map{|m| "\"_#{to_variable_s(m)}\""}.join(",")
+         # "]\n\n"
+       else
+         if pg_class.main == true    
+           PG.external_classes.each{|c| "import #{to_file_s(c)}\n"} 
+         end + "import sys\n"
+       end
+      ].join
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      ""
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      str = "  def __init__("
+      [
+       str + pg_class.members_param.map{|p| to_parameter_s(p)}.unshift("self").join(sprintf(",\n%*s",str.length,"")) + "):\n",
+       pg_class.members_param.map{|m| "    " + to_member_s(m) + " = " + to_parameter_s(m) + "\n"},
+       pg_class.members_default.select{|a| a.scope == Instance }.map{|m| "    " + to_member_s(m) + " = " + to_value(m.type)} * "\n" + "\n",
+       "    pass\n",
+       "\n\n",
+      ].compact * ""
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      [
+       pg_class.members.map do |m|
+         [
+    	  if m.has_reader? 
+    	    [
+             "  @property",
+             "  def #{to_variable_s(m)}(self):",
+             "    return #{to_member_s(m)}" 	
+    	    ].join("\n")  + "\n"
+    	  end,
+    	  
+    	  if m.has_writer?	
+    	    [
+             "  @#{to_variable_s(m)}.setter",
+             "  def #{to_variable_s(m)}(self, _#{to_variable_s(m)}):",
+             "    #{to_member_s(m)} = _#{to_variable_s(m)}",
+    	    ].join("\n") + "\n"
+    	  end,
+          
+    	  if m.has_reader? || m.has_writer?
+    	    "\n"
+    	  end,
+         ].join
+       end,
+      ].join
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "  def __repr__(self):",
+       "    return " + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m.type, m)), l[1].push(to_string(m.type, m.name))]
+       end.ergo{|(f,v)| "\"" + f.join("-") + "\"" + "%(" + (v.join(",")) + ")"},
+      ].join("\n") + "\n"
+    end
+    
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+      pg_class.pg_methods.map do |m|
+        [
+         if pg_class.main != true
+           str = "  def #{to_method_s(m)}(self,"
+           params = []
+           [
+            str,
+            m.params.map {|p| params.push(p); p.lang_name}.join(sprintf(",\n%*s",str.length,"")),
+            "):\n"
+           ].join
+         end,
+         
+         m.pg_vars.map do |v|
+           [
+            if m.main != true
+              "    "
+            end,
+            v.lang_name,
+            " = ",
+            if v.init == nil
+              "\"\""
+            else
+              v.init.show  
+            end,
+            "\n"
+           ].join
+         end,
+         m.statements.map{|s| s.show + "\n"},
+         "\n\n",
+        ].join
+      end
+    end
+    
+    def self.render_method(returnType, name, params, static=false)
+      start = "  def " +  ((static==true)?"self.":"") + name + "(self"
+      [
+       start,
+       if params.length &gt; 0
+         "," + params.map{|m| Python.to_variable_s(m.name)}.join(",\n" + (" "  * start.length) )
+       end,
+       "):",
+       "\n",
+       yield,
+       "\n",
+       "\n"
+      ].join
+    end
+
+  def Python.makefile_rules(project,classes)
+  end
+  def Python.rakefile_rules(project,classes)
+  end
+  def Python.ant_rules(project,classes)
+  end
+  def Python.scons_rules(project,classes)
+  end
+  def self.rake_run_test(files,builddir)
+    "(PYTHONPATH=src python #{files.last})"
+  end
+
+    
+  end
+  
+  
+  
+    
+  end
+</pre></body></html>

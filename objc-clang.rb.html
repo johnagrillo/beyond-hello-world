@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/objccase"
+
+module BHW
+
+  
+  
+  module ObjCClang
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(ObjCCase)
+    self.extend(Compiled)
+    self.extend(Linked)
+    
+    directory        "objc-clang" 
+    option           "objc-clang" 
+    formal_name      "ObjectiveC(Clang)"
+    header_file_ext  "h"
+    source_file_ext  "m"
+    object_file_ext  "o"
+    exec_file_ext "exe"
+    indent            "    "
+    terminator       ";"
+    assign           "="
+    mode_line        "//-*-objc-*-"
+    home_url  "https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html"
+    
+    self.types = 
+      base_types.merge([[Array, "NSArray",         :array_init_s],
+                        [List,  "NSArray",         :array_init_s],
+                        [Tuple, "NSArray",         :tuple_init_s],
+                        [Set,   "NSSet",           :set_init_s],
+                        [Tuple, "NSArray",         :tuple_init_s],
+                        [Hash,  "NSDictionary",    :key_value_list_init_s],
+                        [Map,   "NSDictionary",    :key_value_list_init_s],
+                       ].reduce({}) {|h, (cls,type,lister)|
+                         h.merge( cls =&gt; {
+                                    type:       type + " * ",
+                                    to_value:   -&gt;(a,b=nil){ self.send(lister,a)},
+                                    include:     nil,
+                                    to_cmp:      "",
+                                    to_k:       -&gt;(a){"key"},
+                                    format:     -&gt;(a){"%s"},
+                                    to_s:       -&gt;(a){"string"},
+                                  })
+                       })
+    
+    
+    
+    def self.key_value_list_init_s(hash)
+      [
+       "@{" ,
+       hash.map {|e| to_value(e[0]) + ":" + to_value(e[1])}.join(", "),
+       "}"
+      ].join
+      
+    end
+    
+    def self.array_init_s(array)
+      if array == nil
+        "NULL"
+      else
+        [
+         "@[",
+         array.map{|a| 
+           if a.class == Array
+             self.array_init_s(a)
+           else
+             to_value(a)
+           end
+           
+         }. join(", "),
+         "]"
+        ].join
+      end
+    end
+    
+    
+    def self.tuple_init_s(array)
+      [
+       "@[",
+       array.map{|a| to_value(a)}. join(", "),
+       "]"
+      ].join
+    end
+    
+    def self.set_init_s(array)
+      [
+       "[NSSet setWithObjects:",
+       array.map{|a| to_value(a)}. join(", "),
+       ",NULL",
+       "]"
+      ].join
+    end
+    
+    
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+&lt;&lt;-MAIN
+#include &lt;Foundation/Foundation.h&gt;
+    
+#{vars.select{|v| v.type.class == BHW::Class}.map{|a| "#include \"#{to_file_s(a.type.name)}.h\"   "}.join("\n")}
+int main(int argc, char * arg[])
+{
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    #{render_main_vars(vars)}
+    #{vars.map{|a| "printf(\"%s\\n\", [[ #{ to_variable_s(a.name)} description ] cString] );"}.join("\n    ")}
+    [pool drain];
+    return 0;
+}
+MAIN
+    end
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "clang -c -Wall -fconstant-string-class=NSConstantString -Isrc \#{#{src_file}} -o \#{#{dest_file}}"
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      "clang \#{#{src_file}} -o \#{#{dest_file}} -lobjc -lgnustep-base"
+    end
+
+
+#   def self.compile(obj,srcs,srcdir=".", builddir=".")
+#     [
+#      "gcc -Wall -fconstant-string-class=NSConstantString -Isrc",
+#      srcs.map{|s| "#{srcdir}/#{s}" } * " ",
+#      "-o#{builddir}/#{obj} -lobjc -lgnustep-base"
+#     ] * " "
+#   end
+
+#   def self.rake_compile()
+#     "gcc -Wall -fconstant-string-class=NSConstantString -c -o"
+#   end
+
+#   "gcc -obuild/test build/Test.o \#{OBJ}"
+
+#   def self.rake_run_test(file,builddir)
+#     file
+#   end
+
+#   def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+#     "gcc -Wall -Isrc -fconstant-string-class=NSConstantString #{srcdir}/#{src} #{testdir}/#{test} -o#{builddir}/#{out} -lobjc -lgnustep-base"
+#   end
+
+#   def self.rake_run_test(file,builddir)
+#     file
+#   end
+
+#   def self.makefile_rules(project,classes)
+#   end
+
+#   def self.rakefile_rules(project,classes)
+#   end
+
+#   def self.ant_rules(project,classes)
+#   end
+
+#   def self.scons_rules(project,classes)
+# &lt;&lt;RULES
+# env=Environment(
+#                 CPPPATH='/usr/include/boost:/usr/local/lib/pg/cplusplus:.',
+# 		CCFLAGS=["-fconstant-string-class=NSConstantString"],
+#                 CPPDEFINES=[],
+#                 LIBS=[],
+#                 SCONS_CXX_STANDARD="c++11"
+#                 )
+# env.Library(Glob('*.m'))
+# RULES
+#   end
+
+
+
+  end
+end
+</pre></body></html>

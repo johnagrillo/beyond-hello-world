@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/luacase"
+module BHW
+  module Io
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(LuaCase)  
+    self.extend(Interpreted)
+
+    interpreter     "io"     
+    directory       "io" 
+    formal_name     "io"
+
+
+    source_file_ext "io"
+    option          "io"
+    assign          " := "
+    indent          "  "
+
+    home_url    "https://iolanguage.org/"
+
+
+    self.merge_types(base_types,
+                     BHW::Class=&gt; { 
+                       to_value:   -&gt;(v){  
+                         [
+                          to_class_s(v.class_name.downcase) ,
+                          " init(",
+                          v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+                          ");"
+                         ] * ""
+                       },
+                     })
+    
+    def self.array_to_s(a,l=0)
+      delimited_list_s(a, ["list(",")"],",",l)
+    end
+
+    def self.hash_to_s(hash,l=0)
+      key_value_list_s(hash, ["(Map clone)atPut",""], "()", ",",  " atPut ")
+    end
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      [
+       vars.select{|v| v.type.class == BHW::Class}.map{|a| File.open("io/" + to_file_s(a.type.name) + ".io") {|f| f.read}},
+       "\n",
+       render_main_vars(vars,""),
+       "\n",
+       vars.map{|v| to_variable_s(v) + " print\n\"\\n\" print\n\n"}
+      ] * ""
+    end
+    
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+      
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      
+      [
+       to_class_s(pg_class) + " := Object clone",
+       to_class_s(pg_class) + " init " + " := method(" + pg_class.members_param.map{|p| to_parameter_s(p) + ","} * "",
+       pg_class.members_param.map{|m| "    self " + to_variable_s(m) + " := " + to_parameter_s(m) + ";"},
+       pg_class.members_instance_default.map{|m| 
+         "    self " + to_variable_s(m) + " := " + to_value(m.type) + ";"
+       },
+       
+       "    return(self);",
+       ");",
+       "\n\n",
+       
+      ]  * "\n"
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_to_string_local(pg_class, file_type=SourceExt)
+      [
+       "return string.format(" + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m)), l[1].push("object."+to_parameter_s(m))]
+       end.ergo{|(f,v)| 
+         
+         if v.size == 0
+           "\"\""
+         else
+           ["\"" + f.join("-") + "\"",   (v.join(",")) ] * "," 
+         end + ")"
+       }
+      ].join("\n") + "\n"
+    end
+    
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_method(returnType, name, params, static=false)
+    end
+    
+  end
+  
+  
+end
+</pre></body></html>

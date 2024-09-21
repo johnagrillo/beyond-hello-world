@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/rubycase"
+module BHW
+
+  module Ruby
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(RubyCase)
+    self.extend(Interpreted)
+
+    interpreter     "ruby"     
+    directory       "ruby"
+    formal_name     "Ruby"
+
+    source_file_ext "rb" 
+    option          "ruby"
+    indent          "    "
+    assign "="
+    home_url        "https://www.ruby-lang.org/en/"
+    
+    self.merge_types(base_types,
+                     {
+                       Default =&gt; {
+                         to_cmp:   -&gt;(a){ "#{to_variable_s(a)} &lt;=&gt; rhs.#{to_variable_s(a)}"},
+                         to_eq:    -&gt;(a){ "#{to_variable_s(a)}.eql?(rhs.#{to_variable_s(a)})"},
+                         to_h:     -&gt;(a){ "#{to_variable_s(a)}.hash"},
+                         format:     "%s",
+                       },
+                       BHW::Class =&gt; {
+                         to_value:   -&gt;(v){  
+                           [
+                            to_class_s(v.class_name.downcase) ,
+                            ".new(",
+                            v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+                            ");"
+                           ] * ""
+                         },
+                       },
+                       String=&gt; {
+                         to_value: proc{|a| "\"#{a}\""},
+                       }
+                     }.merge(
+                       IntClasses.reduce({}){|h,cls|
+
+                         type = if cls.ap?
+                                  "BigNum"
+                                elsif cls.bits == 64 and cls.signed?()
+                                  "FixNum"
+                                else
+                                  type = ""
+                                end
+                         
+                         if type == ""
+                           h
+                         else
+                           h.merge(cls =&gt; {
+                                     primitive:  true,
+                                     type:       "#{type}",
+                                     default:       "0",
+                                     format:     -&gt;(v,m){ m.pad() == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" },
+                                   }
+                                  )
+                         end
+                       }))
+
+                       
+    def self.array_to_s(a,l=0)
+      square_bracket_list_s(a,",",l)    
+    end
+    
+    def self.hash_to_s(h,l=0)
+      key_value_delimited_list_s(h)
+    end
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      [
+       vars.select{|v| v.type.class == BHW::Class}.map{|v| "require '" + to_file_s(v.type.name) + "'\n"},
+       "",
+       render_main_vars(vars,""),
+       "\n",
+       vars.map{|v| "print(" + to_variable_s(v) + "); puts\n"}
+      ] * ""
+    end
+    
+    def self.key_value_delimited_list_s(hash)
+      key_value_list_s(hash, "{}", "", "=&gt;",  ",")
+    end
+    
+    def self.render_method(returnType, name, params, static=false)
+      start = "  def " +  (static==true ? "self." : "") + name + "("
+      [
+       start,
+       if params.length &gt; 0
+         params.map{|m| to_variable_s(m.name)}.join(",\n" + (" "  * start.length) )
+       end,
+       ")",
+       "\n",
+       yield,
+       "\n",
+       "  end",
+       "\n"
+      ].join
+    end
+    
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       pg_class.includes(self).map {|i| "require " + i + "\n"}.join,
+       if pg_class.main == true
+         PG.external_classes.map{|c| "require \"#{c.lang_name}\"\n"}.join
+       else
+         [
+          if pg_class.factory == true 
+            "require \"factory\"\n";
+          end,
+          "class #{to_class_s(pg_class.name)}\n",
+          if pg_class.factory == true 
+            "  include Factory\n";
+          end,
+          if pg_class.members_rw.length &gt; 0
+            "  attr_accessor " + pg_class.members_rw.map{|r| ":"+to_variable_s(r.name) }.join(", ") + "\n"
+          end,
+          if pg_class.members_r_only.length &gt; 0
+            "  attr_reader " + pg_class.members_r_only.map{|r| ":"+to_variable_s(r.name)}.join(", ") + "\n"
+          end,
+          if pg_class.members_w_only.length &gt; 0
+            "  attr_writer " &lt;&lt; pg_class.members_w_only.map{|r| ":"+to_variable_s(r.name)}.join(", ") + "\n"
+          end,
+         ].join
+       end
+      ].join
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      "end\n"    
+    end
+    
+    def self.render_private_constructor
+      "  private \n" + render_constructor(pg_class)
+    end
+    
+    def self.render_private
+      "  private\n"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      render_method("", "initialize", pg_class.members_param) do
+        [
+         pg_class.members_param.map {|m| "   " &lt;&lt; to_member_s(m) &lt;&lt; " = " &lt;&lt; to_parameter_s(m)},
+         pg_class.members_default.select{|a| a.scope==Instance  }.map{|m| "   " &lt;&lt; to_member_s(m) &lt;&lt; " = " &lt;&lt; to_value(m.type)}
+        ].join("\n")
+      end
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       render_method("", "get_key", pg_class.members.select{|a| a.scope==Instance}, true)  do
+         [
+          "    "  + 
+          pg_class.members_to_str{|a| a.scope==Instance }.reduce([[],[]]) do |l,m| 
+            [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m.name))]
+          end.each_with_index.map {|m,i| (i == 0) ? ("\"" + m.join("-") + "\"") : "%[" + (m.join(",")) + "]"}.join(""),
+         ].join
+       end,
+       
+       render_method("", "to_s", []) do
+         (indent*2) &lt;&lt; to_class_s(pg_class.name) &lt;&lt; ".get_key(" &lt;&lt;
+           pg_class.members_instance.map {|m| "@"+to_variable_s(m.name)}.join(",") &lt;&lt; ")"
+       end
+      ].join("\n")
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type) 
+      [
+       render_method("", "&lt;=&gt;", [Variable.new("rhs", :type =&gt; String)]) {
+         pg_class.members_instance.map do |m| 
+           "    ret = #{to_compare(m.type,m.name)}\n    return ret if ret != 0\n"
+         end.join
+       },
+       render_method("", "eql?", [Variable.new("rhs", :type =&gt; String)]) {
+         "  "*2 &lt;&lt; pg_class.members_instance.map{|m| to_eq(m.type, m.name)}.join(" and ")
+       },
+       render_method("", "hash", []) {
+         "  "*2 &lt;&lt; pg_class.members_instance.map{|m,i| to_hash(m.type, m.name)}.join(" + ")
+       }
+      ].join("\n")
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+      pg_class.pg_methods.map do |m|
+        [
+         if m.main != true
+           str = "\n  def #{m.lang_name}("
+           str + m.params.map{|p| to_variable_s(p)  }.join(sprintf(",\n%*s",str.length,"")) +  ")\n"
+         end,
+         m.pg_vars.map{|v|  "    " + v.lang_name + " = " + v.init == nil ? "nil" : v.init.show + "\n"},
+         m.statements.map{|s| "  " + s.show + "\n"},
+         if m.main != true
+           "  end\n"  
+         end
+        ].join
+      end
+    end
+    
+    def render_compare_methods(pg_class)
+    end
+
+
+  def self.execute_file(file, srcdir=".",builddir)
+    [
+     "ruby #{srcdir}/#{file}"
+    ] * " "
+  end
+
+  def Ruby.makefile_rules(project,classes)
+  end
+  def Ruby.rakefile_rules(project,classes)
+  end
+  def Ruby.ant_rules(project,classes)
+  end
+  def Ruby.scons_rules(project,classes)
+  end
+  def self.rake_run_test(files,builddir)
+    "ruby -I src #{files.last}"
+  end
+
+  end
+end
+</pre></body></html>

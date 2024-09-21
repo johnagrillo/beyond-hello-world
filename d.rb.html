@@ -1,0 +1,463 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/dcase"
+
+module BHW
+
+  module D 
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(DCase)
+    self.extend(Compiled)
+    self.extend(Linked)
+    
+    directory "d" 
+    option "d" 
+
+    formal_name "DMD" 
+
+    source_file_ext "d"
+    object_file_ext "obj"
+    exec_file_ext   "exe"
+    
+    object_file_ext "o"
+    indent      "    "
+    terminator  ";"
+    assign      "="
+    mode_line   "//-*-d-*-"
+    
+    rosetta_url      "D"
+    home_url         "https://dlang.org"
+    wikipedia_url    "D_(programming_language)"
+    
+    def self.key_value_pairs_list_s(hash,l=0)
+      key_value_list_s(hash, "[]", "", ":",  ",")
+    end
+    
+    def self.type_comma_list_s(list)
+      "(" + list.map{|v| to_type(v)}.join(",") + ")"
+    end
+    
+    def self.value_comma_list_s(list,l)
+      "(" + list.map{|v| to_value(v,"",l)}.join(",") + ")"
+    end
+    
+    
+    def self.operate(var, op_cmp_ret_1, op_cmp_ret_2)
+      [
+       [lhs_rhs(var).join( " " + op_cmp_ret_1[0] + " "), op_cmp_ret_1[2]],
+       [lhs_rhs(var).join( " " + op_cmp_ret_2[0] + " "), op_cmp_ret_2[2]],
+      ]
+    end
+    
+    def self.functionate(function, var, cmp_ret_1, cmp_ret_2)
+      [
+       [function+"("+lhs_rhs(var).join(" , ") + ")" + cmp_ret_1[0], cmp_ret_1[1]],
+       [function+"("+rhs_lhs(var).join(" , ") + ")" + cmp_ret_2[0], cmp_ret_2[1]],
+      ]
+    end
+
+    def self.lhs_rhs(var)
+      ["this.#{var}", "rhs.#{var}"]
+    end
+    
+    def self.rhs_lhs(var)
+      ["rhs.#{var}", "this.#{var}"]
+    end
+    
+    self.types = {
+      Primitive =&gt; {  # in C are Integer, Char, Float, Integer
+        define:  -&gt;(v,n){ to_type(v) + " " + to_variable_s(n)},
+        include:  nil,
+        to_s:     -&gt;(a){ "this.m_#{to_variable_s(a)}"},
+        to_h:     -&gt;(a){ "this.m_#{to_variable_s(a)}"},
+        to_eq:    -&gt;(a){ "this.m_" + to_variable_s(a) + " == rhs.m_" + to_variable_s(a)},
+        to_cmp:   -&gt;(a){ operate( "m_" + to_variable_s(a), ["&lt;", "==1", "-1"], ["&gt;", "==1", "1"])},
+        format:   "%s",
+        to_value: -&gt;(a,l=0){ a.to_s},
+      },
+      Default =&gt; {
+        include:    nil,
+        define:     -&gt;(v,n){
+          "#{to_type(v)} #{to_variable_s(n)}"
+        },
+        to_h:       -&gt;(a){ "#{to_variable_s(a)}"},
+        to_s:       -&gt;(a){ "#{to_variable_s(a)}"},
+        format:     "%s",
+        to_value:   -&gt;(a){ a.to_s},
+      },
+      BHW::Class =&gt; {
+        type:     -&gt;(c){ c.name.camel_case_capitalize},
+        to_cmp:   -&gt;(a){ operate( "m_" + to_variable_s(a), ["&lt;", "==1", "-1"], ["&gt;", "==1", "1"])},
+        to_eq:    -&gt;(a){ "this.m_" + to_variable_s(a) + " == rhs.m_" + to_variable_s(a)},
+        include:  -&gt;(a){ a.type.name.camel_case_capitalize},
+        to_h:     -&gt;(a){ "m_#{to_variable_s(a)}.toHash()"},
+        to_value:   -&gt;(v){  
+          [
+           "new ",
+           to_class_s(v.class_name),
+           "(",
+           v.members_param.map{|a| to_value(a.type)   }.join(","),
+           ")"
+          ] * ""
+          
+        },
+      },
+      
+      Char=&gt; {
+        primitive:  true,
+        type:       "char",
+        default:       " ",
+      },
+      String=&gt; {
+        to_h:       -&gt;(a){ "typeid(m_#{to_variable_s(a)}).getHash(&amp;m_#{to_variable_s(a)})"},
+        primitive:  true,
+        default:       "\"\"",
+        type:       "string",
+        include:    "std.string",
+        to_value: proc{|a| "\"#{a}\""}
+      },
+      Integer=&gt; {
+        primitive:  true,
+        type:       "int",
+        default:       "0",
+        format:     -&gt;(v,m){ m.pad ? "%#{m.pad}#{m.width}s"  : "%#{m.width}s" },
+      },
+      Boolean=&gt; {
+        primitive:  true,
+        type:       "bool",
+        default:     "0",
+      },
+      Float=&gt; {
+        primitive:  true,
+        type:       "float",
+        default:    "0.0",
+        to_h:       -&gt;(a){ "cast(int)m_#{to_variable_s(a)}" },
+      },
+      HashValue =&gt; {
+        type:       "hash_t",
+        default:       0,
+      },
+      Object =&gt; {
+        type:       "Object",
+      }
+    }.merge( IntClasses.reduce({}){|h,cls|
+
+               unsigned = ""
+               type = if cls.ap?
+                        "BigInt"
+                      else
+                        unsigned = cls.signed? ? "": "u"
+                        
+                        if cls.bits == 8
+                          "byte"
+                        elsif cls.bits == 16
+                          "short"
+                        elsif cls.bits == 32
+                          "int"
+                        elsif cls.bits == 64
+                          "long"
+                        elsif cls.bits == "Word"
+                          "size"
+                        end
+                      end
+               
+               h.merge(cls =&gt; {
+                         primitive:  true,
+                         type:       "#{unsigned}#{type}",
+                         default:    "0",
+                         format:     -&gt;(v,m){ m.pad() == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" },
+                         })
+               
+               
+             }
+           ).merge([[Array, -&gt;(a){ array_type(a) + " [] "} ],
+                    [List,  -&gt;(a){ array_type(a) + " [] "} ],
+             [Set,   -&gt;(a){ set_type(a) + " [] "  } 
+             ],
+            ].reduce({}) { |h,(cls,p)|
+              h.merge(cls =&gt; {
+                        type:       -&gt;(a){ p.(a) },
+                        to_value:   -&gt;(a,scope=Instance,l=0){ 
+                          square_bracket_list_s(a,",",l)
+                        },
+                      })
+            }).merge(
+                     Tuple   =&gt; {
+                       type:       -&gt;(a){ "Tuple!" + type_comma_list_s(a)},
+                       to_value:   -&gt;(a,scope=nil,l=0){ "tuple"  + value_comma_list_s(a,l)},
+                       include:       "std.typecons",
+                     }
+                     ).merge([Hash, Map].reduce({}) {|h,cls|
+                               h.merge(cls =&gt; {
+                                         type:   -&gt;(a) { 
+                                           key_t,value_t = key_value_type(a)
+                                           value_t + "[" + key_t + "]"
+                                         },
+                                         
+                                         to_value:    -&gt;(a,s=nil,l=0){ self.key_value_pairs_list_s(a,l) },
+                                       })
+                             }
+                             )
+    
+    
+    #
+    # render vars for maiun
+    #
+    # bug in compiler does not allow
+    #     initialization and assignment at the same time
+    #     work around is too define and assign in different sgteps
+    
+    def self.render_d_vars(vars)
+      vars.map do |(var)|
+        [
+         to_define(var.type, var.name),
+         assign,
+         to_value(var.type),
+         terminator,
+        ].join + "\n"
+      end.join("#{indent}")
+    end
+    
+    
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+
+   # #{vars.map{|v| "import src." + to_file_s(v.name) + ";"  }.join("\n") }
+
+&lt;&lt;-MAIN
+    
+
+    
+import std.stdio;
+import std.bigint;
+    
+int main(string [] argv)
+{
+    #{render_d_vars(vars)}
+    
+    #{vars.map{|v| "std.stdio.writefln(\"%s\"," + to_variable_s(v.name) + ");"  }.join("\n#{indent}") }
+    return 0;
+}
+MAIN
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      if pg_class.main != true
+        [
+         "module src." + to_file_s(pg_class.name) + ";\n",
+         pg_class.includes(self).map {|i| "import #{i};\n"}.join,
+         "import std.string;\n",
+         "import std.typecons;\n",
+         "class #{to_class_s(pg_class.name)} {\n",
+         "public:\n",
+        ].join
+      else
+        includes.map {|i| "import #{i};\n"}.join + PG.external_classes.map{|c| 
+          "import #{c.name.to_file_s};\n"
+        }.join
+      end
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      if pg_class.main then ""
+      else "}\n"
+      end
+    end
+    
+    def self.render_method(returnType, name, params, override=false, static=false)
+      start = indent + (override == true ? "override ":"") + 
+        (static == true ? "static ":"") + 
+        to_type(returnType.type) + " " + name + "("
+      [
+       start,
+       if params.length &gt; 0
+         params.map{|m| 
+           to_define(m.type, m.name)
+         }.join(",\n" + (" "  * start.length) )
+       end,
+       ")",
+       "\n#{indent}{\n" + yield + "\n#{indent}}", # append 
+       "\n",
+      ].join
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      f = ""
+      if pg_class.main then ""
+      else
+        construct = "  this"
+        str = "#{construct} ("
+        [
+         str,
+         pg_class.members.reject{|m| m.init == Default}.map{|p| to_define(p.type,p.name)}.join(","),
+         ")",
+         "\n  {\n",
+         pg_class.members_param.map {|m| "    " + "this.m_" + to_member_s(m) + " = " + to_member_s(m) + ";\n"},
+         pg_class.members_default.map do |m|
+           #
+           # hash cannot be initialized
+           #
+           #if m.type.class != Hash
+           "    " + "this.m_" + to_member_s(m) + " = " + to_value(m.type) + ";\n"
+           #end
+         end,
+         "  }\n"
+        ].join
+      end
+    end
+    
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      pg_class.members.map do |m|
+        [
+         if m.has_reader? 
+           "  @property #{to_member_s(m)}() pure {return m_#{to_member_s(m)};}\n" 	
+         end,
+         
+         if m.has_writer?	
+           "  @property #{to_member_s(m)}(" &lt;&lt; to_type(m.type) &lt;&lt; " "  &lt;&lt; to_member_s(m) &lt;&lt; ") { m_#{to_member_s(m)}=#{to_member_s(m)};}\n"
+         end,
+         
+         if m.has_reader? &amp;&amp; m.has_writer?
+           "\n"
+         end
+        ]
+      end.join() + "\n"
+    end
+    
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      render_get_key(pg_class) + "\n" + 
+        render_method(Variable.new("ret",""), "toString", [], true) {
+        indent + indent + "return(" + to_class_s(pg_class) + ".getKey(" + 
+        pg_class.members.map {|m| "m_" + to_variable_s(m) }.join(",") + "));";
+      }
+      
+    end
+    
+    def self.render_get_key(pg_class)
+      render_method(Variable.new("",""),"getKey", pg_class.members,false,true) {
+        [
+         indent * 2,
+         "return std.string.format(",
+         pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+           [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m))]
+         end.each_with_index.map do |m,i| 
+           (i == 0) ? ("\"" + m.join("-") + "\"") : (m.join(","))
+         end.join(","),
+         ");"
+        ].join
+      }
+    end
+    
+    #render_get_key,
+    
+    def self.render_hashable_methods(pg_class,file_type)
+      render_method(Variable.new("",HashValue.new()),"toHash",[],true,false) {
+        [
+         indent,
+         "return ",
+         pg_class.members_to_str.map do |m| 
+           to_hash(m.type, m.name)
+         end.join(" +\n#{indent*2}") +
+         ";"
+        ].join
+      }
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+      args = [Variable.new("rhs_object",Object.new())]
+      [
+       render_method(Variable.new("",1),  "opCmp", args,true){
+         [
+          "#{to_class_s(pg_class)} rhs = cast(#{to_class_s(pg_class)}) rhs_object;",
+          pg_class.members_to_str.reduce([]) do |l,m| 
+            to_compare(m.type, m.name).each{|a| l.push(a)}
+            l
+          end.each_with_index.map do |m,i|
+            "  #{i==0 ? "if " : "else if "}(#{m[0]}){\n    return #{m[1]};\n  }\n"
+          end.join
+         ].join("\n") + "return 0;\n"
+       },
+       
+       render_method(Variable.new("",Boolean.new),  "opEquals",  args, true){
+         indent + indent + "#{to_class_s(pg_class)} rhs = cast(#{to_class_s(pg_class)}) rhs_object;\n" + 
+         "  return " + pg_class.members_to_str.each_with_index.map do |m,i| 
+           "(" + to_eq(m.type,m.name) + ")"
+         end.join(" &amp;&amp; \n#{indent*2} ") + ";"
+       },
+       
+      ].join
+    end
+    
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_members(pg_class,file_type=SourceExt)
+      unless pg_class.main
+        [
+         "private:",
+         pg_class.members.map {|m| "#{indent}#{to_type(m.type)} m_#{to_variable_s(m)};"}.join("\n"),
+        ].join("\n")
+      end
+    end
+
+
+    def self.rakefile_rules(task,classes)
+%Q[LDFLAGS=""
+DMDFLAGS=""
+DMD="dmd"
+]
+    end
+
+    def self.compile_cmd_str(src_file,dest_file)
+      "\#{DMD} \#{DMDFLAGS} -c \#{#{src_file}} -of\#{#{dest_file}}"
+    end
+
+    def self.link_cmd_str(src_file,dest_file)
+      "\#{DMD} \#{LDFLAGS} \#{#{src_file}} -of\#{#{dest_file}}"
+    end
+
+
+  # def self.compile(obj,srcs,srcdir=".", builddir=".")
+  #   [
+  #    "dmd -of#{builddir}/#{obj} ",
+  #    srcs.map{|a| srcdir + "/" + a} * " ",
+  #   ] * " "
+  # end
+
+  # def self.rakefile_rules(project,classes)
+
+  # end
+
+  # def self.rake_compile()
+  #   #"dmd -c O0 -Wall -g -fPIC -I/usr/include/boost  -I /usr/local/include/pg/cplusplus -std=c++11 -c -o"
+  #   "dmd -c -of"
+
+  # end
+
+  # def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+  #    "dmd -of#{builddir}/#{out} #{srcdir}/#{src} #{testdir}/#{test}"
+  # end
+
+  # def self.rake_run_test(file,builddir)
+  #   file
+  # end
+
+  # def self.makefile_rules(project,classes)
+  #   # exe_name = self.to_file_s(project).downcase + ".exe" 
+  #   # exe_name = self.to_file_s(project).downcase 
+  # end
+
+  # def self.ant_rules(project,classes)
+  # end
+
+  # def self.scons_rules(project,classes)
+  #   "Library(Glob('*.d'))"
+  # end
+
+    
+  end
+end
+</pre></body></html>

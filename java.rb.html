@@ -1,0 +1,527 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/javacase"
+module BHW
+
+  module Java 
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(JavaCase)
+    self.extend(Compiled)
+
+    
+    directory       "java" 
+    source_file_ext "java"
+    object_file_ext "class"
+    option          "java"
+    formal_name     "Java"
+    indent          "    "
+    terminator      ";"
+    assign          "="
+    mode_line       "//---*-java-*-"
+    home_url        "https://www.java.com/en/"
+
+    
+
+    #                       2    3       4       5       6      7      8     9      10
+    tuples = %W(Zero Single Pair Triplet Quartet Quintet Sextet Septet Octet Ennead Decade)
+    
+    
+    self.types = {
+      Primitive =&gt; {
+        format:       "%s",
+        to_h:         -&gt;(a){to_variable_s(a)},
+        define:       -&gt;(v,n){  to_type(v) + " " + to_variable_s(n)},
+        to_cmp:       -&gt;(a){ 
+          [
+           "",
+           indent * 2 + "if (#{to_variable_s(a)} &lt; rhs.#{to_variable_s(a)}) return -1;",
+           indent * 2 + "if (#{to_variable_s(a)} &gt; rhs.#{to_variable_s(a)}) return 1;",
+           "",
+          ].join("\n")
+        },
+        to_value: -&gt;(a,scope=nil,l=0){ a.to_s},
+      },
+      Default =&gt; {
+        format:       "%s",
+        include:      nil,
+        define:      -&gt;(v,n){  to_type(v) + " " + to_variable_s(n)},
+        to_h:         -&gt;(a){to_variable_s(a) + ".hashCode()"},
+        to_value:    proc{|a| a.to_s},
+      },
+      
+      BHW::Class =&gt; {
+        format:      "%s",
+        to_h:        -&gt;(a){to_variable_s(a) + ".hashCode()"},
+        define:    -&gt;(v,n,c=Instance){ "src." + v.name.camel_case_capitalize  + " " + to_variable_s(n)},
+        type:       -&gt;(a){ "src." + a.type.name.camel_case_capitalize },
+        to_cmp:     -&gt;(a){ 
+          [
+           indent * 2 + "ret = #{to_variable_s(a)}.compareTo(rhs.#{to_variable_s(a)});",
+           indent * 2 + "if (ret !=0) return ret;",
+          ].join("\n")
+        },
+        to_value:   -&gt;(v){  
+          [
+           "new src.",
+           to_class_s(v.class_name.downcase) ,
+           "(",
+           v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+           ")"
+          ] * ""
+          
+        },
+      },
+      Char=&gt; {
+        primitive:  true,
+        type:       "char",
+        default:       " ",
+        format:       "%c",
+      },
+      String=&gt; {
+        type:       "String",
+        default:       "\"\"",
+        to_cmp:     -&gt;(a){ 
+          [
+           indent * 2 + "ret = #{to_variable_s(a)}.compareTo(rhs.#{to_variable_s(a)});",
+           indent * 2 + "if (ret !=0) return ret;",
+          ].join("\n")
+        },
+        to_value: proc{|a| "\"#{a}\""}
+      },
+      Integer =&gt; {
+        primitive:  true,
+        type:       "Integer",
+        default:       0,
+        format:     -&gt;(v,m){ m.pad == false ? "%#{m.width}d":"%#{m.pad}#{m.width}d"
+        },
+      },
+      Float=&gt; {
+        primitive:  true,
+        type:       "Double",
+        default:    "0.0",
+        format:     "%s", 
+        to_value:    -&gt;(a){ a.to_s + "d"},
+        to_h:        -&gt;(a){ to_variable_s(a) + ".hashCode()"},
+      },
+      Array =&gt; {
+        define:     -&gt;(v,n){ 
+          
+          t = v[0]
+          t = t[0] while t.class == Array
+          
+          if t.class == Tuple
+            "List &lt;" + array_type(v) + "&gt;"
+          else
+            array_type(v) + "[]" 
+          end  + " " + self.to_variable_s(n)
+          
+        },
+        to_value:   -&gt;(a,scope=Instance,l=0) {self.squigly_bracket_list_s(a,l)},
+        type:       -&gt;(a){ 
+          
+          #
+          # is there a tuple
+          #  if yes switch to ArrayList 
+          #
+          
+          t = a[0]
+          t = t[0] while t.class == Array
+          if t.class == Tuple
+            "List &lt;" + array_type(a) + "&gt;"
+          else
+            array_type(a) + "[]" 
+          end
+        },
+        default:    -&gt;(a){ 
+          t = a[0]
+          t = t[0] while t.class == Array
+          if t.class == Tuple
+            "Arrays.asList" + self.paren_bracket_list_s(a) + "";
+          else
+            "new " + to_type(a) + " " + self.squigly_bracket_list_s(a)
+          end
+        },
+      },
+      
+      List   =&gt; {    
+        type:       -&gt;(a,b=nil){ "List&lt;" + array_type(a) + "&gt;" },
+        to_value:   -&gt;(a,b=nil){ "new " + "ArrayList&lt; " + array_type(a)   + " &gt;()"},
+        default:   -&gt;(a,b=nil){ "new " + "ArrayList&lt; " + array_type(a)   + " &gt;()"},
+      },
+      
+      Set   =&gt; {    
+        type:       -&gt;(a){ "Set&lt;" + set_type(a) + "&gt;" },
+        to_value:   -&gt;(a){ "new " + "HashSet&lt; " + set_type(a)  + " &gt;()"},
+        default:   -&gt;(a){ "new " + "HashSet&lt; " + set_type(a)  + " &gt;()"},
+      },
+      
+      Tuple   =&gt; {    
+        include:    "org.javatuples.*",
+        type:       -&gt;(a){ tuples[a.size] + "&lt;" + tuple_type(a) + "&gt;" },
+        to_value:   -&gt;(a,s,l){ "new " + tuples[a.size] + "&lt;" + tuple_type(a)   + " &gt;(" +  a.map{|a| a.inspect}.join(",") + ")"},
+        default:    -&gt;(a){ "new " + tuples[a.size] + "&lt;" + tuple_type(a)   + " &gt;(" +  a.map{|a| a.inspect}.join(",") + ")"},
+      },
+      
+      Hash =&gt; {
+        type:     -&gt;(a){ "Map&lt;" + hash_type(a) + "&gt;" },
+        to_value:  -&gt;(a){ 
+          [ "new TreeMap&lt;" + hash_type(a) + "&gt;(){{\n" + 
+            a.map{|k,v| " put(%s,%s);\n"%[to_value(k), to_value(v)]}.join
+          ].join + "\n    }}"},
+        default:  -&gt;(a){ 
+          [ "new TreeMap&lt;" + hash_type(a) + "&gt;(){{\n" + 
+            a.map{|k,v| " put(%s,%s);\n"%[to_value(k), to_value(v)]}.join
+          ].join + "\n    }}"},
+      },
+      Map =&gt; {
+        type:     -&gt;(a){ "Map&lt;" + hash_type(a) + "&gt;" },
+        to_value:  -&gt;(a){ 
+          [ "new TreeMap&lt;" + hash_type(a) + "&gt;(){{\n" + 
+            a.map{|k,v| " put(%s,%s);\n"%[to_value(k), to_value(v)]}.join
+          ].join + "\n    }}"},
+        default:  -&gt;(a){ 
+          [ "new TreeMap&lt;" + hash_type(a) + "&gt;(){{\n" + 
+            a.map{|k,v| " put(%s,%s);\n"%[to_value(k), to_value(v)]}.join
+          ].join + "\n    }}"},
+      },
+    }.merge(
+      IntClasses.reduce({}){|h,cls|
+        
+        type = if cls.ap?
+                 "java.math.BigInteger"
+               else
+                 if cls.bits == 8
+                   if cls.signed?
+                     "byte"
+                   end
+                 elsif cls.bits == 16
+                   if cls.signed?
+                     "short"
+                   else
+                     "char"
+                   end
+                 elsif cls.bits == 32
+                   if cls.signed?
+                     "int"
+                   end
+                 elsif cls.bits == 64
+                   if cls.signed?
+                     "long"
+                   end
+                 end
+               end
+
+        if type == nil
+          h
+        else
+          h.merge(cls =&gt; {
+                    primitive:  true,
+                    type:       "#{type}",
+                    default:       "0",
+                    format:     -&gt;(v,m){ m.pad() == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" },
+                  }
+                 )
+        end
+      })
+      
+    
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+&lt;&lt;-MAIN
+import java.util.*;
+import org.javatuples.*;
+    
+public class #{to_class_s(pg_class.name)}
+{
+    static public void main(final String[] args)
+    {
+        #{render_main_vars(vars,indent*2)}
+        #{vars.map{|v| "System.out.println(" + to_variable_s(v.name)  + ");"}.join("\n#{indent*2}")}
+        System.exit(0);
+    }
+}
+MAIN
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       "package src;",
+       "import java.util.*;",
+       "import org.javatuples.*;",
+       pg_class.includes(self) {|i| "import #{i};"},
+       "public class #{to_class_s(pg_class)}",
+       if pg_class.comparable
+         " implements Comparable&lt;#{to_class_s(pg_class)}&gt;" 
+       end,
+       "{\n"
+      ].join("\n")
+    end
+    
+    def self.render_members(pg_class,file_type=SourceExt)
+      pg_class.members_instance.map do |m|
+        indent + "private " + to_define(m.type,m.name) + ";"
+      end.join("\n")
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      "\n}\n"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      [
+       "#{indent}public #{to_class_s(pg_class)}(" +
+       pg_class.members_param.map{|p| to_define(p.type,p.name)}.join(",") + ")",
+       "#{indent}{",
+       pg_class.members_param.map{|m|"#{indent*2}#{to_member_s(m)} = #{to_variable_s(m)};"},
+       pg_class.members_default.select{|m| m.scope == Instance}.map{|m| "#{indent*2}#{to_member_s(m)} = #{to_default(m.type)};"},
+       "#{indent}}"
+      ].join("\n")
+    end
+    
+    def self.render_get_instance(pg_class)
+      [
+       str = indent + "public static #{to_class_s(pg_class)} getInstance(" +
+       pg_class.members_param.map{|p| p.declare}.join(sprintf(",\n%*s",str.length,"")) + ")",
+       
+       "#{indent}{",
+       "#{indent*2}return factory.checkInstance(new #{to_class_s(pg_class)}(" +
+       pg_class.members_param.map {|m|   to_variable_s(m)}.join(",") +
+       "));",
+       
+       "#{indent}}"
+      ].join("\n")
+      
+    end
+    
+    def self.render_get_key(pg_class)
+      str = indent + "public static String getKey("      
+      [
+       str,
+       pg_class.members_param.map{|p| p.declare}.join(sprintf(",\n%*s",str.length,"")),
+       ")",
+       "\n#{indent}{\n",
+       (indent*2) + "return String.format(",
+       PG.make_printf(pg_class.members_param).map{|formats,args|
+         [
+          "\"" + formats.join + "\"", 
+          args.map{|arg| arg.to_variable_s}.join(",")
+         ].join("aa,")
+       }.join,
+       ");\n",
+       indent + "}\n\n"
+      ].join
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      pg_class.members.map do |m|
+        [
+         if m.has_reader? 
+           "#{indent}#{to_type(m.type)} #{to_reader_s(m)}(){ return this.#{to_variable_s(m)};}"
+         end,
+         if m.has_writer?	
+           [
+    	    "#{indent}#{to_type(m.type)} #{to_writer_s(m)}(#{to_type(m.type)} #{to_parameter_s(m)}){",
+    	    "#{indent*2}this.#{to_variable_s(m)}=#{to_parameter_s(m)};",
+    	    "#{indent*2}return this.#{to_variable_s(m)};}",
+           ].join
+         end,
+         if m.has_reader? &amp;&amp; m.has_writer?
+           "\n"
+         end,
+        ].join("\n")
+      end
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "#{indent}@Override public String toString()",
+       "#{indent}{",
+       
+       "#{indent*2}return String.format(" + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m))]
+       end.ergo do |(f,v)| 
+         [
+          "\"" + f.join("-") + "\"",
+          if v.count &gt; 0
+            v.join(",")
+          end
+         ].compact.join(",")
+       end + ");",
+       
+       "#{indent}}\n"
+      ].join("\n")
+    end
+    
+    def self.render_compare(pg_class)
+      if pg_class.members_to_str.size &gt; 0
+        class_name = to_class_s(pg_class)
+        class_var = to_variable_s(pg_class)
+        [
+         "#{indent}@Override public int compareTo(#{class_name} rhs)",
+         "#{indent}{",
+         "#{indent*2}int ret=0;",
+         pg_class.members_to_str.map {|m| to_compare(m.type,m.name)}.join("\n"),
+         "#{indent*2}return ret;",
+         "#{indent}}",
+        ].join("\n")
+      end
+    end
+    
+    def self.render_hash(pg_class)
+      if pg_class.members_to_str.size &gt; 0
+        [
+         "#{indent}@Override public int hashCode()",
+         "#{indent}{",
+         "#{indent*2}return " + pg_class.members_to_str.map{|m| to_hash(m.type, m.name)}.join("+") + ";",
+         "#{indent}}",
+        ].join("\n")
+      end
+    end
+    
+    def self.render_equals(pg_class)
+      class_name = to_class_s(pg_class)
+      class_var = to_variable_s(pg_class)
+      
+      if pg_class.members_to_str.size &gt; 0
+        [
+         "#{indent}@Override public boolean equals(Object obj)",
+         "#{indent}{",
+         "#{indent*2}if (this == obj) return true;",
+         "#{indent*2}if (!(obj instanceof #{class_name})) return false;",
+         "#{indent*2}#{class_name} #{class_var} = (#{class_name})obj;",
+         "#{indent*2}return " + pg_class.members_to_str.map do |m| 
+           var = to_variable_s(m)
+           # if @primitives.include?(m.type) == false
+           #   "#{var}.equals(#{class_var}.#{var})"
+           # else
+           "#{var} == #{class_var}.#{var}"
+           # end
+         end.join(" &amp;&amp;\n" + (indent * 3)) + ";",
+         
+         "#{indent}}",
+        ].join("\n")
+      end
+    end
+    
+    def self.render_hashable_methods(pg_class, file_type)
+      render_hash(pg_class).to_s + "\n" + render_equals(pg_class).to_s + "\n"
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+      render_compare(pg_class)
+    end
+    
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+
+
+    def self.rakefile_rules(task,classes)
+      %Q[
+JAVAC="javac"
+JAVA="java"
+]
+    end
+
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "\#{JAVAC} -d \#{BUILD} -classpath /usr/local/lib/pg/java:/usr/local/lib/pg/java/javatuples-1.2.jar:. \#{#{src_file}}"
+    end
+
+    def self.run_cmd_str(file)
+      "\#{JAVA} -classpath /usr/local/lib/pg/java:/usr/local/lib/pg/java/javatuples-1.2.jar:.:\#{BUILD} \#{File.basename(#{file},\".class\")}"
+    end
+
+    def self.run_cmd_shell_str(file)
+      "java -classpath /usr/local/lib/pg/java:/usr/local/lib/pg/java/javatuples-1.2.jar:.:build #{File.basename(file,".class")}"
+    end
+
+  # def self.compile(obj,srcs,srcdir=".", builddir=".")
+  #   [
+  #    "javac -d build",
+  #    srcs.map{|s| srcdir + "/" + s} * " ",
+  #   ] * " "
+  # end
+
+  def self.execute_file(file, srcdir=".",builddir)
+    [
+     "java -classpath #{builddir} #{file.split('.').first}"
+    ] * " "
+  end
+
+  # def Java.rakefile_compile_task(cls)
+  #   [
+  #    "task :compile =&gt; [] do",
+  #    "  sh \" javac #" + "{SRC} -classpath /usr/local/lib/pg/java:/usr/local/lib/pg/java/javatuples-1.2.jar:.  -d #" + "{OBJDIR}\"",
+  #    "  sh \" mv build/src/*.class build \"",
+  #    "end",
+  #   ] * "\n" + "\n"
+  # end
+
+  # def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+  #   [
+  #    "javac -classpath build:/usr/local/lib/pg/java/javatuples-1.2.jar:. -d build test/Test.java" ,
+  #   ] * "\n"
+  # end
+  # def self.rake_run_test(cls,builddir)
+  #   "java -classpath build:/usr/local/lib/pg/java/javatuples-1.2.jar:. test.Test"
+  # end
+
+  # def self.rakefile_compile_task(cls)
+  #   [
+  #    "task :compile =&gt; [] do",
+  #    "  sh \" javac #" + "{SRC} -classpath /usr/local/lib/pg/java  -d #" + "{OBJDIR}\"",
+  #    "end",
+  #   ] * "\n" + "\n"
+  # end
+  
+#   def self.rake_compile
+#     ""
+#   end
+
+#   def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+#     [
+#      "javac -classpath #{builddir}:/usr/local/lib/pg/java/javatuples-1.2.jar:.  -d #{builddir} #{testdir}/#{test}" ,
+#     ] * "\n"
+#   end
+
+#   def self.rake_run_test(file,builddir)
+#     "java -classpath #{builddir}:/usr/local/lib/pg/java/javatuples-1.2.jar:. test.#{File.basename(file)}"
+#   end
+
+
+#   def self.makefile_rules(project,classes)
+#     class_file = self.to_file_s(project)
+
+# &lt;&lt;RULES
+# # run:
+# #\t\${JAVA} #{class_file} \${FILES}
+# RULES
+
+#   end
+
+
+#   def self.rakefile_rules(project,classes)
+# &lt;&lt;RULES
+# # rule '.class' =&gt; '.java' do |t|
+#   sh "javac \#{t.source}"
+# end
+# RULES
+
+#   end
+
+  # def self.ant_rules(project,classes)
+  # end
+
+  # def self.scons_rules(project,classes)
+  #   "Java('.', '.')"
+  # end
+
+
+  end
+  
+  
+  
+  
+end
+</pre></body></html>

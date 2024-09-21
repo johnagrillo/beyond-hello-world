@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  # Clean
+    
+  # [edit]Record type
+  
+  # [edit]Parameterized Algebraic type
+  # :: Point a = Point a a  // usage: (Point Int)
+  # [edit]Synonym type
+  # :: Point :== (Int, Int)
+  # [edit]
+  
+  module Clean
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(CamelCase)
+    self.extend(Compiled)
+    
+    def self.to_file_s(s)
+      s.camel_case.under_case
+    end
+    
+    def self.to_parameter_s(s)
+      s.camel_case
+    end
+    
+    
+    directory              "clm"
+    option                 "clm"
+    formal_name            "Clean"
+    
+    source_file_ext        "icl"
+    header_file_ext        "dcl"
+    object_file_ext        "o"
+    exec_file_ext          "exe"
+    indent                 "    "
+    assign                "="
+    mode_line             "//-*-clean-*-"
+
+    formal_name          "Clean"
+
+    rosetta_url          "Clean"
+    home_url             "http://clean.cs.ru.nl/"
+    wikipedia_url        "Clean_(programming_language)"
+    
+    self.types = {
+      Default=&gt; {
+        to_s:      -&gt;(a){ to_variable_s(a)},
+        include:  nil,
+        define:   -&gt;(v,n=""){ to_variable_s(v)},   
+        to_value: -&gt;(v,l=0){ v.to_s},
+        type:     "type",
+      },
+      BHW::Class =&gt; {
+        type:      -&gt;(a){ a.type.name.camel_case_capitalize },
+        include:   -&gt;(a){ a.type.name.camel_case_capitalize },
+        format:    "%s",
+        default:      -&gt;(a){ "new_#{a.type.name.camel_case_capitalize} " },
+        to_s:      -&gt;(a){ "(show #{to_variable_s(a)})"},
+        to_value:   -&gt;(v){
+          [
+           "new" + to_class_s(v.class_name),
+           v.members_param.map{|a| to_value(a.type)  }.join(" ")
+          ] * " "
+        },
+        
+      },
+      Char=&gt; {
+        type:       "Char",
+        default:       "' '",
+        format:      "%c",
+      },
+      String=&gt; {
+        type:       "String",
+        default:       "\"\"",
+        format:      "%s",
+        to_value:   -&gt;(a,s=nil,l=0){ "\"#{a}\""}
+      },
+      Integer=&gt; {
+        type:       "Int",
+        default:       0,
+        format:     -&gt;(a){ a.pad == false ? "%#{a.width}d" : "%#{a.pad}#{a.width}d" }
+      },
+      Float=&gt; {
+        type:       "Real",
+        default:       0.0,
+        format:      "%f"
+      },
+    }.merge( [[Array, :clean_array_type_s,  :clean_array_s],
+              [List,  :clean_list_type_s,   :clean_list_s],
+              [Set ,  :clean_set_type_s,    :clean_set_s],
+              [Tuple, :clean_tuple_type_s,  :clean_tuple_s],
+              [Hash,  :clean_hash_type_s,   :clean_hash_s],
+              [Map ,  :clean_map_type_s,    :clean_map_s],
+             ].reduce({}) do|h, (cls,typer,lister)|
+               h.merge( cls =&gt; {
+                          to_value:   -&gt;(a,b=Instance,l=0){self.send(lister,a,l)},
+                          type:       -&gt;(a){ self.send(typer,a)},
+                          to_k:       -&gt;(a){"key"},
+                          format:     -&gt;(a){"%s"}
+                        })
+             end
+             )
+    
+    
+    def self.clean_array_type_s(array)
+      "{" + array_type(array) + "}"
+    end
+    
+    def self.clean_array_s(array,l=0)
+      self.delimited_list_s(array, "{}",",",l)
+    end
+    
+    def self.clean_list_type_s(array)
+      "[" + array_type(array) + "]"
+    end
+    
+    def self.clean_list_s(array,l=0)
+      self.delimited_list_s(array, "[]", ",",l)
+    end
+    
+    def self.clean_set_type_s(set)
+      "[" + set_type(set) + "]"
+    end
+    
+    def self.clean_set_s(set)
+      self.delimited_list_s(set, "[]")
+    end
+    
+    def self.clean_tuple_type_s(tuple)
+      "(" + tuple_type(tuple) + ")"
+    end
+    
+    def self.clean_tuple_s(tuple,l=0)
+      self.delimited_list_s(tuple, "()", ",")
+    end
+    
+    def self.clean_hash_type_s(a)
+      "FMap (" + hash_type_value(a) + ")"
+    end
+    
+    def self.clean_hash_s(a,l=0)
+      key_value_list_s(a,["emptyFMap",""],[" &lt;&lt;= (",")"],",","",l)
+    end
+    
+    def self.clean_map_type_s(a)
+      "Map " + hash_type_value(a)
+    end
+    
+    def self.clean_map_s(a)
+      key_value_list_s(a)
+    end
+    
+    #"import _SystemArray",
+    #"import GenFMap",
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      [
+       "module " + to_file_s(pg_class.name),
+
+       vars.select{|v| v.type.class == BHW::Class}.map{|v| "import " + to_file_s(v.type.class_name) + "\n"} * "",
+       "Start = \n" + vars.map {|v| ["    let", to_define(v,v.name), "=",  to_value(v.type) + " in" ] * " "} * "\n",
+       "    (" + vars.map{|v| to_variable_s(v) } * "," + ")"
+      ] * "\n"
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      lang_name = to_file_s(pg_class.name)
+      
+      
+      if file_type == HeaderExt
+        [
+         "definition module #{lang_name}\n",
+         "::  #{to_class_s(pg_class)}\n"
+        ] * "\n"
+      else
+        [
+         "implementation module #{lang_name}\n\n",
+         "import _SystemArray\n",
+         "import GenFMap\n",
+         "\n",
+         [
+          "::  #{to_class_s(pg_class)} =  {\n",
+          pg_class.members_instance.map {|m|  "  #{to_member_s(m)} :: #{to_type(m.type)}"}.join(",\n"),
+          "}",
+          "\n"
+         ] * ""
+        ] * ""
+      end
+    end
+    
+    
+    
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      
+      params = pg_class.members_param.map{|p| to_type(p.type)}
+      declare = "new" + to_class_s(pg_class) + " :: " 
+      if params.size &gt; 0
+        declare += params.join(" ") + "-&gt;"
+      end
+      declare += to_class_s(pg_class)
+      
+      if file_type == HeaderExt
+        declare 
+      else
+        [
+         declare,
+         "new" + to_class_s(pg_class) + " " + pg_class.members_param.map{|p| to_parameter_s(p)}.join(" ") + " = {" + to_class_s(pg_class) + "|",
+         pg_class.members_instance.map{|m| "  " + to_variable_s(m) + " = " + (m.is_param? ? to_parameter_s(m)  : to_value(m.type)) }.join(",\n") + "}",
+         "\n\n",
+        ]
+      end
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_get_instance
+    end
+    
+    def self.render_get_key(pg_class)
+    end
+    
+    def self.render_factory_methods
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+    end
+
+
+    ################################################################
+    #
+    # Compiler Strings
+    #
+    ################################################################
+
+    def self.compile_cmd_str(src_file,dest_file)
+      "\#{CLM} -I \#{File.basename(File.dirname(#{src_file}))} \#{File.basename(#{src_file}).ext} -o \#{#{dest_file}}"
+    end
+
+    def self.link_cmd_str(src_file,dest_file)
+      "cp \#{#{src_file}} \#{#{dest_file}}"
+    end
+
+    def self.run_cmd_str(file)
+      "./\#{#{file}}"
+    end
+
+
+    ################################################################
+    #
+    # Makefile
+    #
+    ################################################################
+    def self.makefile_rules(a,b)
+    end
+
+
+    ################################################################
+    #
+    # Rakefile 
+    #
+    ################################################################
+
+
+    def self.rakefile_rules(task,classes)
+      %Q[CLM="clm"]
+    end
+
+
+    def self.compile(obj,srcs,srcdir=".", builddir=".")
+      "clm -I #{srcdir} " +
+        srcs.map{|s| s.split('.').first } * " "+ 
+        " -o #{builddir}/#{obj}"
+    end
+
+    # def self.rake_compile_test(src,tst,out,srcdir,testdir,builddir)
+    #   "clm -I test -I src #{tst.split('.')[0]} -o #{builddir}/#{out}"
+    # end
+
+    # def self.rake_run_test(file,builddir)
+    #   "#{file} 2&gt;/dev/null"
+    # end
+
+
+
+
+    def self.scons_rules(a,b)
+    end
+
+  end
+
+
+
+
+end
+</pre></body></html>

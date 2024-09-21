@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module Awk
+
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(Interpreted)
+    self.extend(UnderCase)
+    
+    interpreter     "awk"
+    directory       "awk"
+    option          "awk"
+    source_file_ext "awk"
+    indent           "    "
+    terminator       ";"
+    assign           "="
+    mode_line        "#-*-awk-*-"
+    formal_name      "Awk"
+    rosetta_url      "awk"
+    wikipedia_url    "AWK"
+
+    home_url     "https://www.gnu.org/software/gawk/manual/gawk.html"
+    
+    merge_types(base_types, {
+                  
+      Default =&gt;
+      {
+        define_init:-&gt;(v,declare=nil){
+          [
+            
+            indent,
+            to_variable_s(v),
+            "=",
+            to_value(v.type),
+            ";"
+          ] * ""
+        },
+      },
+
+      Int_AP =&gt;
+      {
+        define_init:-&gt;(v,declare=nil){
+          [
+            
+            indent,
+            declare,
+            "=",
+            to_value(v.type),
+            ";"
+          ] * ""
+        },
+      },
+      
+      
+      BHW::Class =&gt; {
+           to_value:   -&gt;(v){  
+           [
+            to_class_s(v.class_name) + "_new" ,
+            "(",
+            v.members_param.map{|a| to_value(a.type)   }.unshift(to_variable_s(v.name)) * ",",
+            ")"
+           ] * ""
+         },
+      },
+      
+    }.merge( [Array, List, Set, Tuple ].reduce({}) {|h,cls| 
+               h.merge(cls =&gt; { 
+                         to_value: -&gt;(a,b=nil) {a.to_s} ,
+                         define_init: -&gt;(m,var=nil) {
+                           flattened = m.type.flattened.map{|a| a}
+                           first = flattened.first
+
+                           [
+                            "\n" + indent + "# #{m.type.to_a[0..10].inspect} \n",
+                            flattened.map do |(i,v)|
+                              
+                              if m.type.class == Tuple
+                                v.each_with_index.map do |tv,ti|
+                                end
+                              else
+                                
+                                if var == nil
+                                  var = "self[\"#{to_member_s(m.name)}\"]"
+                                end
+
+
+                                  
+
+                                if v.class == Hash
+                                  v.flattened.map{|a| indent + "#{var}#{i.map{|i|"[#{i}]"} *""}#{a[0].map{|i|"[#{to_value(i)}]"} *""} = #{to_value(a[1])}\n" } 
+                                else
+                                  indent + "#{var}#{i.map{|i| "[#{i}]" }*""}=#{to_value(v)};\n"      
+                                end
+
+                              end
+                            end 
+                            
+                           ] * ""
+                         } 
+           }
+                       )
+             })
+        .merge( [Hash,Map].reduce({}){|h,cls| 
+                h.merge(cls=&gt; {
+                          to_value:  -&gt;(a,b=nil){a.to_s},
+                          define_init: -&gt;(m,var=nil) {
+                            dims,type = m.type.dims_type
+                            flatened = m.type.flattened
+                            [
+                             "\n" + indent + "#" + m.type.flattened.to_a[0..5].to_s + "\n",
+                             m.type.flattened.map do |(i,v)|
+                               indent + "self[\"#{to_member_s(m.name)}\"]#{i.map{|i| "[#{to_value(i)}]" }*""}=#{to_value(v)};\n"      
+                             end
+                            ] * ""
+                          }})}))
+  
+    def self.render_main(pg_class,file_type,vars=[], &amp;block)
+
+      def self.define_vars(vars)
+
+        vars.map do |v|
+          print v.type.class, " ="
+          @lookup_type[v.class].each do |a|
+            print a.class
+            puts
+          end
+            
+          [
+            to_define_init(v, to_variable_s(v))
+          ].join
+        end * "\n"
+      end
+  
+      def self.print_vars(vars)
+        vars.map do |v|
+          if v.type.class == BHW::Class
+            to_class_s(v.type.class_name) + "_tostring(#{to_variable_s(v)});"
+          else
+            "#{indent}print #{to_variable_s(v)};"
+          end
+        end * "\n"
+      end
+
+      [
+       vars.select do |v| 
+         v.type.class == BHW::Class
+       end.map do |a| 
+         File.open("awk/" + to_file_s(a.type.name) + ".awk") {|f| f.read}
+       end,
+       "BEGIN{",
+       self.define_vars(vars),
+       #self.print_vars(vars),
+       "}",
+      ] * "\n"
+    end
+
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      [
+       "function #{to_class_s(pg_class)}_new(",
+       pg_class.members_param.map{|p| to_parameter_s(p)}.unshift("self") * ",",
+       "){\n",
+       
+       pg_class.members_param.map do |m|
+         indent + 'self["' + to_member_s(m.name) + '"] = ' + to_parameter_s(m.name) &lt;&lt; ";\n"
+       end,
+       
+       pg_class.members_instance_default.map{|m|
+         to_define_init(m) + "\n"
+       },
+       "}",
+      ].join
+    end 
+
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "function #{to_class_s(pg_class)}_tostring(self){",
+       "}"
+      ] * "\n"
+    end
+
+    def self.render_methods(pg_class,file_type)
+    end
+
+    def self.run_cmd_str(file)
+      "awk -f #" +"{SRC}/\#{#{file}}.awk"
+    end
+
+    def self.run_cmd_shell_str(file)
+      "awk -f ./" + file + ".awk"
+    end
+
+  end
+
+end
+
+
+
+</pre></body></html>

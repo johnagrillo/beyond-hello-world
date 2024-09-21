@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module Scala 
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(CamelCase)
+    self.extend(Interpreted)
+    
+    option           "scala"
+    directory        "scala" 
+    formal_name      "Scala"
+    source_file_ext  "scala"
+    #object_file_ext  "class"
+
+    assign            "="
+    indent            "    "
+    interpreter       "scala"
+    home_url          "https://www.scala-lang.org/"
+    
+    def self.array_s(array,l=0)
+      delimited_list_s(array, ["Array(", ")"],",",l)
+    end
+    
+    def self.list_s(array,l=0)
+      delimited_list_s(array, ["scala.List(", ")"],",",l)
+    end
+    
+    def self.set_s(array)
+      delimited_list_s(array, ["Set(", ")"])
+    end
+    
+    def self.tuple_s(array,l=0)
+      delimited_list_s(array, ["(", ")"],",",l)
+    end
+    
+    def self.key_value_delimited_s(hash,l=0)
+      key_value_list_s(hash, 
+                       ["collection.mutable.HashMap(", ")"],
+                       "",
+                       "-&gt;",
+                       ",")
+    end
+    
+    
+    def self.list_type_s(a) ;  "List[" + array_type(a) + "]"; end
+    def self.array_type_s(a);  "Array[" + array_type(a) + "]"; end
+    def self.tuple_type_s(a);   "(" + tuple_type(a) + ")";  end
+    def self.set_type_s(a);    "Set[" +  set_type(a) +"]";  end
+    def self.hash_type_s(a);   "scala.collection.mutable.HashMap[" + hash_type(a, ",") + "]"; end
+    def self.map_type_s(a);    "scala.collection.mutable.HashMap[" + hash_type(a, ",") + "]";end
+    
+    self.types = {
+      Default =&gt; {
+        include:  nil,
+        define:  -&gt;(a,n){ "val " + to_variable_s(n)},
+        format:   "%s",
+        to_s:     -&gt;(a){ to_variable_s(a) },
+        to_value: -&gt;(a,s=nil,l=0){ a.to_s},
+      },
+      BHW::Class =&gt; {
+        include:  -&gt;(a){ a.type.name.camel_case_capitalize},
+        define:  -&gt;(v,n,c=Instance){ "val " + n.camel_case + ":" + v.name.camel_case_capitalize},
+        to_value:   -&gt;(v){  
+          [
+           "new ",
+           to_class_s(v.class_name.downcase) ,
+           "(",
+           v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+           ");"
+          ] * ""
+        },
+      },
+      Char     =&gt; {
+        format:  "%c",
+        type:  "java.lang.Character", 
+        default:  "' '",
+      },
+      String   =&gt; {
+        type:      "String", 
+        default:      "\"\"",
+        to_value:  proc{|a| "\"#{a}\""},
+      },
+      Integer  =&gt; {
+        type:  "scala.Int",    
+        default:  0,
+        format:   -&gt;(v,a){
+          if a.pad = ""
+            pad = ""
+          else
+            pad = a.pad
+          end
+          "%#{pad}#{a.width}d"
+        },
+      },
+      Float    =&gt; {
+        type:  "scala.Double",  
+        default:  "0.0",
+      },
+    }.merge([[Array, :array_s,               :array_type_s],
+             [List,  :list_s,                :list_type_s],
+             [Set,   :set_s,                 :set_type_s],
+             [Tuple, :tuple_s,               :tuple_type_s],
+             [Hash,  :key_value_delimited_s, :map_type_s],
+             [Map,   :key_value_delimited_s, :map_type_s],
+              ].reduce({}) {|h, (type,valuer,typer)|
+              h.merge(type =&gt; {
+                        type:       -&gt;(a,b=nil){ self.send(typer,a) },
+                        to_value:   -&gt;(a,b=nil,l=0){ self.send(valuer,a,l)},
+                  default:   -&gt;(a,b=nil){ self.send(valuer,a)},
+                      })
+            })
+    
+    def self.render_main(pg_class, file_type,vars=[], &amp;block) 
+&lt;&lt;-MAIN
+object #{to_class_s(pg_class.name)}
+{
+    def main (args : Array[String]) = {
+        #{render_main_vars(vars,indent * 2)}
+        #{vars.map{|v| "System.out.println(" + to_variable_s(v.name) + ")";}.join("\n        ")}
+    }
+}
+MAIN
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+    #pg_class.includes(self) {|i|  "import #{i}\n"  }
+    
+    start = "case class #{to_class_s(pg_class)}" 
+    start &lt;&lt; " private " if pg_class.members_instance.length &gt; pg_class.members_param.length 
+    start &lt;&lt; "("
+    [
+     start,
+     pg_class.members_instance.map {|m| "var " + to_variable_s(m) + ":" + to_type(m.type)}.join(",\n" + (" " * start.length)),
+     ") \n",
+     if pg_class.comparable == true
+       " extends Ordered[#{to_class_s(pg_class)}]"
+     end,
+     "{\n",
+     if pg_class.members_instance.length &gt; pg_class.members_param.length 
+       [
+        "  def this (",
+        pg_class.members_instance_param.map {|m| to_variable_s(m) + ":" + to_type(m.type)}.join(",\n           "),
+        ")\n  {\n",
+        "    this(",
+        pg_class.members_instance.map do |m| 
+          if m.init  == Default
+            to_default(m.type).to_s
+          else
+            to_member_s(m)
+          end
+        end.join(",\n          "),
+        "  );\n",
+        "  }\n",
+       ].join
+     end
+    ].join
+  end
+  
+  def self.render_compare_methods(pg_class, file_type=SourceExt)
+
+    class_name = to_class_s(pg_class.name)
+    class_var = to_variable_s(pg_class.name)
+    [
+     indent + "override def compare(rhs:#{class_name}) : Int = {\n",
+     (indent * 2).to_s + "var ret:Int=0\n",
+     pg_class.members_to_str.map do |m| 
+       var = to_variable_s(m)
+       compare = if m.type == Kernel::Char
+                   "compareTo"
+                 elsif m.type == Date
+                   "compareTo"
+                 else
+                   "compare"	    
+                 end
+       (indent * 2) + "ret = #{var}.#{compare}(rhs.#{var});" + "\n" + (indent * 2) + "if (ret !=0) return ret;";
+     end.join("\n") + "\n",
+     (indent * 2) &lt;&lt; "return ret;\n#{indent}}\n",
+    ].join
+  end
+  
+  def self.render_end_of_class(pg_class, file_type=SourceExt)
+    "\n}\n"
+  end
+  
+  def self.render_to_string(pg_class, file_type=SourceExt)
+    [
+     "  override def toString = ",
+     pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+       [l[0].push(to_format(m.type,m)), l[1].push(to_string(m.type,m.name))]
+     end.ergo do |(f,v)| 
+       ("\"" + f.join("-") + "\"") + ".format(" + (v.join(",")) + ")"
+     end
+    ].join + "\n"
+  end
+  
+  def self.render_methods(pg_class, file_type=SourceExt)
+  end
+
+
+  # def self.execute_file(file, srcdir=".",builddir)
+  #   [
+  #    "scala #{srcdir}/#{file}"
+  #   ] * " "
+  # end
+  
+  # def self.rakefile_compile_task(cls)
+  # java -cp /usr/share/scala/lib/scala-library.jar:. Scalars
+  #   [
+  #    "task :compile =&gt; [] do",
+  #    "  sh \"fsc #" + "{SRC}  -d #" + "{OBJDIR}\"",
+  #    "end",
+  #   ] * "\n" + "\n"
+  # end
+  
+  # def Scala.rakefile_test_task(cls)
+  #   [
+  #    "task :test =&gt; [] do",
+  #    "  sh \"fsc -classpath build test/Test.scala\"",
+  #    "end",
+  #   ] * "\n" + "\n"
+  # end
+  
+  # def self.makefile_rules(project,classes)
+  # end
+  
+  # def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+  #   "fsc -d build #{srcdir}/#{src} "
+  # end
+  
+  # def self.rake_compile()
+  #   ""
+  # end
+  
+  # def self.rake_run_test(file,builddir)
+  #   "scala -classpath build test/#{File.basename(file)}.scala"
+  # end
+  
+  def self.rakefile_rules(project,classes)
+    
+  end
+  
+  # def self.ant_rules(project,classes)
+  # end
+  
+  # def self.scons_rules(project,classes)
+  # end
+  end
+end
+
+</pre></body></html>

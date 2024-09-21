@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/perlcase"
+module BHW
+  module Perl
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(PerlCase)
+    self.extend(Interpreted)
+
+    interpreter     "perl"
+    directory       "perl" 
+    formal_name     "Perl"
+
+    source_file_ext "pm"
+    script_file_ext "pl"
+    option          "perl"
+    terminator      ";"
+    assign          "="
+    home_url        "https:/www.perl.org"
+
+    
+                     
+    def self.array_to_s(a,l=0)
+      paren_bracket_list_s(a,",",l)
+    end
+
+    def self.hash_to_s(h,l=0)
+      key_value_list_s(h, "()", "", "=&gt;",  ",")
+    end
+
+    self.merge_types(base_types,
+                     {
+                       Default =&gt; {
+                         define:  -&gt;(v,n){ "my " + to_variable_s(n) },
+                       },
+                       
+                       BHW::Class =&gt; {
+                         to_value:   -&gt;(v){  
+                           [
+                            "new ",
+                            to_class_s(v.class_name) ,
+                            "(",
+                            v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+                            ");"
+                           ] * ""
+                         },
+                       },
+                     })
+
+
+    
+    #
+    # perl scripts have a different extension
+    # 
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+&lt;&lt;-MAIN
+#{vars.select{|v| v.type.class == BHW::Class}.map{|v| "use " + to_class_s(v.type) + ";"}.join("\n")}
+#{render_main_vars(vars)}
+#{vars.map{|v| "print(" + to_variable_s(v.name) + ",\"\\n\");"}.join("\n")}
+MAIN
+    end
+    
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      [
+       "use strict;\n",
+       if pg_class.main != true
+         "package " &lt;&lt; to_class_s(pg_class.name) + ";\n" + 
+           "use overload('\"\"', 'toString');\n"
+         
+       end,
+       pg_class.includes(self).map{|i| "use #{i};\n"}.join,
+       if pg_class.main == true     
+         PG.external_classes.map{|c| "use #{to_class_s(c.name).upcase};\n"}.join
+       end,
+       "\n",
+       pg_class.members.map{|m| "my #{to_variable_s(m.name).upcase} = \"#{m.name}\";\n";}.join,
+       "\n"
+      ]
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      if pg_class.main != true
+        "\n1;\n"
+      end
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      [
+       "sub new {\n",
+       "  my ($this,",
+       pg_class.members.reject{|m| m.init == Default}.map{|p| to_parameter_s(p.name)}.join(","),
+       ") = @_;\n",
+       "  my $ref = ref($this)||$this;\n",
+       "  my $self = {};\n",
+       "  bless $self,$ref;\n",
+       pg_class.members_param.map{|m|  "  " + to_member_s(m.name) + " = " + to_parameter_s(m.name) + ";\n"}.join,
+       pg_class.members_default.map{|m| "  " &lt;&lt; to_member_s(m) &lt;&lt; " = " &lt;&lt; to_value(m.type) &lt;&lt; ";\n"}.join,
+       "  return $self;\n}\n\n",
+      ].join
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      pg_class.members_r.map do |m|
+        [
+         "sub #{to_reader_s(m)} {\n",
+         "  my ($self) = @_;\n",
+         "  #{to_member_s(m)};\n",
+         "}\n",
+        ].join 
+      end.join +
+        pg_class.members_w.map do |m|
+        [
+         "sub #{to_writer_s(m.name)} {\n",
+         "  my ($self,$param) = @_;\n",
+         "  #{to_member_s(m)} = $param;\n",
+         "}\n"
+        ].join
+      end.join
+    end
+    
+    #####################################################
+    #
+    # to String
+    #
+    #####################################################
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       "sub toString {\n",
+       "  my ($self) = @_;\n",
+       "  sprintf(\"",
+       pg_class.members_to_str.map do |m| 
+         if m.type==Date
+           "%s"
+         elsif m.type==Integer
+           "%#{m.width}d"
+         elsif m.type==Float
+           "%f"
+         elsif m.type==String
+           "%s"
+         elsif m.type==Char
+           "%s"
+         else
+           "%s"
+         end
+       end.join("-") + "\",\n",
+       " " * 10,
+       pg_class.members_to_str.map do |m| 
+         stmt = "$self-&gt;{#{Perl.to_variable_s(m.name).upcase}}"
+         if m.type == Date
+           stmt = "  PgUtil-&gt;dateToString(#{stmt})"
+         end
+         stmt
+       end.join(","),
+       ");\n}\n"
+      ].join
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+      pg_class.pg_methods.each do |m|
+        [      
+         if m.main != true
+           [
+            "sub #{m.lang_name} {\n",
+            "  my ($self,",
+            m.params.each{|p| to_parameter_s(p) + "," }.join,
+            ") = @_;\n"
+           ].join
+         end,
+         
+         m.pg_vars.each do |v|
+           [
+            "  my " &lt;&lt; to_variable_s(v),
+            if v.init != nil
+              " = " + v.init.show  
+            end,
+            ";\n"
+           ].join
+         end,
+         m.statements.map{|s|  "  " + s.show + "\n"}.join,
+         if m.main != true
+           "}\n"
+         end
+        ].join
+      end
+    end
+
+    def self.run_cmd_str(dest_file)
+      "perl ./\#{file}.pm"
+    end
+
+    def self.run_cmd_shell_str(file)
+      "perl ./#{file}.pm"
+    end
+
+  def Perl.rakefile_rules(project,classes)
+  end
+
+  def self.makefile_rules(project,classes)
+  end
+
+  def self.scons_rules(project,classes)
+  end
+
+  def self.ant_rules(project,classes)
+  end
+
+  def self.rake_run_test(files,builddir)
+    "perl -I src #{files.last}"
+  end
+
+  end
+end
+</pre></body></html>

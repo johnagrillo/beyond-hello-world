@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/ecase"
+
+module BHW
+  module E 
+    include BHW::Props
+    include BHW::Writer
+    self.extend(BHW::Writer)
+    self.extend(ECase)
+    
+    directory       "e" 
+    source_file_ext "emaker"
+    option          "e"
+    formal_name     "E" 
+
+
+    script_file_ext "e"
+    indent          "    "
+    assign          ":="
+    mode_line       "#-*-e-*-"
+
+    rosetta_url      "E"
+    home_url         "http://www.erights.org/"
+
+    
+    self.types={
+      Primitive =&gt; {
+        format:      -&gt;(a){ to_variable_s(a)},
+        to_value:   proc{|a| a.to_s},
+      },
+      Default=&gt; {
+        to_value:    -&gt;(a){ a.to_s},
+        define:  -&gt;(v,n){
+          "def " + to_variable_s(v)},
+      },
+      BHW::Class=&gt; { 
+        format:  -&gt;(a){ to_variable_s(a) +".toString()"  },
+        to_value:   -&gt;(v){  
+          [
+           "make" + to_class_s(v.class_name.downcase) ,
+           "(",
+           v.members_param.map{|a| to_value(a.type)   }.join(","),
+           ")"
+          ] * ""
+        },
+        
+      },
+      Char=&gt; {
+        primitive:  true,
+        type:       "char",
+        default:       "' '",
+      },
+      String=&gt; {
+        type:       "String",
+        default:       "\"\"",
+        format:      -&gt;(v,a){ to_variable_s(a)},
+        to_value:    proc{|a| "\"#{a}\""},
+      },
+      Integer=&gt; {
+        primitive:  true,
+        type:       "int",
+        default:       "0", 
+        format:      -&gt;(v,a){ 
+          "&lt;import:java.lang.makeLong&gt;.toString(#{to_variable_s(a)})"
+          #"&lt;this:Util&gt;.right(#{a.width()},&lt;import:java.lang.makeLong&gt;.toString(#{to_variable_s(a)}))"
+          #if a.pad() == false
+          #else
+          #"&lt;this:Util&gt;.right(#{a.width()}, #{to_variable_s(a)})"
+          #end
+        },
+      },
+      Float=&gt; {
+        primitive:     true,
+        type:          "float",
+        default:       "0.0",
+        format:        -&gt;(v,a) {"&lt;import:java.lang.makeFloat&gt;.toString(#{to_variable_s(a)})"}
+      }
+    }.merge([[Array, :square_bracket_list_s ],
+             [List,  :square_bracket_list_s ],
+             [Set,   :square_bracket_list_s, ".asSet()", ],
+             [Tuple, :square_bracket_list_s ],
+             [Hash,  :key_value_pairs_list_s ],
+             [Map,   :key_value_pairs_list_s ],
+            ].reduce({}) { |h,(cls,lister,mod)| 
+              h.merge(cls =&gt; {
+                        to_value:   -&gt;(a,scope=Instance,l=0){ self.send(lister, a,l) + (mod==nil ? "" : mod)},
+                        default:    -&gt;(a){ self.send(lister, a) + (mod==nil ? "" : mod)},
+                        to_k:       -&gt;(a){"key"},
+                        format:     -&gt;(a){"%s"},
+                        to_s:       -&gt;(a){"string"},
+                      })
+            })
+    
+    
+    def self.render_main_vars(vars)
+      out = vars.map {|(var)|
+        [ 
+         "def make" + to_class_s(var.name) + " := &lt;this:" + to_class_s(var.name)  + "&gt;",
+         to_define(var.type, var.name) + assign +  to_value(var.type) ,
+         "println(" + to_variable_s(var.name) + ".toString())",
+        ]
+      } * "\n"  + "\n"
+    end
+    
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      class_name = to_class_s(pg_class)
+      #"import java.util.*;\n"
+      #includes {|i| "import #{i};\n"}
+      "def make#{class_name}(" + pg_class.members_param.map{|p|  "_"+to_variable_s(p)}.join(",") + ") : any {\n" + 
+        pg_class.members_param.map{|m| "   var "+to_member_s(m) + " := _" + to_variable_s(m) + ";\n" }.join +
+        pg_class.members_default.map{|p|  indent + "var " + to_variable_s(p) + ":= " + to_value(p.type) }.join("\n")
+    end
+    
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      indent + "def #{to_class_s(pg_class)}{"
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      class_name = to_class_s(pg_class)
+      "    }\n    return #{class_name}\n}\n"
+    end
+    
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      pg_class.members.map do |m|
+        pname = to_variable_s(m)
+        [
+         if m.has_reader? 
+           indent * 2&lt;&lt; "to #{to_reader_s(m)}() : any {return #{pname}}" 	
+         end,
+         
+         if m.has_writer?
+           [
+    	    indent*2 + "to " + to_writer_s(m) + "(#{pname}_) {",
+    	    "#{pname}:=#{pname}_}",
+    	    #"return this.#{E.to_variable_s(m.name)}}",
+           ].join
+         end,
+         
+         if m.has_reader? or m.has_writer? 
+           "\n"
+         end
+        ].compact.join("\n")
+      end.join
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       indent*2 + "to toString(){",
+       indent*3 + "return \"\"  " + if  pg_class.members_to_str.size &gt; 0
+                                      "+" + pg_class.members_to_str.map do |m| to_format(m.type,m)  end.join(" + \"-\" + \n                   ")
+                                    end.to_s,
+       indent*2 + "}",	
+      ].join("\n")
+    end
+    
+    
+    def self.render_compare
+    end
+    
+    def self.render_hash
+    end
+    
+    def self.render_equals
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.square_bracket_list_s(array,l=0)
+      self.delimited_list_s(array, "[]",",",l)
+    end
+    
+    def self.key_value_pairs_list_s(hash,l=0)
+      self.key_value_list_s(hash, "[]", " ", "=&gt;", ",",l)
+    end
+
+    def self.compile_cmd_str(src_file, dest_file)
+      ""
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      ""
+    end
+
+    def self.run_cmd_str(dest_file)
+      ""
+    end
+
+
+#   def self.execute_file(file, srcdir=".",builddir)
+#     [
+#      "rune #{srcdir}/#{file}"
+#     ] * " "
+#   end
+
+
+#   def self.rakefile_rules(project,classes)
+#   end
+
+#   def self.rake_run_test(files,builddir)
+#     "(cd build &amp;&amp; cp ../#{files[0]} ../#{files[1]} . &amp;&amp; rune #{File.basename(files[1])})"
+#   end
+
+#   def self.makefile_rules(project,classes)
+#     # runnable files need an e
+#     script_name = to_file_s(project) + ".e"
+    
+# &lt;&lt;RULES
+# all:run
+# compile:
+# run:\n\t${RUNE} #{script_name} ${FILES}
+# RULES
+#   end
+
+
+#   def self.ant_rules(project,classes)
+#   end
+
+#   def self.scons_rules(project,classes)
+#   end
+
+
+end
+end
+
+
+</pre></body></html>

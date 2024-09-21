@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module GCL
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(DashCase)
+    self.extend(Interpreted)
+    
+    directory "gcl" 
+    source_file_ext "lisp"
+
+
+    option               "gcl"
+    formal_name          "Lisp(Gnu Common Lisp)"
+
+    rosetta_url          "GCL"
+    home_url             "http://savannah.gnu.org/projects/gcl"
+    wikipedia_url        "GNU_Common_Lisp"
+
+    #object_file_ext "o"
+    mode_line        ";;-*-lisp-*-"
+    indent           "    "
+
+    interpreter        "gcl"
+
+
+    self.merge_types(base_types,
+                     {
+                       Primitive =&gt; {  
+                         format:   "~a",
+                         include:  nil,
+                         to_value: proc{|v| v.to_s},
+                         default: "\"\"",
+                       },
+                       Default  =&gt; { 
+                         format:  "~a",
+                         to_s:    -&gt;(n){ "(#{to_class_s(n)} this)"},
+                         include:  nil,
+                         define:   -&gt;(v,n){ to_variable_s(n) },
+                         to_value: -&gt;(v){ v.to_s},
+                         default: "",
+                       },
+      
+                       Class =&gt; {
+                         include:  -&gt;(v){ to_file_s(v.type.name) + ".lisp" },
+                         to_s:     -&gt;(v){ "(#{to_class_s(v.type)}-to-string (#{to_class_s(v)} this))"},
+                         to_value:  -&gt;(v) {
+                           ["(make-instance '",
+                            to_class_s(v.class_name),
+                            " " ,
+                            v.members_param.map{|m| ":" + to_member_s(m.name) + " " + to_value(m.type) }.join(" "),
+                            ")"
+                           ] * ""
+                         },
+                       },
+                       
+                       Integer=&gt; {
+                         primitive:  true,
+                         default:       0, 
+                         format:  -&gt;(v,m){ m.pad() == false ? "~#{m.width}d" : "~#{m.width},'#{m.pad}d"},
+                       },
+                       
+                       Float  =&gt; {
+                         primitive:  true,
+                         default:    0.0,       
+                         format:      "~f"  
+                       },
+                       String =&gt; {
+                         primitive:  true,
+                         default:       "\"\"",
+                         to_value:  proc{|v| "\"#{v}\""},
+                         format:  "~a",
+                       },
+                       Char   =&gt; {
+                         primitive:  true,
+                         format:  "~a",
+                       }
+    })
+
+    def self.array_to_s(a,l=0)
+      self.delimited_list_s(a, ["'(", ")"], sep=" ")
+    end
+
+    def self.hash_to_s(m,l=0)
+      [
+       "(pg-make-hash-table (list ",
+       m.map do |k,v| 
+         [
+          "(list ",
+          to_value(k),
+          " ",
+          to_value(v),
+          ")"
+         ].join 
+       end.join(" ") + "))"
+      ].join
+    end
+    
+    def self.let_vars(vars=[])
+      vars.map do |v|
+        [
+         "(",
+         to_define(v.type,v.name),
+         " ",
+         to_value(v.type),
+           ")"
+        ].join
+      end.join("\n#{indent}" + "  ")
+    end
+    
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+&lt;&lt;-MAIN
+;;
+;; make hash from a list of key value pairs
+;;
+    
+(defun pg-make-hash-table (key-values)
+  (let ( (hash (make-hash-table)))
+    (loop for key-value in key-values do 
+          (setf (gethash (first key-value) hash) (second key-value)))
+    hash))
+    
+;;
+;; main starts here
+;;
+    
+(let (#{self.let_vars(vars)})
+#{vars.select{|v| v.type.class == BHW::Class}.map{|v| "(format t \"~a~%\" (" + to_variable_s(v.type.name) + "-to-string " + to_variable_s(v.name) + "))"}.join("\n")}
+)
+    
+    
+    MAIN
+    end
+    
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      
+      [
+       pg_class.includes(self).map do |i| if i !~ /timer/
+                                            "(load \"#{i.dash_case.downcase}\")\n"
+                                          end
+       end,
+       if pg_class.main == true
+         PG.external_classes.sort{|a,b| a[0] &lt;=&gt; b[0]}.each{|c| "(load \"#{c.name.to_file_s}.lisp\")\n"} 
+       end,
+       "(load \"/usr/local/include/pg//commonlisp/pg-timer.lisp\")\n"
+      ].join
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      "(defclass " + to_class_s(pg_class) + " ()\n  (" +
+        pg_class.members_instance.map do |m|
+        [
+         "(" &lt;&lt; to_member_s(m) +  "\n",
+         if m.init == Param
+           "  :initarg :" + to_member_s(m.name) + "\n" + "  :initform (error \"" &lt;&lt; to_member_s(m.name) + " is a required parameter\")\n"
+         end,
+         if m.init == Default
+           "  :initform " &lt;&lt; to_value(m.type) + "\n"
+         end,
+         "  :accessor " + to_member_s(m) + ")\n",
+        ].join
+        end.join("\n") + "\n)))\n"
+    end
+    
+    def self.render_get_key(pg_class)
+      class_variable_name = pg_class.name.dash_case
+      [
+       
+       "(defun #{class_variable_name}-get-key (",
+       pg_class.members_instance.map{|m| to_variable_s(m.name)}.join(" ") + ")\n",
+       "  (format nil " + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [ l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m.name))]
+       end.each_with_index.map do |m,i| 
+         (i == 0) ? ("\"" + m.join("-") + "\"") : (m.join(" "))
+       end.join(" "),
+       "))",
+      ].join
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      class_variable_name = pg_class.name.dash_case
+      
+      [
+       render_get_key(pg_class),
+       "\n",
+       "(defun #{class_variable_name}-to-string (this)",
+       "  (#{class_variable_name}-get-key",
+       pg_class.members_instance.map {|m| "    " + to_string(m.type,m.name)}.join("\n"),
+       "))",
+      ].join("\n") + "\n"
+    end
+    
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+      
+      pg_class.pg_methods.map do |m|
+        [
+         if m.main != true
+           str = "(defun #{to_member_s(m.name)} (this"
+           str + m.params.map{|p| p.type_str + " " + p.lang_name}.join(sprintf(" \n%*s",str.length,"")) + ")\n"
+         end,
+         
+         if pg_class.main != true
+           if m.pg_vars.length &gt; 0
+             [
+              "  (let* ( \n" + m.pg_vars.nap do |v|
+                if v.type != TmpString
+                  [
+                   "     (" ,
+                   v.lang_name,
+                   " ",
+                   if v.init
+                     v.init.show
+                   end,
+                   ")\n"
+                  ].join
+                end
+              end
+             ].join("\n") + ")\n"      
+           end
+         else
+           m.pg_vars.map do |v|
+             if v.type != TmpString
+               [
+                "(defvar " + v.lang_name + " ",
+                if v.init
+                  v.init.show 
+                end,
+                ")\n"
+               ].join
+             end
+           end
+         end,
+         
+         m.statements.map{|s| "    " + s.show + "\n"}.join("\n"),
+         if m.main != true
+           "))\n"
+         end
+        ].join
+      end.join("\n")
+    end
+
+    def self.compile_cmd_str(src_file, dest_file)
+      ""
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      ""
+    end
+
+    def self.run_cmd_str(dest_file)
+      "gcl -load ./\#{#{dest_file}}.lisp -batch"
+    end
+
+    def self.run_cmd_shell_str(dest_file)
+      "gcl -load ./#{dest_file}.lisp -batch"
+    end
+
+    # def self.execute_file(file,srcdir,builddir)
+    #   files = [file]
+    #   "gcl "+ (files.map{|f| "-load #{srcdir}/#{f}"} * " ") + " -batch"
+    # end
+
+    # def self.rake_run_test(files,builddir)
+    #   "gcl "+ (files.map{|f| "-load #{f}"} * " ") + " -batch"
+    # end
+
+    # def self.makefile_rules(project,classes)
+    # end
+
+    # def self.rakefile_rules(project,classes)
+    # end
+
+    # def self.ant_rules(project,classes)
+    # end
+
+    # def self.scons_rules(project,classes)
+    # end
+
+  end
+end
+</pre></body></html>

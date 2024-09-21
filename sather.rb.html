@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/eiffelcase"
+
+module BHW
+  require 'pp'
+  module Sather
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(EiffelCase)
+    self.extend(Compiled)
+      
+    directory             "sather" 
+    option                "sather" 
+    formal_name           "Sather"
+
+    source_file_ext       "sa"
+    exec_file_ext         "exe"
+    indent                "    "
+    mode_line              "--*-sather-*-"
+    object_file_ext "o"
+    home_url          "https://www.gnu.org/software/sather/"
+    self.types ={
+      Default =&gt; {
+        include:  nil,
+        define:  -&gt;(v,n){ "#{to_variable_s(n)}:#{to_type(v)}" },
+        to_value: -&gt;(a){ a.to_s},
+      },
+      
+      BHW::Class =&gt; {
+        include:  -&gt;(a){ to_file_s(a.type.name)},
+        type:     -&gt;(a){ to_class_s(a.type.name)},
+        to_value:   -&gt;(v){  
+          [
+           "#" + to_class_s(v.class_name) ,
+           if v.members_param.size &gt; 0
+             [
+              "(",
+              v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.type)   }.join(","),
+              ")"
+             ] * ""
+           end,
+           
+          ]
+        },
+      },
+      
+      Char     =&gt; {:type =&gt;"CHARACTER"},
+      String   =&gt; {
+        type: "STR",
+        to_value: -&gt;(a){ "\"#{a}\""},
+        default:   "\"\"",
+      },
+      KeyString=&gt; {:type =&gt;"STR"},
+      Integer   =&gt; {
+        type: "INT",
+        default:   0,
+      },
+      Float    =&gt; {:type =&gt;"FLT",       :default =&gt;  0.00,},
+      Argc     =&gt; {:type =&gt;"INT"},
+      Argv     =&gt; {:type =&gt;"ARRAY{STRING}"},
+      Stream   =&gt; {:type =&gt;"TEXT_FILE_READ"},
+    }.merge([[Array, "ARRAY",      "ARRAY", :array_type, :array_show],
+             [List,  "ARRAY",      "ARRAY", :array_type, :list_show],
+             [Set,   "SET",        "SET",   :set_type,   :set_show], 
+             [Tuple, "TUP",        "TUP", :tuple_type, :tuple_init],
+             [Hash,  "MAP",        "MAP",   :hash_type,  :hash_show], 
+             [Map,   "MAP",        "MAP",   :hash_type,  :hash_show]
+            ].reduce({}) {|h,(cls,base,derived,typer,initer)|
+              
+              h.merge(cls =&gt; {
+                        type:      -&gt;(a,b=nil){ base    + "{" + self.send(typer,a) + "}" },
+                        to_value:  -&gt;(a,b=nil){  self.send(initer,a,derived,typer)   },
+                        default:   -&gt;(a){  self.send(initer,a,derived,typer)   },
+                      })
+            })
+    
+    
+
+    def self.local(vars)
+      vars.map do |var| 
+        [
+         "        ",
+         self.to_variable_s(var),
+         ":",
+         self.to_type(var),
+        ].join
+      end.join("\n")
+    end
+    
+    
+    def self.render_start_of_class(pg_class,file_type=SourceExt)
+      [
+       "class " + to_class_s(pg_class) + " is",
+       pg_class.members.map do |m| 
+         "    attr " + to_member_s(m) + ":" + to_type(m.type) + ";"
+       end * "\n",
+        ] * "\n"
+    end
+    
+    def self.render_end_of_class(pg_class,file_type=SourceExt)
+      [
+       "end;"
+      ] * "\n"
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      
+      class_name = to_class_s(pg_class.name)
+    
+      create = "create"
+        
+      if pg_class.members_param.size &gt; 0
+        create += "(" + pg_class.members_param.map {|a| to_define(a.type, a.name)}.join(",") +")"
+      end
+      
+    
+    
+      [
+       create + ":" + to_class_s(pg_class)+ "  is \n",
+       [ 
+        "    res:" + to_class_s(pg_class)+ " :=new ;\n",
+        pg_class.members_param.map{|m| "    res."+to_member_s(m) + " := " + to_variable_s(m) + ";\n" }.join,
+        pg_class.members_default.map{|m| "    res." + to_member_s(m) + " := " + to_default(m.type) + ";\n" }.join,
+        "    return res;",
+        "\nend;\n",
+       ].join
+      ] * "\n"
+      
+    end
+    
+    #  class POINT is
+    #  attr x, y:INT;
+    #  create(xvalue,yvalue:INT):POINT is
+    #     res:POINT := new;
+    #     res.x := xvalue;
+    #     res.y := yvalue;
+    #     return res;
+    #  end;
+    # end;
+    
+    
+    
+    
+    def self.render_to_string(pg_class,file_type=SourceExt)
+      [
+       "str:STR is",
+       "    return " + 
+       if pg_class.members_to_str.size &gt; 0
+         pg_class.members_to_str.map{|m| to_member_s(m) + ".str"}.join(" + \"-\" + ")
+       else
+         "\"\""
+       end,
+       "end;"
+      ] * "\n"
+    end
+    
+    def self.render_methods(pg_class,file_type=SourceExt)
+    end
+    
+    
+    def self.render_main(pg_class, file_type,vars=[], &amp;block) 
+      
+      def self.initialize(vars)
+        vars.map do |var| 
+          [
+           self.to_variable_s(var),
+           ":",
+           if var.type == BHW::Class
+             to_class_s(var.type.name)
+           else
+             to_type(var.type)
+           end,
+           " := ",
+           self.to_value(var.type),
+           ";"
+          ].join
+        end.join("\n#{indent*3}")
+      end
+      
+      def self.print_vars(vars)
+        vars.map do |var| 
+          "    #OUT  +test_" + self.to_variable_s(var.type.name) + ".str  + \"\\n\";"
+        end * "\n"
+      end
+      
+        &lt;&lt;-MAIN
+class #{to_class_s(pg_class.name)} is
+    main is
+        #{self.initialize(vars)}
+        #{self.print_vars(vars.select{|v| v.type.class == BHW::Class})}
+    end;
+end
+MAIN
+
+    end
+    
+    def self.tuple_init(tuple,derived,typer)
+        [
+         "#TUP{",
+         tuple.map{|a| to_type(a) }.join(",") + 
+         "}(",
+         tuple.map{|a| to_value(a) }.join(",") + 
+         ")"
+        ].join
+    end
+    
+    
+    def self.array_show(a,derived,typer)
+         [
+          #"#",
+          #derived,
+          #"{",
+          #self.send(typer,a),
+          #"}.create(|",
+          "|",
+          a.map {|elem| 
+            if elem.class == Array
+              self.array_show(elem,derived,typer)
+            else
+              to_value(elem) 
+            end
+          }.join(","),    
+          #"|)"
+          "|"
+         ].join
+    end
+    
+    def self.list_show(a,derived,typer)
+      self.array_show(a,derived,typer)
+    end
+    
+        
+    def self.hash_show(a,derived,typer)    
+      [
+       "#",
+       derived,
+       "{",
+       self.send(typer,a),
+       "}.",    
+       a.map do |key,value| 
+         "insert(" + to_value(key) + "," + to_value(value) + ")"
+       end.join(".")
+       
+      ].join()
+    end
+    
+    def self.set_show(set,derived,typer)
+      [
+       "#",
+       derived,
+       "{",
+       self.send(typer,set),
+       "}.",
+       set.map {|elem| "insert(" + to_value(elem) +")"}.join("."),    
+        ].join()
+    end
+
+    def self.compile_cmd_str(src_file, dest_file)
+      "sacomp -main \#{File.split(#{dest_file}).last.upcase} -o \#{#{dest_file}} \#{#{src_file}} "
+    end
+
+
+  # def self.rakefile_test_task(files)
+  #   [
+  #    "task :test =&gt; [] do",
+  #    "  sh \"sacomp -main TEST -o build/test test/test.sa  \#{SRC}\"",
+  #    "  sh \"./build/test\"",
+  #    "end",
+  #   ] * "\n" + "\n"
+  #  end
+
+  # def makefile_rules(project,classes)
+  # end
+
+  # def self.rakefile_rules(project,classes)
+  # end
+
+  # def self.makefile_rules(project,classes)
+  # end
+
+  # def self.ant_rules(project,classes)
+  # end
+
+  # def self.scons_rules(project,classes)
+  # end
+  
+  # def self.rake_compile_test(src,test,out,srcdir,testdir,builddir)
+  #   "sacomp -main #{test.split('.')[0].upcase}    -o #{builddir}/#{out} #{testdir}/#{test} #{srcdir}/#{src} "
+  # end
+
+  # def self.rake_compile()
+  #   ""
+  # end
+
+  # def self.rake_run_test(file,builddir)
+  #   file
+  # end
+    
+  end
+end
+</pre></body></html>

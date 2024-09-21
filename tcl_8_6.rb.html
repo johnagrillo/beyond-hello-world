@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>=begin
+package require TclOO
+oo::class create summation {
+    variable v
+    constructor {} {
+        set v 0
+    }
+
+    method add x {
+        incr v $x
+    }
+    method value {} {
+        return $v
+    }
+    destructor {
+        puts "Ended with value $v"
+    }
+}
+set sum [summation new]
+puts "Start with [$sum value]"
+for {set i 1} {$i &lt;= 10} {incr i} {
+    puts "Add $i to get [$sum add $i]"
+}
+$sum destroy
+=end
+
+=begin
+Tcl has 3 fundamental collection types: list, array and dictionary.
+
+A Tcl list is called an array in other languages (an integer-indexed list of values).
+
+set c [list] ;# create an empty list 
+# fill it
+lappend c 10 11 13
+set c [linsert $c 2 "twelve goes here"]
+# iterate over it
+foreach elem $c {puts $elem}
+ 
+# pass to a proc
+proc show_size {l} {
+    puts [llength $l]
+}
+show_size $c
+
+A Tcl array is an associative array (aka hash). Arrays are collections of variables indexable by name, and not collections of values. An array
+cannot be passed to a procedure be value: it must either be passed by name or by its serialized representation. Tcl arrays also are strictly
+one-dimensional: arrays cannot be nested. However, multi-dimensional arrays can be simulated with cleverly constructed key strings.
+
+# create an empty array
+array set h {}
+# add some pair
+set h(one) 1
+set h(two) 2
+# add more data
+array set h {three 3 four 4 more {5 6 7 8}}
+# iterate over it in a couple of ways
+foreach key [array names h] {puts "$key -&gt; $h($key)"}
+foreach {key value} [array get h]  {puts "$key -&gt; $value"}
+ 
+# pass by name
+proc numkeys_byname {arrayName} {
+    upvar 1 $arrayName arr
+    puts "array $arrayName has [llength [array names arr]] keys"
+}
+numkeys_byname h
+ 
+# pass serialized
+proc numkeys_bycopy {l} {
+    array set arr $l
+    puts "array has [llength [array names arr]] keys"
+}
+numkeys_bycopy [array get h]
+
+Works with: Tcl version 8.5
+
+A Tcl dictionary is an associative array value that contains other values. Hence dictionaries can be nested and arbitrarily deep data structures
+can be created.
+
+# create an empty dictionary
+set d [dict create]
+dict set d one 1
+dict set d two 2
+# create another
+set e [dict create three 3 four 4]
+set f [dict merge $d $e]
+dict set f nested [dict create five 5 more [list 6 7 8]]
+puts [dict get $f nested more] ;# ==&gt; 6 7 8
+=end
+
+
+
+module BHW
+  module Tcl_8_6
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(BHW::Interpreted)
+    self.extend(UnderCase)
+
+    interpreter     "tclsh8.6"
+    directory       "tcl_8_6"
+    option          "tcl_8_6"
+    formal_name     "TCL(8.6)"
+    source_file_ext "tcl"
+    indent           "  "
+    terminator       ";"
+    mode_line        "#-*-tcl-*-"
+    home_url         "https://www.tcl-lang.org/"
+
+    def self.render_start_of_class(pg_class,file_type)
+      [
+       "package require TclOO",
+       "oo::class create #{to_class_s(pg_class)} {",
+       pg_class.members_instance.map do |mem|
+         indent + "variable " + to_variable_s(mem)
+       end * "\n" + "\n"
+      ]
+    end
+
+    def self.render_end_of_class(pg_class,file_type)
+      "}"
+    end
+
+    def self.render_members(pg_class,file_type)
+    end
+
+    def self.render_constructor(pg_class,file_type)
+      [
+       indent + "constructor {" + pg_class.members_param.map {|mem| to_parameter_s(mem) + "_"} * " " + "} {",
+       pg_class.members_param.map {|mem| (indent*2) + "set " + to_parameter_s(mem) +" $" + to_parameter_s(mem)+"_"  + "\n"} * "",
+       pg_class.members_default.select{|a| a.scope == Instance }.map{|m| (indent*2) + "set " + to_member_s(m) + "  " + to_value(m.type)},
+       indent + "}",
+      ] * "\n"
+    end
+
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      [
+       pg_class.members.map do |m|
+         [
+    	  if m.has_reader? 
+    	    [
+             (indent * 2)  + "method get_#{to_variable_s(m)} {} {",
+             (indent * 3)  + "return $#{to_member_s(m)}",
+             (indent * 2)  + "}"
+    	    ].join("\n")  + "\n"
+    	  end,
+    	  
+    	  if m.has_writer?	
+    	    [
+             (indent * 2)  + "method set_#{to_variable_s(m)} {#{to_variable_s(m)}} {",
+             (indent * 3)  + "set #{to_member_s(m)} $#{to_variable_s(m)}",
+             (indent * 2)  + "}"
+    	    ].join("\n") + "\n"
+    	  end,
+          
+    	  if m.has_reader? || m.has_writer?
+    	    "\n"
+    	  end,
+         ].join
+       end,
+      ].join
+    end
+    
+
+
+    def self.render_to_string(pg_class, file_type=SourceExt)
+      [
+       indent + "method to_string  {} {",
+       "    return [format " + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m.type, m)), l[1].push(to_string(m.type, m.name))]
+       end.ergo{|(f,v)| "\"" + (f * "-") + "\"" + " " + (v.map{|a| "$#{a}"}.join(" ")) + " "},
+      ].join("\n") + "]\n#{indent*2}}\n"
+
+    end
+          
+
+    def self.render_methods(pg_class,file_type)
+    end
+
+    self.types = {
+        Default=&gt; {
+          include:   nil,
+          to_h:      -&gt;(a){ "hash(#{to_member_s(a)})" },
+          to_s:      -&gt;(a){ to_member_s(a)},
+          format:    "%s",
+          define:   -&gt;(v,n){ self.to_variable_s(n)  },
+          to_value:  -&gt;(a,scope=nil,l=0){ a.to_s},
+        },
+    
+        BHW::Class=&gt; { 
+          to_value:   -&gt;(v){  
+            to_class_s(v.class_name.downcase) + " new " + (v.members_param.map{|a| to_value(a.type)  } * " ") + " "
+          },
+        },
+    
+        Char=&gt; {
+          default:       "\"\"",
+        },
+        String=&gt; {
+          default:    "\"\"",
+          format:     "%s",
+        to_value:   proc{|a| "\"#{a}\""},
+        },
+        Integer=&gt; {
+          default:    0,
+          format:     -&gt;(v,m){ m.pad() == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" }
+        },
+        Float=&gt; {
+          default:    0.0,
+          format:     "%f",
+        }
+        #
+        # add to_value for Array, List, Set, Tupl
+        # 
+
+    }.merge( [Array, List, Set,Tuple].reduce({}) {|h,cls|  
+               h.merge(cls =&gt; 
+                       { to_value: -&gt;(a,b=nil,l=0) {delimited_list_s(a, ["[ list ", "]"], " ",l)}})})
+      .merge( [Hash,Map].reduce({}){|h,cls| h.merge(cls=&gt; {to_value:  -&gt;(a,b=nil,l=nil){
+                                                        key_value_list_s(a, ["[ dict create ", "]"], " ", " ",  " ",l)
+                                                      }})})
+      
+    def self.key_value_delimited_list_s(hash)
+        key_value_list_s(hash, "{}", "", ":",  ",")
+      end
+    
+      def self.render_main(pg_class,file_type,vars=[],&amp;block)
+        [
+         vars.select{|v| v.type.class == BHW::Class}.map{|v| "source [file join [file dirname [info script]] ../src/ #{to_file_s(v.type.name)}.tcl]"} * "\n",
+         "",
+         vars.map do |(var)|
+           [
+            "set ",
+            to_define(var.type, var.name,var),
+            #" [",
+            " ",
+            to_value(var.type),
+            #"]",
+            terminator,
+           ].join 
+         end.join("\n") + "\n",
+         "",
+
+         #vars.map{|v| "puts [$" + to_define(v.type, v.name,v) + " to_string]"} * "\n"
+
+         vars.map{|v| "puts $" + to_define(v.type, v.name,v) + ""} * "\n"
+        ] * "\n"
+      end
+  end
+end
+
+</pre></body></html>

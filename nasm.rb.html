@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module Nasm
+    include BHW::Props
+    self.extend(BHW::Writer)
+    self.extend(CCase)
+    self.extend(Compiled)
+    
+    directory        "nasm"
+    option           "nasm"
+    source_file_ext  "nasm"
+
+    formal_name     "Nasm"
+
+    exec_file_ext   "exe"
+    indent           "\t"
+    terminator       ";"
+    assign           "="
+    mode_line        "//-*-asm-*-"
+    
+    
+    #
+    #
+    #
+    self.types= {
+      Primitive =&gt; {  # in C are Integer, Char, Float, Integer
+        define:   -&gt;(v,n,s=nil){ to_type(v) + " " + to_variable_s(n)},
+        include:  nil,
+      },
+      
+      Default  =&gt; {  # classes as members
+        define:  -&gt;(v,n){  to_type(v) + "  " + to_variable_s(n)},
+        format:  "%s",
+      },
+      
+      BHW::Class =&gt; {
+        type:       -&gt;(v){ "struct #{v.type.name.camel_case_capitalize} * "},
+        define:     -&gt;(v,n,s=nil){ "struct " + v.name.camel_case_capitalize  + " * " + to_variable_s(n)},
+        default:    "NULL",
+        include:    -&gt;(c){  "\"#{to_file_s(c.name)}.h\""},
+        format:     "%s",
+        to_value:   -&gt;(v,n,t){  
+          [
+           to_variable_s(t.type.name), 
+           "_new(" ,
+           t.type.members_param.map {|a| to_value(a.type)}.join(","),
+           ")"
+          ] * ""
+        }
+        
+      },
+      
+      Integer=&gt; {
+        primitive:  true,
+        type:       "int",
+        default:       "0",
+        format:     -&gt;(v,m){ m.pad() == false ? "%#{m.width}d" : "%#{m.pad}#{m.width}d" },
+      },
+      
+      Float=&gt; {
+        primitive:  true,
+        type:       "float",
+        default:    "0.0",
+        format:     "%5.2f",
+      },
+      
+      Char=&gt; {
+        primitive:  true,
+        type:       "char",
+        default:    "' '",
+        format:     "%c",
+        to_value:   -&gt;(v,scope=nil){"'" + v.to_s + "'"},
+      },
+      
+      String=&gt; {
+        primitive: true,
+        type:       "char*",
+        default:    "\"\"",
+        define:     -&gt;(v,n,s=nil){ "char * #{n.camel_case}"},
+        include:    ["&lt;stdio.h&gt;", "\"pgutil.h\""],
+        format:     "%s",
+        to_value:   -&gt;(v,scope=nil){"\"" + v.to_s + "\""},
+      },
+      Void=&gt; {
+        type:       "void * ",
+        define:    -&gt;(a,b,c){ "void * #{to_variable_s(b)}"},
+        default:    "void",
+      },
+      
+      Array    =&gt; {
+        type:       -&gt;(a,scope=nil){ to_type(a[0],scope) + "*" },
+        define:     -&gt;(a,n,scope){ self.define_array(a,n,scope)},
+        to_value:   -&gt;(a,scope){ 
+          if scope == Class
+            self.c_list_s(a,scope) 
+          else
+            "(" + a.dims_type.ergo do |(dims,type)|  to_type(type,scope) + ("*" * (dims.size-1))
+            end + "[]){" + a.map do |elem| 
+              to_value(elem,scope)  
+            end.join("," + " ")  + "}"
+          end
+        },
+        format:     "%s",
+        to_s:       -&gt;(a){ "\"array\""},
+        to_k:       -&gt;(a){ "\"key\""},
+      },
+      
+      Tuple    =&gt; {
+        define:     -&gt;(a,n,scope){ self.define_array(a,n,scope)},
+        type:       -&gt;(a,scope=nil){ "struct " + a.map{|a| to_type(a).gsub("*","p")} * "_"  + "_tuple" },
+        to_value:   -&gt;(a,scope=nil){ (scope == Instance ? "(" + to_type(a) +  ")" : "" ) + "{" + a.map{|b| to_value(b,scope)} *"," + "}"  },
+        format:     "%s",
+      },
+    }.merge([ [List, 
+               -&gt;(a){""},
+               -&gt;(a,b=nil){if b == nil 
+                             "//"
+                           else
+                             "//" + b.to_s
+                           end
+               },
+              ], 
+              [Set, 
+               -&gt;(a){""},
+               -&gt;(a,b=nil){""}, 
+              ],  
+              [Hash, 
+               -&gt;(a){if a.keys[0] == String
+                       %W[compare hash show free].map{|a| "pgHash_" + "string" + a.capitalize}.join(", ")
+                     else
+                       ""
+                     end
+               },
+               -&gt;(a,b=nil){""},
+              ],
+              [Map,  
+               -&gt;(a){""},
+               -&gt;(a,b){""},
+              ]
+            ].reduce({}) {|h,cls_init_value|
+              
+              cls,init,value = cls_init_value
+              
+              h.merge( cls =&gt; {
+                         define:   -&gt;(v,n,s=nil){ "struct Pg" + cls.to_s + " * " + to_variable_s(n)  },
+                         type:      "struct Pg" +  cls.to_s + " * ",
+                         include:   -&gt;(a){"\"pg" + to_file_s(cls.to_s) + ".h\""},
+                         to_value:   -&gt;(a,b=nill,c=nil) { "NULL;/*" + value.(a,b)+ "*/"},
+                         format:     "%s",
+                       })
+            })
+    
+    
+    def self.define_array(a,n,scope=nil)
+      
+      #
+      #  static int sa1[] = {1, 2, 3, 4};
+      #  static int sa2[][4] = {{1, 2, 3, 4}, {1, 2, 3, 4}};
+      #  static int sa3[][2][4] = {{{1, 2, 3, 4}, {1, 2, 3, 4}}};
+      #       first index is optional
+      #
+      #  int* a1;
+      #  int** a2;
+      #  int*** a3;
+      
+      a.dims_type.ergo do |(dims,type)|
+        to_type(type) + " " +   if scope == Instance
+                                  ("*" * dims.size) + " " + to_variable_s(n)
+                                else
+                                  to_variable_s(n) + dims.map {|a| "[#{a}]" } * ""
+                                end
+      end
+    end
+    
+    def self.render_main(pg_class, file_type, vars=[], &amp;block)
+      
+      &lt;&lt;-MAIN
+      MAIN
+    end
+    
+    def self.render_start_of_class(pg_class,file_type)
+      [
+       "STRUC " + to_class_s(pg_class),
+       pg_class.members_instance.map{|m| "." + to_member_s(m) + ": RESD 1"  } * "\n",
+       "ENDSTRUC"
+      ] * "\n"
+    end
+    
+    def self.render_end_of_class(pg_class,file_type)
+    end
+    
+    def self.render_method(ret, name, params,file_type)
+    end
+    
+    
+    def self.render_compare_methods(pg_class,file_type)
+    end
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_constructor(pg_class,file_type)
+      pg_class.members_instance.map{|m| "." + to_member_s(m) + ": RESD 1"  } * "\n"
+    end
+    
+    def self.render_destructor(pg_class, file_type)
+    end
+    
+    def self.render_accessors(pg_class, file_type)
+    end
+
+    def self.render_to_string(pg_class,file_type)
+    end
+    
+    
+    def self.render_methods(pg_class,file_type)
+      
+    end
+
+
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+
+    def self.compile_cmd_str(src_file, dest_file)
+      ""
+    end
+
+    def self.link_cmd_str(src_file, dest_file)
+      ""
+    end
+
+    private
+  end
+    
+end
+</pre></body></html>

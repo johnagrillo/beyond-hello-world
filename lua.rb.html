@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>require_relative "./mod/luacase"
+module BHW
+=begin
+    Vector = {}                   -- Create a table to hold the class methods
+    function Vector:new(x, y, z)  -- The constrtoruuctor
+      local object = { x = x, y = y, z = z }
+      setmetatable(object, { __index = Vector })  -- Inheritance
+      return object
+    end
+    function Vector:magnitude()   -- Another member function
+      -- Reference the implicit object using self
+      return math.sqrt(self.x^2 + self.y^2 + self.z^2)
+    end
+     
+    vec = Vector:new(0, 1, 0)     -- Create a vector
+    print(vec:magnitude())        -- Call a member function using ":" (output: 1)
+    print(vec.x)    
+=end
+    
+
+
+  module Lua
+    include BHW::Props
+    self.extend(Typeless)
+    self.extend(LuaCase)  
+    self.extend(Interpreted)
+    
+    lang = "lua"
+    directory       lang
+    source_file_ext lang
+    option          lang
+    interpreter     lang
+    
+    formal_name     "Lua"
+    assign          "="
+    indent          "  "
+    home_url        "https://www.lua.org/"
+
+    self.merge_types(base_types,
+                     {
+                       BHW::Class=&gt; { 
+                         to_value:   -&gt;(v){  
+                           [
+                            to_class_s(v.class_name.downcase) ,
+                            ":new(",
+                            v.members_param.map{|a| a.value == nil ? to_default(a.type) : to_value(a.value)   }.join(","),
+                            ");"
+                           ] * ""
+                         },
+                       },
+                     })
+
+    def self.hash_to_s(hash,l=0)
+      [
+       "{",
+       if hash.map == nil
+         ""
+       else
+         hash.map do |key,value| 
+           [
+            "{",
+            "[" + to_value(key) + "]",
+            "=",
+            to_value(value),
+            "}",
+           ].join
+         end.join(",")
+       end,
+       "}",
+      ].join
+    end
+
+    def self.array_to_s(a,l=0)
+      delimited_list_s(a, ["{","}"],",",l)
+    end
+
+    
+    def self.render_main(pg_class,file_type,vars=[],&amp;block)
+      [
+       vars.select{|v| v.type.class == BHW::Class}.map{|v| "require(\"src/" + to_file_s(v.type.name) + "\")\n"},
+       "",
+       render_main_vars(vars,""),
+       "\n",
+       vars.map{|v| "print(" + to_variable_s(v) + ")\n"}
+      ] * ""
+    end
+    
+    
+    def self.render_hashable_methods(pg_class,file_type)
+    end
+    
+    def self.render_compare_methods(pg_class, file_type=SourceExt)
+      
+    end
+    
+    def self.render_start_of_class(pg_class, file_type=SourceExt)
+      to_class_s(pg_class) + "= {}"
+    end
+    
+    def self.render_end_of_class(pg_class, file_type=SourceExt)
+      ""
+    end
+    
+    def self.render_constructor(pg_class, file_type=SourceExt)
+      str = "function " + to_class_s(pg_class) + ":new("
+      
+      args = []
+      
+      pg_class.members_param.map{|m| args.push(to_variable_s(m) + " = " + to_parameter_s(m))}
+      pg_class.members_default.select{|a| a.scope == Instance }.map{|m| args.push(to_variable_s(m) + " = " + to_value(m.type))}
+      
+      [
+       str,
+       pg_class.members_param.map{|p| to_parameter_s(p)}.join(sprintf(",\n%*s",str.length," ")),
+       ")\n",
+       "    local object = {" + args.join(",\n              ") + "}",
+       "    setmetatable(object,",
+       "                        { __index = Class1,",
+       "	                        __tostring = function() #{render_to_string_local(pg_class)} end",
+       "                        })",
+       "    return object",
+       "end",
+       "",
+      ]  * "\n"
+    end
+    
+    def self.render_accessors(pg_class, file_type=SourceExt)
+      [
+       pg_class.members.map do |m|
+         [
+    	  if m.has_reader? 
+    	    [
+             "function #{to_class_s(pg_class.name)}:#{to_reader_s(m.name)}()",
+             "    return #{to_member_s(m)}",
+             "end",
+    	    ].join("\n")  + "\n"
+    	  end,
+    	  
+    	  if m.has_writer?	
+    	    [
+             "function #{to_class_s(pg_class.name)}:#{to_writer_s(m.name)}(val)",
+             "    #{to_member_s(m)} = val",
+             "end",
+    	    ].join("\n") + "\n"
+    	  end,
+          
+    	  if m.has_reader? || m.has_writer?
+    	    "\n"
+    	  end,
+         ].join
+       end,
+      ].join
+    end
+    
+    def self.render_to_string(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_to_string_local(pg_class, file_type=SourceExt)
+      [
+       "return string.format(" + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
+         [l[0].push(to_format(m.type,m)), l[1].push("object."+to_parameter_s(m))]
+       end.ergo{|(f,v)| 
+         
+         if v.size == 0
+           "\"\""
+         else
+           ["\"" + f.join("-") + "\"",   (v.join(",")) ] * "," 
+         end + ")"
+       }
+      ].join("\n") + "\n"
+    end
+    
+    
+    def self.render_methods(pg_class, file_type=SourceExt)
+    end
+    
+    def self.render_method(returnType, name, params, static=false)
+    end
+    
+
+  def self.scons_rules(project,classes)
+  end
+
+  def self.makefile_rules(project,classes)
+  end
+
+  def self.rake_run_test(files,builddir)
+    "lua #{files.last}"
+  end
+
+
+  end
+end
+</pre></body></html>

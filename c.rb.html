@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><body><pre>module BHW
+  module CKR
+    include BHW::Props
+    self.extend(BHW::CBase)
+    self.cprops
+    directory       "ckr"
+    option          "ckr"
+    formal_name     "C(K&amp;R)"
+
+    self.extend(Compiled)
+    self.extend(Linked)
+
+    # no option for k&amp;r
+    def self.stdopts
+      ""
+    end
+    
+    self.merge_types(ctypes,
+                     {
+                       Array =&gt; {
+                         type:       -&gt;(a,scope=nil){ to_type(a[0],scope) },
+                         define:     -&gt;(a,n,scope=Instance){ self.define_array(a,n,scope)},
+                         # to_value:   -&gt;(a,scope=Instance){ 
+                         #   if scope == Class
+                         #     c_list_s(a,scope) 
+                         #   else
+                         #     "(" + a.dims_type.ergo do |(dims,type)|  
+                         #       to_type(type,scope) + ("*" * (dims.size-1))
+                         #     end + "[]){" + a.map do |elem| 
+                         #       to_value(elem,scope)
+                         #     end.join("," + " ")  + "}"
+                         #   end
+                         # },
+                         define_init: -&gt;(m) {
+                           # do a malloc
+                           dims,val = m.type.dims_type
+                           ftype = to_type(val)
+                           flattened = m.type.flattened
+                           first = flattened.first
+                           sum = 1
+                           index = []
+                           stars = dims.size+1
+                           [
+                            "\n" + indent + "// #{m.type.to_a[0..10].inspect}",
+                            indent + "// " + dims.inspect + ftype.inspect,
+                            
+                            # mallocs
+                            
+                            dims.each_with_index.map do |d,i|
+                              stars = stars-1
+                              flattened.map{|a| a[0][0..i] }.reduce({}) do |h,e|
+                                array = e[0..-2]
+                                h[array] = 1
+                                h
+                              end.map do |a,b|
+                                index = a.map{|a| "[" + a.to_s + "]" } * ""
+                                a = indent + "this-&gt;#{to_member_s(m.name)}#{index} = (#{ftype} #{"*" * stars})malloc( #{d} * sizeof(#{ftype}#{"*" * (stars-1)}));"
+                                a
+                              end
+                            end,
+                                    
+                            flattened.map do |(i,v)|
+                              if m.type.class == Tuple
+                                v.each_with_index.map do |tv,ti| end
+                              else
+                                        if v.class == Hash
+                                          v.flattened.map{|a| indent + "#{to_member_s(m.name)}#{i.map{|i|"[#{i}]"} *""}#{a[0].map{|i|"[#{to_value(i)}]"} *""} = #{to_value(a[1])}\n"  } + "\n"
+                                        else
+                                          indent + "this-&gt;#{to_member_s(m.name)}#{i.map{|i| "[#{i}]" }*""}=#{to_value(v)};" 
+                                        end
+                              end
+                            end,
+                                   ]
+                         },
+                       }})
+    
+    def self.define_array(a,n,scope=nil)
+      
+      #
+      #  static int sa1[] = {1, 2, 3, 4};
+      #  static int sa2[][4] = {{1, 2, 3, 4}, {1, 2, 3, 4}};
+      #  static int sa3[][2][4] = {{{1, 2, 3, 4}, {1, 2, 3, 4}}};
+      #       first index is optional
+      #
+      #  int* a1;
+      #  int** a2;
+      #  int*** a3;
+      
+      a.dims_type.ergo do |(dims,type)|
+        to_type(type) + " " +   if scope == Instance
+                                  ("*" * dims.size) + " " + to_variable_s(n)
+                                else
+                                  to_variable_s(n) + dims.map {|a| "[#{a}]" } * ""
+                                end
+      end
+    end
+  end
+end
+
+module BHW
+  module C89
+    include BHW::Props
+    self.extend(BHW::CBase)
+    self.cprops
+
+    directory       "c89"
+    option          "c89"
+    formal_name     "C89(AnsiC)"
+
+    self.merge_types(ctypes,
+                     {
+                       Array =&gt; {
+                         type:       -&gt;(a,scope=nil){ to_type(a[0],scope) },
+                         define:     -&gt;(a,n,scope=Instance){ self.define_array(a,n,scope)},
+                         # to_value:   -&gt;(a,scope=Instance){ 
+                         #   if scope == Class
+                         #     c_list_s(a,scope) 
+                         #   else
+                         #     "(" + a.dims_type.ergo do |(dims,type)|  
+                         #       to_type(type,scope) + ("*" * (dims.size-1))
+                         #     end + "[]){" + a.map do |elem| 
+                         #       to_value(elem,scope)
+                         #     end.join("," + " ")  + "}"
+                         #   end
+                         # },
+                         define_init: -&gt;(m) {
+                           # do a malloc
+                           dims,val = m.type.dims_type
+                           ftype = to_type(val)
+                           flattened = m.type.flattened
+                           first = flattened.first
+                           sum = 1
+                           index = []
+                           stars = dims.size+1
+                           [
+                            "\n" + indent + "// #{m.type.to_a[0..10].inspect}",
+                            indent + "// " + dims.inspect + ftype.inspect,
+                            
+                            # mallocs
+                            
+                            dims.each_with_index.map do |d,i|
+                              stars = stars-1
+                              flattened.map{|a| a[0][0..i] }.reduce({}) do |h,e|
+                                array = e[0..-2]
+                                h[array] = 1
+                                h
+                              end.map do |a,b|
+                                index = a.map{|a| "[" + a.to_s + "]" } * ""
+                                a = indent + "this-&gt;#{to_member_s(m.name)}#{index} = (#{ftype} #{"*" * stars})malloc( #{d} * sizeof(#{ftype}#{"*" * (stars-1)}));"
+                                a
+                              end
+                            end,
+                            
+                            flattened.map do |(i,v)|
+                              if m.type.class == Tuple
+                                v.each_with_index.map do |tv,ti| end
+                              else
+                                if v.class == Hash
+                                  v.flattened.map{|a| indent + "#{to_member_s(m.name)}#{i.map{|i|"[#{i}]"} *""}#{a[0].map{|i|"[#{to_value(i)}]"} *""} = #{to_value(a[1])}\n"  } + "\n"
+                                else
+                                  indent + "this-&gt;#{to_member_s(m.name)}#{i.map{|i| "[#{i}]" }*""}=#{to_value(v)};" 
+                                end
+                              end
+                            end,
+                           ]
+                         },
+                       }})
+    
+    def self.define_array(a,n,scope=nil)
+      
+      #
+      #  static int sa1[] = {1, 2, 3, 4};
+      #  static int sa2[][4] = {{1, 2, 3, 4}, {1, 2, 3, 4}};
+      #  static int sa3[][2][4] = {{{1, 2, 3, 4}, {1, 2, 3, 4}}};
+      #       first index is optional
+      #
+      #  int* a1;
+      #  int** a2;
+      #  int*** a3;
+      
+      a.dims_type.ergo do |(dims,type)|
+        to_type(type) + " " +   if scope == Instance
+                                  ("*" * dims.size) + " " + to_variable_s(n)
+                                else
+                                  to_variable_s(n) + dims.map {|a| "[#{a}]" } * ""
+                                end
+      end
+    end
+  end
+end
+
+module BHW
+  module C90
+    include BHW::Props
+    self.extend(BHW::CBase)
+    self.cprops
+
+    directory       "c90"
+    option          "c90"
+    formal_name     "C90(ISO C)"
+
+    self.merge_types(ctypes,
+                     {
+                       Array =&gt; {
+                         type:       -&gt;(a,scope=nil){ to_type(a[0],scope) },
+                         define:     -&gt;(a,n,scope=Instance){ self.define_array(a,n,scope)},
+                         # to_value:   -&gt;(a,scope=Instance){ 
+                         #   if scope == Class
+                         #     c_list_s(a,scope) 
+                         #   else
+                         #     "(" + a.dims_type.ergo do |(dims,type)|  
+                         #       to_type(type,scope) + ("*" * (dims.size-1))
+                         #     end + "[]){" + a.map do |elem| 
+                         #       to_value(elem,scope)
+                         #     end.join("," + " ")  + "}"
+                         #   end
+                         # },
+                         define_init: -&gt;(m) {
+                           # do a malloc
+                           dims,val = m.type.dims_type
+                           ftype = to_type(val)
+                           flattened = m.type.flattened
+                           first = flattened.first
+                           sum = 1
+                           index = []
+                           stars = dims.size+1
+                           [
+                            "\n" + indent + "// #{m.type.to_a[0..10].inspect}",
+                            indent + "// " + dims.inspect + ftype.inspect,
+                            
+                            # mallocs
+                            
+                            dims.each_with_index.map do |d,i|
+                              stars = stars-1
+                              flattened.map{|a| a[0][0..i] }.reduce({}) do |h,e|
+                                array = e[0..-2]
+                                h[array] = 1
+                                h
+                              end.map do |a,b|
+                                index = a.map{|a| "[" + a.to_s + "]" } * ""
+                                a = indent + "this-&gt;#{to_member_s(m.name)}#{index} = (#{ftype} #{"*" * stars})malloc( #{d} * sizeof(#{ftype}#{"*" * (stars-1)}));"
+                                a
+                              end
+                            end,
+                                    
+                            flattened.map do |(i,v)|
+                              if m.type.class == Tuple
+                                v.each_with_index.map do |tv,ti| end
+                              else
+                                        if v.class == Hash
+                                          v.flattened.map{|a| indent + "#{to_member_s(m.name)}#{i.map{|i|"[#{i}]"} *""}#{a[0].map{|i|"[#{to_value(i)}]"} *""} = #{to_value(a[1])}\n"  } + "\n"
+                                        else
+                                          indent + "this-&gt;#{to_member_s(m.name)}#{i.map{|i| "[#{i}]" }*""}=#{to_value(v)};" 
+                                        end
+                              end
+                            end,
+                                   ]
+                         },
+                       }})
+    
+    def self.define_array(a,n,scope=nil)
+      
+      #
+      #  static int sa1[] = {1, 2, 3, 4};
+      #  static int sa2[][4] = {{1, 2, 3, 4}, {1, 2, 3, 4}};
+      #  static int sa3[][2][4] = {{{1, 2, 3, 4}, {1, 2, 3, 4}}};
+      #       first index is optional
+      #
+      #  int* a1;
+      #  int** a2;
+      #  int*** a3;
+      
+      a.dims_type.ergo do |(dims,type)|
+        to_type(type) + " " +   if scope == Instance
+                                  ("*" * dims.size) + " " + to_variable_s(n)
+                                else
+                                  to_variable_s(n) + dims.map {|a| "[#{a}]" } * ""
+                                end
+      end
+    end
+  end
+end
+
+module BHW
+  module C99
+    include BHW::Props
+    self.extend(BHW::CBase)
+    self.cprops
+
+    directory       "c99"
+    option          "c99"
+    formal_name     "C99"
+
+    self.merge_types(ctypes,
+                     {
+                       Array =&gt; {
+                         type:       -&gt;(a,scope=nil){ to_type(a[0],scope) },
+                         define:     -&gt;(a,n,scope=Instance){ self.define_array(a,n,scope)},
+                         # to_value:   -&gt;(a,scope=Instance){ 
+                         #   if scope == Class
+                         #     c_list_s(a,scope) 
+                         #   else
+                         #     "(" + a.dims_type.ergo do |(dims,type)|  
+                         #       to_type(type,scope) + ("*" * (dims.size-1))
+                         #     end + "[]){" + a.map do |elem| 
+                         #       to_value(elem,scope)
+                         #     end.join("," + " ")  + "}"
+                         #   end
+                         # },
+                         define_init: -&gt;(m) {
+                           # do a malloc
+                           dims,val = m.type.dims_type
+                           ftype = to_type(val)
+                           flattened = m.type.flattened
+                           first = flattened.first
+                           sum = 1
+                           index = []
+                           stars = dims.size+1
+                           [
+                            "\n" + indent + "// #{m.type.to_a[0..10].inspect}",
+                            indent + "// " + dims.inspect + ftype.inspect,
+                            
+                            # mallocs
+                            
+                            dims.each_with_index.map do |d,i|
+                              stars = stars-1
+                              flattened.map{|a| a[0][0..i] }.reduce({}) do |h,e|
+                                array = e[0..-2]
+                                h[array] = 1
+                                h
+                              end.map do |a,b|
+                                index = a.map{|a| "[" + a.to_s + "]" } * ""
+                                a = indent + "this-&gt;#{to_member_s(m.name)}#{index} = (#{ftype} #{"*" * stars})malloc( #{d} * sizeof(#{ftype}#{"*" * (stars-1)}));"
+                                a
+                              end
+                            end,
+                                    
+                            flattened.map do |(i,v)|
+                              if m.type.class == Tuple
+                                v.each_with_index.map do |tv,ti| end
+                              else
+                                        if v.class == Hash
+                                          v.flattened.map{|a| indent + "#{to_member_s(m.name)}#{i.map{|i|"[#{i}]"} *""}#{a[0].map{|i|"[#{to_value(i)}]"} *""} = #{to_value(a[1])}\n"  } + "\n"
+                                        else
+                                          indent + "this-&gt;#{to_member_s(m.name)}#{i.map{|i| "[#{i}]" }*""}=#{to_value(v)};" 
+                                        end
+                              end
+                            end,
+                                   ]
+                         },
+                       }})
+    
+    def self.define_array(a,n,scope=nil)
+      
+      #
+      #  static int sa1[] = {1, 2, 3, 4};
+      #  static int sa2[][4] = {{1, 2, 3, 4}, {1, 2, 3, 4}};
+      #  static int sa3[][2][4] = {{{1, 2, 3, 4}, {1, 2, 3, 4}}};
+      #       first index is optional
+      #
+      #  int* a1;
+      #  int** a2;
+      #  int*** a3;
+      
+      a.dims_type.ergo do |(dims,type)|
+        to_type(type) + " " +   if scope == Instance
+                                  ("*" * dims.size) + " " + to_variable_s(n)
+                                else
+                                  to_variable_s(n) + dims.map {|a| "[#{a}]" } * ""
+                                end
+      end
+    end
+  end
+end
+
+module BHW
+  module C11
+    include BHW::Props
+    self.extend(BHW::CBase)
+    self.cprops
+
+    directory       "c11"
+    option          "c11"
+    formal_name     "C11"
+
+    self.merge_types(ctypes,
+                     {
+                       Array =&gt; {
+                         type:       -&gt;(a,scope=nil){ to_type(a[0],scope) },
+                         define:     -&gt;(a,n,scope=Instance){ self.define_array(a,n,scope)},
+                         # to_value:   -&gt;(a,scope=Instance){ 
+                         #   if scope == Class
+                         #     c_list_s(a,scope) 
+                         #   else
+                         #     "(" + a.dims_type.ergo do |(dims,type)|  
+                         #       to_type(type,scope) + ("*" * (dims.size-1))
+                         #     end + "[]){" + a.map do |elem| 
+                         #       to_value(elem,scope)
+                         #     end.join("," + " ")  + "}"
+                         #   end
+                         # },
+                         define_init: -&gt;(m) {
+                           # do a malloc
+                           dims,val = m.type.dims_type
+                           ftype = to_type(val)
+                           flattened = m.type.flattened
+                           first = flattened.first
+                           sum = 1
+                           index = []
+                           stars = dims.size+1
+                           [
+                            "\n" + indent + "// #{m.type.to_a[0..10].inspect}",
+                            indent + "// " + dims.inspect + ftype.inspect,
+                            
+                            # mallocs
+                            
+                            dims.each_with_index.map do |d,i|
+                              stars = stars-1
+                              flattened.map{|a| a[0][0..i] }.reduce({}) do |h,e|
+                                array = e[0..-2]
+                                h[array] = 1
+                                h
+                              end.map do |a,b|
+                                index = a.map{|a| "[" + a.to_s + "]" } * ""
+                                a = indent + "this-&gt;#{to_member_s(m.name)}#{index} = (#{ftype} #{"*" * stars})malloc( #{d} * sizeof(#{ftype}#{"*" * (stars-1)}));"
+                                a
+                              end
+                            end,
+                                    
+                            flattened.map do |(i,v)|
+                              if m.type.class == Tuple
+                                v.each_with_index.map do |tv,ti| end
+                              else
+                                        if v.class == Hash
+                                          v.flattened.map{|a| indent + "#{to_member_s(m.name)}#{i.map{|i|"[#{i}]"} *""}#{a[0].map{|i|"[#{to_value(i)}]"} *""} = #{to_value(a[1])}\n"  } + "\n"
+                                        else
+                                          indent + "this-&gt;#{to_member_s(m.name)}#{i.map{|i| "[#{i}]" }*""}=#{to_value(v)};" 
+                                        end
+                              end
+                            end,
+                                   ]
+                         },
+                       }})
+    
+    def self.define_array(a,n,scope=nil)
+      
+      #
+      #  static int sa1[] = {1, 2, 3, 4};
+      #  static int sa2[][4] = {{1, 2, 3, 4}, {1, 2, 3, 4}};
+      #  static int sa3[][2][4] = {{{1, 2, 3, 4}, {1, 2, 3, 4}}};
+      #       first index is optional
+      #
+      #  int* a1;
+      #  int** a2;
+      #  int*** a3;
+      
+      a.dims_type.ergo do |(dims,type)|
+        to_type(type) + " " +   if scope == Instance
+                                  ("*" * dims.size) + " " + to_variable_s(n)
+                                else
+                                  to_variable_s(n) + dims.map {|a| "[#{a}]" } * ""
+                                end
+      end
+    end
+  end
+
+
+end
+</pre></body></html>
