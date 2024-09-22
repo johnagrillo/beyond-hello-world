@@ -1,49 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>tcl_8_6</h1><hr></hr><h2>#simple.tcl#</h2><pre>package require TclOO
-oo::class create simple {
-  variable string_param
-  variable string_default
-  variable string_param_rw
-  variable int_param
-  variable int_default
-  variable float_param
-  variable float_default
-
-  constructor {string_param_ string_param_rw_ int_param_ float_param_} {
-    set string_param $string_param_
-    set string_param_rw $string_param_rw_
-    set int_param $int_param_
-    set float_param $float_param_
-
-    set string_default  "string default"
-    set int_default  0
-    set float_default  0.0
-  }
-    method get_string_param {} {
-      return $string_param
-    }
-
-    method get_string_param_rw {} {
-      return $string_param_rw
-    }
-    method set_string_param_rw {string_param_rw} {
-      set string_param_rw $string_param_rw
-    }
-
-    method get_int_param {} {
-      return $int_param
-    }
-
-    method get_float_param {} {
-      return $float_param
-    }
-
-
-  method to_string  {} {
-    return [format "%s-%s-%s-%4d-%4d-%f-%f" $string_param $string_default $string_param_rw $int_param $int_default $float_param $float_default ]
-    }
-
-}</pre><hr></hr><h2>.#simple.tcl</h2><pre>john@DESKTOP-SH8OU9R.23336:1724062197</pre><hr></hr><h2>array03.tcl</h2><pre>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>tcl_8_6</h1><hr></hr><h2>.#simple.tcl</h2><pre>john@DESKTOP-SH8OU9R.23336:1724062197</pre><hr></hr><h2>array03.tcl</h2><pre>
 
 set array3 [ list 
     [ list 
