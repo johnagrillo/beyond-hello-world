@@ -1,2 +1,415 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>cpp-c11-clang</h1><hr></hr><h2>array10</h2><h4>#include &lt;string&gt;</h4><h4>#include &lt;iostream&gt;</h4><h4>using namespace std;</h4><h4></h4><h4></h4><h4>int main(int argc, char * arg[])</h4><h4>{</h4><h4>    vector &lt; int &gt; * array= {1,2,3,4,5,6,7,8,9,10};</h4><h4></h4><h4>    std::cout &lt;&lt; array &lt;&lt; std::endl;</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>array20</h2><h4>#include &lt;string&gt;</h4><h4>#include &lt;iostream&gt;</h4><h4>using namespace std;</h4><h4></h4><h4></h4><h4>int main(int argc, char * arg[])</h4><h4>{</h4><h4>    vector &lt; int &gt; * array= {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};</h4><h4></h4><h4>    std::cout &lt;&lt; array &lt;&lt; std::endl;</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>array03</h2><h4>#include &lt;string&gt;</h4><h4>#include &lt;iostream&gt;</h4><h4>using namespace std;</h4><h4></h4><h4></h4><h4>int main(int argc, char * arg[])</h4><h4>{</h4><h4>    vector &lt; vector &lt; vector &lt; int &gt; &gt; &gt; * array3= { { {0,1,2}, {10,11,12}, {20,21,22}}, { {100,101,102}, {110,111,112}, {120,121,122}}, { {200,201,202}, {210,211,212}, {220,221,222}}};</h4><h4></h4><h4>    std::cout &lt;&lt; array3 &lt;&lt; std::endl;</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>hash10</h2><h4>#include &lt;string&gt;</h4><h4>#include &lt;iostream&gt;</h4><h4>using namespace std;</h4><h4></h4><h4></h4><h4>int main(int argc, char * arg[])</h4><h4>{</h4><h4>    map &lt; int,string &gt; * hashf={ {1,"string1"}, {2,"string2"}, {3,"string3"}, {4,"string4"}, {5,"string5"}, {6,"string6"}, {7,"string7"}, {8,"string8"}, {9,"string9"}, {10,"string10"}};</h4><h4></h4><h4>    std::cout &lt;&lt; hashf &lt;&lt; std::endl;</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>nested</h2><h4>#include &lt;string&gt;</h4><h4>#include &lt;iostream&gt;</h4><h4>using namespace std;</h4><h4></h4><h4></h4><h4>int main(int argc, char * arg[])</h4><h4>{</h4><h4>    list &lt; list &lt; string &gt; &gt; * listOfListV= { {"1","2"}, {"3","4"}, {"5","6"}};</h4><h4>    list &lt; map &lt; string,string &gt;  &gt; * listOfHashV= {{ {"1","1"}, {"2","2"}},{ {"3","3"}, {"4","4"}},{ {"5","5"}, {"6","6"}}};</h4><h4>    list &lt; list &lt; map &lt; string,map &lt; string,string &gt;  &gt;  &gt; &gt; * mapListOfListOfHashOfHashV= { {{ {"hello1",{ {"hello2","hello4"}}}}}};</h4><h4></h4><h4>    std::cout &lt;&lt; listOfListV &lt;&lt; std::endl;</h4><h4>    std::cout &lt;&lt; listOfHashV &lt;&lt; std::endl;</h4><h4>    std::cout &lt;&lt; mapListOfListOfHashOfHashV &lt;&lt; std::endl;</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>simple</h2><h4>#include "simple.h"</h4><h4></h4><h4>Simple::Simple (string stringParam,string stringParamRw,int intParam,float  floatParam)</h4><h4>{</h4><h4>  this-&gt;stringParam = #&lt;bhw::member:0x000001ed261cf3a8&gt;;</h4><h4>  this-&gt;stringParamRw = #&lt;bhw::member:0x000001ed261ceef8&gt;;</h4><h4>  this-&gt;intParam = #&lt;bhw::member:0x000001ed261ced90&gt;;</h4><h4>  this-&gt;floatParam = #&lt;bhw::member:0x000001ed261ce908&gt;;</h4><h4>  this-&gt;stringDefault = "string default";</h4><h4>  this-&gt;intDefault = 0;</h4><h4>  this-&gt;floatDefault = 0.0;</h4><h4></h4><h4>}</h4><h4></h4><h4>Simple::~Simple ()</h4><h4>{</h4><h4></h4><h4>}</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>ostream &amp;</h4><h4>operator &lt;&lt; (ostream &amp; o, Simple * simple)</h4><h4>{</h4><h4>  return o &lt;&lt; simple-&gt;#&lt;bhw::member:0x000001ed261cf3a8&gt; &lt;&lt; "-"</h4><h4>           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000001ed261cf0d8&gt; &lt;&lt; "-"</h4><h4>           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000001ed261ceef8&gt; &lt;&lt; "-"</h4><h4>           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000001ed261ced90&gt; &lt;&lt; "-"</h4><h4>           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000001ed261ceb60&gt; &lt;&lt; "-"</h4><h4>           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000001ed261ce908&gt; &lt;&lt; "-"</h4><h4>           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000001ed261ce5c0&gt; &lt;&lt; "-";</h4><h4>}</h4><h4></h4><h4>size_t </h4><h4>Simple::getHash()</h4><h4>{</h4><h4>  return this-&gt;stringParam.length() +</h4><h4>    this-&gt;stringDefault.length() +</h4><h4>    this-&gt;stringParamRw.length() +</h4><h4>    this-&gt;intParam +</h4><h4>    this-&gt;intDefault +</h4><h4>    this-&gt;floatParam +</h4><h4>    this-&gt;floatDefault;</h4><h4>}</h4><h4></h4><h4>bool </h4><h4>Simple::operator &lt;(Simple &amp; #&lt;bhw::class:0x000001ed261cf6a0&gt;) const</h4><h4>{</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261cf3a8&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf3a8&gt;) return true;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261cf3a8&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf3a8&gt;) return false;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261cf3a8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf3a8&gt;</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261cf0d8&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf0d8&gt;) return true;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261cf0d8&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf0d8&gt;) return false;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261cf0d8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf0d8&gt;</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ceef8&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceef8&gt;) return true;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ceef8&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceef8&gt;) return false;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ceef8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceef8&gt;</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ced90&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ced90&gt;) return true;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ced90&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ced90&gt;) return false;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ced90&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ced90&gt;</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ceb60&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceb60&gt;) return true;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ceb60&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceb60&gt;) return false;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ceb60&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceb60&gt;</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ce908&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce908&gt;) return true;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ce908&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce908&gt;) return false;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ce908&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce908&gt;</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ce5c0&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce5c0&gt;) return true;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ce5c0&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce5c0&gt;) return false;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ce5c0&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce5c0&gt;</h4><h4>  return false;</h4><h4></h4><h4>}</h4><h4></h4><h4>bool </h4><h4>Simple::operator &gt;(Simple &amp; #&lt;bhw::class:0x000001ed261cf6a0&gt;) const</h4><h4>{</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261cf3a8&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringParam) return false;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261cf3a8&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringParam) return true;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261cf3a8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringParam</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261cf0d8&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringDefault) return false;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261cf0d8&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringDefault) return true;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261cf0d8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringDefault</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ceef8&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringParamRw) return false;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ceef8&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringParamRw) return true;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ceef8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.stringParamRw</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ced90&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.intParam) return false;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ced90&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.intParam) return true;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ced90&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.intParam</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ceb60&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.intDefault) return false;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ceb60&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.intDefault) return true;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ceb60&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.intDefault</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ce908&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.floatParam) return false;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ce908&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.floatParam) return true;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ce908&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.floatParam</h4><h4></h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ce5c0&gt; &lt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.floatDefault) return false;</h4><h4>  if (this-&gt;#&lt;bhw::member:0x000001ed261ce5c0&gt; &gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;.floatDefault) return true;</h4><h4>  //  this-&gt;#&lt;bhw::member:0x000001ed261ce5c0&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.floatDefault</h4><h4>  return false;</h4><h4></h4><h4>}</h4><h4></h4><h4>bool </h4><h4>Simple::operator ==(Simple &amp; #&lt;bhw::class:0x000001ed261cf6a0&gt;) const</h4><h4>{</h4><h4>  return (this-&gt;#&lt;bhw::member:0x000001ed261cf3a8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf3a8&gt;) &amp;&amp;</h4><h4>    (this-&gt;#&lt;bhw::member:0x000001ed261cf0d8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf0d8&gt;) &amp;&amp;</h4><h4>    (this-&gt;#&lt;bhw::member:0x000001ed261ceef8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceef8&gt;) &amp;&amp;</h4><h4>    (this-&gt;#&lt;bhw::member:0x000001ed261ced90&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ced90&gt;) &amp;&amp;</h4><h4>    (this-&gt;#&lt;bhw::member:0x000001ed261ceb60&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceb60&gt;) &amp;&amp;</h4><h4>    (this-&gt;#&lt;bhw::member:0x000001ed261ce908&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce908&gt;) &amp;&amp;</h4><h4>    (this-&gt;#&lt;bhw::member:0x000001ed261ce5c0&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce5c0&gt;);</h4><h4>}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>cpp-c11-clang</h1><hr></hr><h2>#simple.cpp#</h2><pre>#include "simple.h"
+
+Simple::Simple (string stringParam,string stringParamRw,int intParam,float  floatParam)
+{
+  this-&gt;stringParam = #&lt;bhw::member:0x000055f3bbad9008&gt;;
+  this-&gt;stringParamRw = #&lt;bhw::member:0x000055f3bbad8c98&gt;;
+  this-&gt;intParam = #&lt;bhw::member:0x000055f3bbad8b30&gt;;
+  this-&gt;floatParam = #&lt;bhw::member:0x000055f3bbad8810&gt;;
+  this-&gt;stringDefault = "string default";
+  this-&gt;intDefault = 0;
+  this-&gt;floatDefault = 0.0;
+
+}
+
+Simple::~Simple ()
+{ax++++
+
+}
+
+
+
+
+
+
+
+
+
+
+ostream &amp;
+operator &lt;&lt; (ostream &amp; o, Simple * simple)
+{
+  return o &lt;&lt; simple-&gt;#&lt;bhw::member:0x000055f3bbad9008&gt; &lt;&lt; "-"
+           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000055f3bbad8e28&gt; &lt;&lt; "-"
+           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000055f3bbad8c98&gt; &lt;&lt; "-"
+           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000055f3bbad8b30&gt; &lt;&lt; "-"
+           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000055f3bbad89a0&gt; &lt;&lt; "-"
+           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000055f3bbad8810&gt; &lt;&lt; "-"
+           &lt;&lt; simple-&gt;#&lt;bhw::member:0x000055f3bbad8630&gt; &lt;&lt; "-";
+}
+
+size_t 
+Simple::getHash()
+{
+  return this-&gt;stringParam.length() +
+    this-&gt;stringDefault.length() +
+    this-&gt;stringParamRw.length() +
+    this-&gt;intParam +
+    this-&gt;intDefault +
+    this-&gt;floatParam +
+    this-&gt;floatDefault;
+}
+
+bool 
+Simple::operator &lt;(Simple &amp; #&lt;bhw::class:0x000055f3bbad91e8&gt;) const
+{
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad9008&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad9008&gt;) return true;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad9008&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad9008&gt;) return false;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad9008&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad9008&gt;
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8e28&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8e28&gt;) return true;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8e28&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8e28&gt;) return false;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8e28&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8e28&gt;
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8c98&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8c98&gt;) return true;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8c98&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8c98&gt;) return false;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8c98&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8c98&gt;
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8b30&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8b30&gt;) return true;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8b30&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8b30&gt;) return false;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8b30&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8b30&gt;
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad89a0&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad89a0&gt;) return true;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad89a0&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad89a0&gt;) return false;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad89a0&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad89a0&gt;
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8810&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8810&gt;) return true;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8810&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8810&gt;) return false;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8810&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8810&gt;
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8630&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8630&gt;) return true;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8630&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8630&gt;) return false;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8630&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8630&gt;
+  return false;
+
+}
+
+bool 
+Simple::operator &gt;(Simple &amp; #&lt;bhw::class:0x000055f3bbad91e8&gt;) const
+{
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad9008&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringParam) return false;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad9008&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringParam) return true;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad9008&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringParam
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8e28&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringDefault) return false;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8e28&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringDefault) return true;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8e28&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringDefault
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8c98&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringParamRw) return false;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8c98&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringParamRw) return true;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8c98&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.stringParamRw
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8b30&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.intParam) return false;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8b30&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.intParam) return true;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8b30&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.intParam
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad89a0&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.intDefault) return false;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad89a0&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.intDefault) return true;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad89a0&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.intDefault
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8810&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.floatParam) return false;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8810&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.floatParam) return true;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8810&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.floatParam
+
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8630&gt; &lt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.floatDefault) return false;
+  if (this-&gt;#&lt;bhw::member:0x000055f3bbad8630&gt; &gt; #&lt;bhw::class:0x000055f3bbad91e8&gt;.floatDefault) return true;
+  //  this-&gt;#&lt;bhw::member:0x000055f3bbad8630&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.floatDefault
+  return false;
+
+}
+
+bool 
+Simple::operator ==(Simple &amp; #&lt;bhw::class:0x000055f3bbad91e8&gt;) const
+{
+  return (this-&gt;#&lt;bhw::member:0x000055f3bbad9008&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad9008&gt;) &amp;&amp;
+    (this-&gt;#&lt;bhw::member:0x000055f3bbad8e28&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8e28&gt;) &amp;&amp;
+    (this-&gt;#&lt;bhw::member:0x000055f3bbad8c98&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8c98&gt;) &amp;&amp;
+    (this-&gt;#&lt;bhw::member:0x000055f3bbad8b30&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8b30&gt;) &amp;&amp;
+    (this-&gt;#&lt;bhw::member:0x000055f3bbad89a0&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad89a0&gt;) &amp;&amp;
+    (this-&gt;#&lt;bhw::member:0x000055f3bbad8810&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8810&gt;) &amp;&amp;
+    (this-&gt;#&lt;bhw::member:0x000055f3bbad8630&gt; == #&lt;bhw::class:0x000055f3bbad91e8&gt;.#&lt;bhw::member:0x000055f3bbad8630&gt;);
+}
+
+</pre><hr></hr><h2>array03.cpp</h2><pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+
+int main(int argc, char * arg[])
+{
+    vector &lt; vector &lt; vector &lt; int &gt; &gt; &gt; * array3= { { {0,1,2}, {10,11,12}, {20,21,22}}, { {100,101,102}, {110,111,112}, {120,121,122}}, { {200,201,202}, {210,211,212}, {220,221,222}}};
+
+    std::cout &lt;&lt; array3 &lt;&lt; std::endl;
+    return 0;
+}
+</pre><hr></hr><h2>array10.cpp</h2><pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+
+int main(int argc, char * arg[])
+{
+    vector &lt; int &gt; * array= {1,2,3,4,5,6,7,8,9,10};
+
+    std::cout &lt;&lt; array &lt;&lt; std::endl;
+    return 0;
+}
+</pre><hr></hr><h2>array20.cpp</h2><pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+
+int main(int argc, char * arg[])
+{
+    vector &lt; int &gt; * array= {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+
+    std::cout &lt;&lt; array &lt;&lt; std::endl;
+    return 0;
+}
+</pre><hr></hr><h2>hash10.cpp</h2><pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+
+int main(int argc, char * arg[])
+{
+    map &lt; int,string &gt; * hashf={ {1,"string1"}, {2,"string2"}, {3,"string3"}, {4,"string4"}, {5,"string5"}, {6,"string6"}, {7,"string7"}, {8,"string8"}, {9,"string9"}, {10,"string10"}};
+
+    std::cout &lt;&lt; hashf &lt;&lt; std::endl;
+    return 0;
+}
+</pre><hr></hr><h2>integers.cpp</h2><pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+
+int main(int argc, char * arg[])
+{
+    type  0=0;
+    type  0=0;
+    type  0=0;
+    type  0=0;
+    type  0=0;
+    type  0=0;
+    type  0=0;
+    type  0=0;
+    type  0=0;
+    type  0=0;
+    type  0=0;
+
+    std::cout &lt;&lt; int_8_unsigned &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_16_unsigned &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_32_unsigned &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_64_unsigned &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_word_unsigned &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_8_signed &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_16_signed &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_32_signed &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_64_signed &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_word_signed &lt;&lt; std::endl;
+    std::cout &lt;&lt; int_ap &lt;&lt; std::endl;
+    return 0;
+}
+</pre><hr></hr><h2>nested.cpp</h2><pre>#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+
+int main(int argc, char * arg[])
+{
+    list &lt; list &lt; string &gt; &gt; * listOfListV= { {"1","2"}, {"3","4"}, {"5","6"}};
+    list &lt; map &lt; string,string &gt;  &gt; * listOfHashV= {{ {"1","1"}, {"2","2"}},{ {"3","3"}, {"4","4"}},{ {"5","5"}, {"6","6"}}};
+    list &lt; list &lt; map &lt; string,map &lt; string,string &gt;  &gt;  &gt; &gt; * mapListOfListOfHashOfHashV= { {{ {"hello1",{ {"hello2","hello4"}}}}}};
+
+    std::cout &lt;&lt; listOfListV &lt;&lt; std::endl;
+    std::cout &lt;&lt; listOfHashV &lt;&lt; std::endl;
+    std::cout &lt;&lt; mapListOfListOfHashOfHashV &lt;&lt; std::endl;
+    return 0;
+}
+</pre><hr></hr><h2>simple.cpp</h2><pre>#include "simple.h"
+
+Simple::Simple (std::string stringParam, std::string stringParamRw, int intParam, float floatParam):
+  string_param_ stringParam),
+  string_param_rw_ stringParamRw),
+  int_param_ intParam),
+  float_param_ floatParam)
+{
+  string_default_ = "string default";
+  int_default_ = 0;
+  float_default_ = 0.0;
+
+}
+
+Simple::~Simple ()
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+ostream &amp;
+operator &lt;&lt; (ostream &amp; o, Simple * simple)
+{
+  return o &lt;&lt; simple-&gt;string_param_ &lt;&lt; "-"
+           &lt;&lt; simple-&gt;string_default_ &lt;&lt; "-"
+           &lt;&lt; simple-&gt;string_param_rw_ &lt;&lt; "-"
+           &lt;&lt; simple-&gt;int_param_ &lt;&lt; "-"
+           &lt;&lt; simple-&gt;int_default_ &lt;&lt; "-"
+           &lt;&lt; simple-&gt;float_param_ &lt;&lt; "-"
+           &lt;&lt; simple-&gt;float_default_ &lt;&lt; "-";
+}
+
+size_t 
+Simple::getHash()
+{
+  return this-&gt;stringParam.length() +
+    this-&gt;stringDefault.length() +
+    this-&gt;stringParamRw.length() +
+    intParam +
+    intDefault +
+    floatParam +
+    floatDefault;
+}
+
+bool 
+Simple::operator &lt;(Simple &amp; simple) const
+{
+  if (string_param_ &lt; simple.string_param_) return true;
+  if (string_param_ &gt; simple.string_param_) return false;
+  //  string_param_ == simple.string_param_
+
+  if (string_default_ &lt; simple.string_default_) return true;
+  if (string_default_ &gt; simple.string_default_) return false;
+  //  string_default_ == simple.string_default_
+
+  if (string_param_rw_ &lt; simple.string_param_rw_) return true;
+  if (string_param_rw_ &gt; simple.string_param_rw_) return false;
+  //  string_param_rw_ == simple.string_param_rw_
+
+  if (int_param_ &lt; simple.int_param_) return true;
+  if (int_param_ &gt; simple.int_param_) return false;
+  //  int_param_ == simple.int_param_
+
+  if (int_default_ &lt; simple.int_default_) return true;
+  if (int_default_ &gt; simple.int_default_) return false;
+  //  int_default_ == simple.int_default_
+
+  if (float_param_ &lt; simple.float_param_) return true;
+  if (float_param_ &gt; simple.float_param_) return false;
+  //  float_param_ == simple.float_param_
+
+  if (float_default_ &lt; simple.float_default_) return true;
+  if (float_default_ &gt; simple.float_default_) return false;
+  //  float_default_ == simple.float_default_
+  return false;
+
+}
+
+bool 
+Simple::operator &gt;(Simple &amp; simple) const
+{
+  if ({to_member_s(m.name)} &lt; simple.string_param_) return false;
+  if ({to_member_s(m.name)} &gt; simple.string_param_) return true;
+  //  {to_member_s(m.name)} == simple.string_param_
+
+  if ({to_member_s(m.name)} &lt; simple.string_default_) return false;
+  if ({to_member_s(m.name)} &gt; simple.string_default_) return true;
+  //  {to_member_s(m.name)} == simple.string_default_
+
+  if ({to_member_s(m.name)} &lt; simple.string_param_rw_) return false;
+  if ({to_member_s(m.name)} &gt; simple.string_param_rw_) return true;
+  //  {to_member_s(m.name)} == simple.string_param_rw_
+
+  if ({to_member_s(m.name)} &lt; simple.int_param_) return false;
+  if ({to_member_s(m.name)} &gt; simple.int_param_) return true;
+  //  {to_member_s(m.name)} == simple.int_param_
+
+  if ({to_member_s(m.name)} &lt; simple.int_default_) return false;
+  if ({to_member_s(m.name)} &gt; simple.int_default_) return true;
+  //  {to_member_s(m.name)} == simple.int_default_
+
+  if ({to_member_s(m.name)} &lt; simple.float_param_) return false;
+  if ({to_member_s(m.name)} &gt; simple.float_param_) return true;
+  //  {to_member_s(m.name)} == simple.float_param_
+
+  if ({to_member_s(m.name)} &lt; simple.float_default_) return false;
+  if ({to_member_s(m.name)} &gt; simple.float_default_) return true;
+  //  {to_member_s(m.name)} == simple.float_default_
+  return false;
+
+}
+
+bool 
+Simple::operator ==(Simple &amp; simple) const
+{
+  return (string_param_ == simple.string_param_) &amp;&amp;
+    (string_default_ == simple.string_default_) &amp;&amp;
+    (string_param_rw_ == simple.string_param_rw_) &amp;&amp;
+    (int_param_ == simple.int_param_) &amp;&amp;
+    (int_default_ == simple.int_default_) &amp;&amp;
+    (float_param_ == simple.float_param_) &amp;&amp;
+    (float_default_ == simple.float_default_);
+}
+
+</pre><hr></hr><h2>simple.h</h2><pre>#ifndef __SIMPLE_H__
+#define __SIMPLE_H__
+#include "pgutil.h"
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;vector&gt;
+#include &lt;assign.hpp&gt;
+using namespace std;
+using namespace boost;
+using namespace boost::assign;
+#include "factory.h"
+#include &lt;sstream&gt;
+#include &lt;map&gt;
+#include &lt;shared_ptr.hpp&gt;
+
+class Simple {
+public:
+  Simple (std::string stringParam, std::string stringParamRw, int intParam, float floatParam);
+
+  ~Simple ();
+
+
+  std::string getStringParam(){return string_param_;}
+
+  std::string getStringParamRw(){return string_param_rw_;}  Simple &amp; setStringParamRw(std::string val) { string_param_rw_=val; return *this;}
+
+  int getIntParam(){return int_param_;}
+
+  float getFloatParam(){return float_param_;}
+
+
+  friend ostream &amp; operator &lt;&lt; (ostream &amp; o, Simple * simple);
+
+
+  size_t getHash();
+  bool operator &lt;(Simple &amp; simple) const;
+  bool operator &gt;(Simple &amp; simple) const;
+  bool operator ==(Simple &amp; simple) const;
+
+private:
+  std::string stringParam;
+  std::string stringDefault;
+  std::string stringParamRw;
+  int intParam;
+  int intDefault;
+  float floatParam;
+  float floatDefault;
+
+};
+
+
+#endif /* __SIMPLE_H_ */
+</pre></html>

@@ -1,2 +1,421 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>c89</h1><hr></hr><h2>array10</h2><h4>#include &lt;stdio.h&gt;</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>    </h4><h4>int main(int argc, char * argv[])</h4><h4>{</h4><h4>  char buffer[200];</h4><h4>  int * array=  (int[]){1,2,3,4,5,6,7,8,9,10};</h4><h4></h4><h4>    </h4><h4>  </h4><h4></h4><h4>  </h4><h4>    </h4><h4>  return 0;</h4><h4>}</h4><hr></hr><h2>array20</h2><h4>#include &lt;stdio.h&gt;</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>    </h4><h4>int main(int argc, char * argv[])</h4><h4>{</h4><h4>  char buffer[200];</h4><h4>  int * array=  (int[]){1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};</h4><h4></h4><h4>    </h4><h4>  </h4><h4></h4><h4>  </h4><h4>    </h4><h4>  return 0;</h4><h4>}</h4><hr></hr><h2>array03</h2><h4>#include &lt;stdio.h&gt;</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>    </h4><h4>int main(int argc, char * argv[])</h4><h4>{</h4><h4>  char buffer[200];</h4><h4>  int *** array3=  (int**[])</h4><h4>  {</h4><h4>    (int*[])</h4><h4>    {</h4><h4>      (int[]){0,1,2},</h4><h4>      (int[]){10,11,12},</h4><h4>      (int[]){20,21,22}</h4><h4>    },</h4><h4>    (int*[])</h4><h4>    {</h4><h4>      (int[]){100,101,102},</h4><h4>      (int[]){110,111,112},</h4><h4>      (int[]){120,121,122}</h4><h4>    },</h4><h4>    (int*[])</h4><h4>    {</h4><h4>      (int[]){200,201,202},</h4><h4>      (int[]){210,211,212},</h4><h4>      (int[]){220,221,222}</h4><h4>    }</h4><h4>  };</h4><h4></h4><h4>    </h4><h4>  </h4><h4></h4><h4>  </h4><h4>    </h4><h4>  return 0;</h4><h4>}</h4><hr></hr><h2>hash10</h2><h4>#include &lt;stdio.h&gt;</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>    </h4><h4>int main(int argc, char * argv[])</h4><h4>{</h4><h4>  char buffer[200];</h4><h4>  hashf;</h4><h4></h4><h4>    </h4><h4>  </h4><h4></h4><h4>  </h4><h4>    </h4><h4>  return 0;</h4><h4>}</h4><hr></hr><h2>nested</h2><h4>#include &lt;stdio.h&gt;</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>    </h4><h4>int main(int argc, char * argv[])</h4><h4>{</h4><h4>  char buffer[200];</h4><h4>  list of list v;</h4><h4>  list of hash v;</h4><h4>  map list of list of hash of hash v;</h4><h4></h4><h4>    </h4><h4>  </h4><h4></h4><h4>  </h4><h4>    </h4><h4>  return 0;</h4><h4>}</h4><hr></hr><h2>simple</h2><h4>#include "simple.h"</h4><h4>#include &lt;malloc.h&gt;</h4><h4>#include &lt;string.h&gt;</h4><h4></h4><h4>struct Simple{</h4><h4>  char * stringParam;</h4><h4>  char * stringDefault;</h4><h4>  char * stringParamRw;</h4><h4>  int intParam;</h4><h4>  int intDefault;</h4><h4>  float floatParam;</h4><h4>  float floatDefault;</h4><h4>};</h4><h4>struct Simple* </h4><h4>simple_new(char * stringParam,</h4><h4>           char * stringParamRw,</h4><h4>           int intParam,</h4><h4>           float floatParam)</h4><h4>{</h4><h4>  struct Simple * this = (struct Simple*)malloc(sizeof(struct Simple));</h4><h4>  this-&gt;stringParam =  stringParam;</h4><h4>  this-&gt;stringDefault = "string default";</h4><h4>  this-&gt;stringParamRw =  stringParamRw;</h4><h4>  this-&gt;intParam =  intParam;</h4><h4>  this-&gt;intDefault = 0;</h4><h4>  this-&gt;floatParam =  floatParam;</h4><h4>  this-&gt;floatDefault = 0.0;</h4><h4>  return this;</h4><h4>}</h4><h4></h4><h4>// free as a void; used in collections</h4><h4></h4><h4>void simple_free_v(void * v)</h4><h4>{</h4><h4>    simple_free((struct Simple *) v);</h4><h4></h4><h4>}</h4><h4></h4><h4>void simple_free(struct Simple * this)</h4><h4>{</h4><h4>  free(this);</h4><h4>}</h4><h4></h4><h4></h4><h4>char*</h4><h4>simple_getStringParam(struct Simple * this)</h4><h4>{</h4><h4>  return this-&gt;stringParam;</h4><h4>}</h4><h4></h4><h4></h4><h4>char*</h4><h4>simple_getStringParamRw(struct Simple * this)</h4><h4>{</h4><h4>  return this-&gt;stringParamRw;</h4><h4>}</h4><h4>struct Simple *  </h4><h4>simple_setStringParamRw(struct Simple * this,</h4><h4>                        char * stringParamRw)</h4><h4>{</h4><h4>  if (this-&gt;stringParamRw != NULL) free(this-&gt;stringParamRw);</h4><h4>  this-&gt;stringParamRw=stringParamRw;</h4><h4>  return this;</h4><h4>}</h4><h4></h4><h4></h4><h4>int</h4><h4>simple_getIntParam(struct Simple * this)</h4><h4>{</h4><h4>  return this-&gt;intParam;</h4><h4>}</h4><h4></h4><h4></h4><h4>float</h4><h4>simple_getFloatParam(struct Simple * this)</h4><h4>{</h4><h4>  return this-&gt;floatParam;</h4><h4>}</h4><h4></h4><h4></h4><h4>char * </h4><h4>simple_getKey(char * stringParam,</h4><h4>              char * stringDefault,</h4><h4>              char * stringParamRw,</h4><h4>              int intParam,</h4><h4>              int intDefault,</h4><h4>              float floatParam,</h4><h4>              float floatDefault,</h4><h4>              char * buffer,</h4><h4>              int maxlen)</h4><h4>{</h4><h4></h4><h4>  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",stringParam, stringDefault, stringParamRw, intParam, intDefault, floatParam, floatDefault);</h4><h4>  return buffer;</h4><h4></h4><h4>}</h4><h4>char *</h4><h4>simple_toStr(struct Simple * this,</h4><h4>             char * buffer,</h4><h4>             int maxlen)</h4><h4>{</h4><h4></h4><h4>  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",this-&gt;stringParam,this-&gt;stringDefault,this-&gt;stringParamRw,this-&gt;intParam,this-&gt;intDefault,this-&gt;floatParam,this-&gt;floatDefault);</h4><h4>  return buffer;</h4><h4></h4><h4>}</h4><h4>char *</h4><h4>simple_toStr_v(void * this,</h4><h4>               char * buffer,</h4><h4>               int length)</h4><h4>{</h4><h4>  return simple_toStr((struct Simple*) this,buffer,length);</h4><h4>}</h4><h4></h4><h4>unsigned long</h4><h4>simple_getHash(struct Simple * this)</h4><h4>{</h4><h4>  return pgutil_hash(this-&gt;stringParam) +</h4><h4>    pgutil_hash(this-&gt;stringDefault) +</h4><h4>    pgutil_hash(this-&gt;stringParamRw) +</h4><h4>    this-&gt;intParam +</h4><h4>    this-&gt;intDefault +</h4><h4>    this-&gt;floatParam +</h4><h4>    this-&gt;floatDefault;;</h4><h4>}</h4><h4></h4><h4>unsigned long</h4><h4>simple_getHash_v(void * this)</h4><h4>{</h4><h4>  return simple_getHash((struct Simple*) this);</h4><h4>}</h4><h4></h4><h4></h4><h4>int</h4><h4>simple_isLessThan(struct Simple * lhs,</h4><h4>                  struct Simple * rhs)</h4><h4>{</h4><h4>  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&lt;0) return 1;</h4><h4>  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&gt;0) return 0;</h4><h4>  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&lt;0) return 1;</h4><h4>  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&gt;0) return 0;</h4><h4>  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&lt;0) return 1;</h4><h4>  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&gt;0) return 0;</h4><h4>  if(lhs-&gt;intParam &lt; rhs-&gt;intParam) return 1;</h4><h4>  if(rhs-&gt;intParam &gt; lhs-&gt;intParam) return 0;</h4><h4>  if(lhs-&gt;intDefault &lt; rhs-&gt;intDefault) return 1;</h4><h4>  if(rhs-&gt;intDefault &gt; lhs-&gt;intDefault) return 0;</h4><h4>  if(lhs-&gt;floatParam &lt; rhs-&gt;floatParam) return 1;</h4><h4>  if(rhs-&gt;floatParam &gt; lhs-&gt;floatParam) return 0;</h4><h4>  if(lhs-&gt;floatDefault &lt; rhs-&gt;floatDefault) return 1;</h4><h4>  if(rhs-&gt;floatDefault &gt; lhs-&gt;floatDefault) return 0;</h4><h4>  return 0;</h4><h4></h4><h4>}</h4><h4>int</h4><h4>simple_isLessThan_v(void * lhs,</h4><h4>                    void * rhs)</h4><h4>{</h4><h4>  return simple_isLessThan((struct Simple*) lhs, (struct Simple* ) rhs);</h4><h4>}</h4><h4>int</h4><h4>simple_isEqualTo(struct Simple * lhs,</h4><h4>                 struct Simple * rhs)</h4><h4>{</h4><h4>  return (strcmp(lhs-&gt;stringParam,rhs-&gt;stringParam)==0) &amp;&amp;</h4><h4>    (strcmp(lhs-&gt;stringDefault,rhs-&gt;stringDefault)==0) &amp;&amp;</h4><h4>    (strcmp(lhs-&gt;stringParamRw,rhs-&gt;stringParamRw)==0) &amp;&amp;</h4><h4>    (lhs-&gt;intParam == rhs-&gt;intParam) &amp;&amp;</h4><h4>    (lhs-&gt;intDefault == rhs-&gt;intDefault) &amp;&amp;</h4><h4>    (lhs-&gt;floatParam == rhs-&gt;floatParam) &amp;&amp;</h4><h4>    (lhs-&gt;floatDefault == rhs-&gt;floatDefault);</h4><h4>}</h4><h4>int</h4><h4>simple_isEqualTo_v(void * lhs,</h4><h4>                   void * rhs)</h4><h4>{</h4><h4>  return simple_isEqualTo((struct Simple* ) lhs, (struct Simple*) rhs);</h4><h4>}</h4><h4>int</h4><h4>simple_isGreaterThan(struct Simple * lhs,</h4><h4>                     struct Simple * rhs)</h4><h4>{</h4><h4>  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&gt;0) return 1;</h4><h4>  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&lt;0) return 0;</h4><h4>  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&gt;0) return 1;</h4><h4>  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&lt;0) return 0;</h4><h4>  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&gt;0) return 1;</h4><h4>  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&lt;0) return 0;</h4><h4>  if(lhs-&gt;intParam &gt; rhs-&gt;intParam) return 1;</h4><h4>  if(rhs-&gt;intParam &lt; lhs-&gt;intParam) return 0;</h4><h4>  if(lhs-&gt;intDefault &gt; rhs-&gt;intDefault) return 1;</h4><h4>  if(rhs-&gt;intDefault &lt; lhs-&gt;intDefault) return 0;</h4><h4>  if(lhs-&gt;floatParam &gt; rhs-&gt;floatParam) return 1;</h4><h4>  if(rhs-&gt;floatParam &lt; lhs-&gt;floatParam) return 0;</h4><h4>  if(lhs-&gt;floatDefault &gt; rhs-&gt;floatDefault) return 1;</h4><h4>  if(rhs-&gt;floatDefault &lt; lhs-&gt;floatDefault) return 0;</h4><h4>  return 0;</h4><h4></h4><h4>}</h4><h4>int</h4><h4>simple_isGreaterThan_v(void * lhs,</h4><h4>                       void * rhs)</h4><h4>{</h4><h4>  return simple_isGreaterThan((struct Simple*)lhs,(struct Simple*)rhs);</h4><h4>}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>c89</h1><hr></hr><h2>array03.c</h2><pre>#include &lt;stdio.h&gt;
+
+
+
+
+    
+int main(int argc, char * argv[])
+{
+  char buffer[200];
+  int *** array3=  (int**[])
+  {
+    (int*[])
+    {
+      (int[]){0,1,2},
+      (int[]){10,11,12},
+      (int[]){20,21,22}
+    },
+    (int*[])
+    {
+      (int[]){100,101,102},
+      (int[]){110,111,112},
+      (int[]){120,121,122}
+    },
+    (int*[])
+    {
+      (int[]){200,201,202},
+      (int[]){210,211,212},
+      (int[]){220,221,222}
+    }
+  };
+
+    
+  
+  
+    
+  return 0;
+}
+</pre><hr></hr><h2>array10.c</h2><pre>#include &lt;stdio.h&gt;
+
+
+
+
+    
+int main(int argc, char * argv[])
+{
+  char buffer[200];
+  int * array=  (int[]){1,2,3,4,5,6,7,8,9,10};
+
+    
+  
+  
+    
+  return 0;
+}
+</pre><hr></hr><h2>array20.c</h2><pre>#include &lt;stdio.h&gt;
+
+
+
+
+    
+int main(int argc, char * argv[])
+{
+  char buffer[200];
+  int * array=  (int[]){1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+
+    
+  
+  
+    
+  return 0;
+}
+</pre><hr></hr><h2>hash10.c</h2><pre>#include &lt;stdio.h&gt;
+
+
+
+
+    
+int main(int argc, char * argv[])
+{
+  char buffer[200];
+  
+
+    
+  
+  
+    
+  return 0;
+}
+</pre><hr></hr><h2>integers.c</h2><pre>#include &lt;stdio.h&gt;
+
+
+
+
+    
+int main(int argc, char * argv[])
+{
+  char buffer[200];
+  unsigned char int_8_unsigned=0;
+  unsigned short int_16_unsigned=0;
+  unsigned long int_32_unsigned=0;
+  unsigned long long int_64_unsigned=0;
+  unsigned int int_word_unsigned=0;
+  char int_8_signed=0;
+  short int_16_signed=0;
+  long int_32_signed=0;
+  long long int_64_signed=0;
+  int int_word_signed=0;
+
+    
+  
+  
+    
+  return 0;
+}
+</pre><hr></hr><h2>nested.c</h2><pre>#include &lt;stdio.h&gt;
+
+
+
+
+    
+int main(int argc, char * argv[])
+{
+  char buffer[200];
+  
+
+    
+  
+  
+    
+  return 0;
+}
+</pre><hr></hr><h2>simple.c</h2><pre>#include "simple.h"
+#include &lt;malloc.h&gt;
+#include &lt;string.h&gt;
+
+struct Simple{
+  char * stringParam;
+  char * stringDefault;
+  char * stringParamRw;
+  int intParam;
+  int intDefault;
+  float floatParam;
+  float floatDefault;
+};
+struct Simple* 
+simple_new(char * stringParam,
+           char * stringParamRw,
+           int intParam,
+           float floatParam)
+{
+  struct Simple * this = (struct Simple*)malloc(sizeof(struct Simple));
+  this-&gt;stringParam =  stringParam;
+  this-&gt;stringDefault = "string default";
+  this-&gt;stringParamRw =  stringParamRw;
+  this-&gt;intParam =  intParam;
+  this-&gt;intDefault = 0;
+  this-&gt;floatParam =  floatParam;
+  this-&gt;floatDefault = 0.0;
+  return this;
+}
+
+// free as a void; used in collections
+
+void simple_free_v(void * v)
+{
+    simple_free((struct Simple *) v);
+
+}
+
+void simple_free(struct Simple * this)
+{
+  free(this);
+}
+
+
+char*
+simple_getStringParam(struct Simple * this)
+{
+  return this-&gt;stringParam;
+}
+
+
+char*
+simple_getStringParamRw(struct Simple * this)
+{
+  return this-&gt;stringParamRw;
+}
+struct Simple *  
+simple_setStringParamRw(struct Simple * this,
+                        char * stringParamRw)
+{
+  if (this-&gt;stringParamRw != NULL) free(this-&gt;stringParamRw);
+  this-&gt;stringParamRw=stringParamRw;
+  return this;
+}
+
+
+int
+simple_getIntParam(struct Simple * this)
+{
+  return this-&gt;intParam;
+}
+
+
+float
+simple_getFloatParam(struct Simple * this)
+{
+  return this-&gt;floatParam;
+}
+
+
+char * 
+simple_getKey(char * stringParam,
+              char * stringDefault,
+              char * stringParamRw,
+              int intParam,
+              int intDefault,
+              float floatParam,
+              float floatDefault,
+              char * buffer,
+              int maxlen)
+{
+
+  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",stringParam, stringDefault, stringParamRw, intParam, intDefault, floatParam, floatDefault);
+  return buffer;
+
+}
+char *
+simple_toStr(struct Simple * this,
+             char * buffer,
+             int maxlen)
+{
+
+  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",this-&gt;stringParam,this-&gt;stringDefault,this-&gt;stringParamRw,this-&gt;intParam,this-&gt;intDefault,this-&gt;floatParam,this-&gt;floatDefault);
+  return buffer;
+
+}
+char *
+simple_toStr_v(void * this,
+               char * buffer,
+               int length)
+{
+  return simple_toStr((struct Simple*) this,buffer,length);
+}
+
+unsigned long
+simple_getHash(struct Simple * this)
+{
+  return pgutil_hash(this-&gt;stringParam) +
+    pgutil_hash(this-&gt;stringDefault) +
+    pgutil_hash(this-&gt;stringParamRw) +
+    this-&gt;intParam +
+    this-&gt;intDefault +
+    this-&gt;floatParam +
+    this-&gt;floatDefault;;
+}
+
+unsigned long
+simple_getHash_v(void * this)
+{
+  return simple_getHash((struct Simple*) this);
+}
+
+
+int
+simple_isLessThan(struct Simple * lhs,
+                  struct Simple * rhs)
+{
+  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&lt;0) return 1;
+  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&gt;0) return 0;
+  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&lt;0) return 1;
+  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&gt;0) return 0;
+  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&lt;0) return 1;
+  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&gt;0) return 0;
+  if(lhs-&gt;intParam &lt; rhs-&gt;intParam) return 1;
+  if(rhs-&gt;intParam &gt; lhs-&gt;intParam) return 0;
+  if(lhs-&gt;intDefault &lt; rhs-&gt;intDefault) return 1;
+  if(rhs-&gt;intDefault &gt; lhs-&gt;intDefault) return 0;
+  if(lhs-&gt;floatParam &lt; rhs-&gt;floatParam) return 1;
+  if(rhs-&gt;floatParam &gt; lhs-&gt;floatParam) return 0;
+  if(lhs-&gt;floatDefault &lt; rhs-&gt;floatDefault) return 1;
+  if(rhs-&gt;floatDefault &gt; lhs-&gt;floatDefault) return 0;
+  return 0;
+
+}
+int
+simple_isLessThan_v(void * lhs,
+                    void * rhs)
+{
+  return simple_isLessThan((struct Simple*) lhs, (struct Simple* ) rhs);
+}
+int
+simple_isEqualTo(struct Simple * lhs,
+                 struct Simple * rhs)
+{
+  return (strcmp(lhs-&gt;stringParam,rhs-&gt;stringParam)==0) &amp;&amp;
+    (strcmp(lhs-&gt;stringDefault,rhs-&gt;stringDefault)==0) &amp;&amp;
+    (strcmp(lhs-&gt;stringParamRw,rhs-&gt;stringParamRw)==0) &amp;&amp;
+    (lhs-&gt;intParam == rhs-&gt;intParam) &amp;&amp;
+    (lhs-&gt;intDefault == rhs-&gt;intDefault) &amp;&amp;
+    (lhs-&gt;floatParam == rhs-&gt;floatParam) &amp;&amp;
+    (lhs-&gt;floatDefault == rhs-&gt;floatDefault);
+}
+int
+simple_isEqualTo_v(void * lhs,
+                   void * rhs)
+{
+  return simple_isEqualTo((struct Simple* ) lhs, (struct Simple*) rhs);
+}
+int
+simple_isGreaterThan(struct Simple * lhs,
+                     struct Simple * rhs)
+{
+  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&gt;0) return 1;
+  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&lt;0) return 0;
+  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&gt;0) return 1;
+  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&lt;0) return 0;
+  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&gt;0) return 1;
+  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&lt;0) return 0;
+  if(lhs-&gt;intParam &gt; rhs-&gt;intParam) return 1;
+  if(rhs-&gt;intParam &lt; lhs-&gt;intParam) return 0;
+  if(lhs-&gt;intDefault &gt; rhs-&gt;intDefault) return 1;
+  if(rhs-&gt;intDefault &lt; lhs-&gt;intDefault) return 0;
+  if(lhs-&gt;floatParam &gt; rhs-&gt;floatParam) return 1;
+  if(rhs-&gt;floatParam &lt; lhs-&gt;floatParam) return 0;
+  if(lhs-&gt;floatDefault &gt; rhs-&gt;floatDefault) return 1;
+  if(rhs-&gt;floatDefault &lt; lhs-&gt;floatDefault) return 0;
+  return 0;
+
+}
+int
+simple_isGreaterThan_v(void * lhs,
+                       void * rhs)
+{
+  return simple_isGreaterThan((struct Simple*)lhs,(struct Simple*)rhs);
+}
+</pre><hr></hr><h2>simple.h</h2><pre>#ifndef __SIMPLE__H__
+#define __SIMPLE__H__
+#include "pgutil.h"
+#include &lt;stdio.h&gt;
+
+struct Simple* 
+simple_new(char * stringParam,
+           char * stringParamRw,
+           int intParam,
+           float floatParam);
+
+// free as a void; used in collections
+
+void simple_free_v(void * v);
+
+void simple_free(struct Simple * this);
+
+
+char*
+simple_getStringParam(struct Simple * this);
+
+
+char*
+simple_getStringParamRw(struct Simple * this);
+struct Simple *  
+simple_setStringParamRw(struct Simple * this,
+                        char * stringParamRw);
+
+
+int
+simple_getIntParam(struct Simple * this);
+
+
+float
+simple_getFloatParam(struct Simple * this);
+
+
+char * 
+simple_getKey(char * stringParam,
+              char * stringDefault,
+              char * stringParamRw,
+              int intParam,
+              int intDefault,
+              float floatParam,
+              float floatDefault,
+              char * buffer,
+              int maxlen);
+char *
+simple_toStr(struct Simple * this,
+             char * buffer,
+             int maxlen);
+char *
+simple_toStr_v(void * this,
+               char * buffer,
+               int length);
+
+unsigned long
+simple_getHash(struct Simple * this);
+
+unsigned long
+simple_getHash_v(void * this);
+
+
+int
+simple_isLessThan(struct Simple * lhs,
+                  struct Simple * rhs);
+int
+simple_isLessThan_v(void * lhs,
+                    void * rhs);
+int
+simple_isEqualTo(struct Simple * lhs,
+                 struct Simple * rhs);
+int
+simple_isEqualTo_v(void * lhs,
+                   void * rhs);
+int
+simple_isGreaterThan(struct Simple * lhs,
+                     struct Simple * rhs);
+int
+simple_isGreaterThan_v(void * lhs,
+                       void * rhs);
+
+#endif /* __SIMPLE__H_ */
+</pre></html>

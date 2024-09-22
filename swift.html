@@ -1,2 +1,57 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>swift</h1><hr></hr><h2>array10</h2><h4>    let array : [Int] =  [1,2,3,4,5,6,7,8,9,10];</h4><h4></h4><h4>    print(array)</h4><hr></hr><h2>array20</h2><h4>    let array : [Int] =  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];</h4><h4></h4><h4>    print(array)</h4><hr></hr><h2>array03</h2><h4>    let array3 : [[[Int]]] =  [ [ [0,1,2], [10,11,12], [20,21,22]], [ [100,101,102], [110,111,112], [120,121,122]], [ [200,201,202], [210,211,212], [220,221,222]]];</h4><h4></h4><h4>    print(array3)</h4><hr></hr><h2>hash10</h2><h4>    let hashf :  [ Int:String ]  = [ 1:"string1",</h4><h4>     2:"string2",</h4><h4>     3:"string3",</h4><h4>     4:"string4",</h4><h4>     5:"string5",</h4><h4>     6:"string6",</h4><h4>     7:"string7",</h4><h4>     8:"string8",</h4><h4>     9:"string9",</h4><h4>     10:"string10"];</h4><h4></h4><h4>    print(hashf)</h4><hr></hr><h2>nested</h2><h4>    let list_of_list_v : [[String]] =  [ ["1","2"], ["3","4"], ["5","6"]];</h4><h4>    let list_of_hash_v : [ [ String:String ] ] =  [[ "1":"1",</h4><h4>     "2":"2"],[ "3":"3",</h4><h4>     "4":"4"],[ "5":"5",</h4><h4>     "6":"6"]];</h4><h4>    let map_list_of_list_of_hash_of_hash_v : [[ [ String: [ String:String ]  ] ]] =  [ [[ "hello1":[ "hello2":"hello4"]]]];</h4><h4></h4><h4>    print(list_of_list_v)</h4><h4>    print(list_of_hash_v)</h4><h4>    print(map_list_of_list_of_hash_of_hash_v)</h4><hr></hr><h2>simple</h2><h4>package src</h4><h4>import "fmt"</h4><h4></h4><h4>type simple struct {</h4><h4>    fmt.Stringer</h4><h4>    string_param String</h4><h4>    string_default String</h4><h4>    string_param_rw String</h4><h4>    int_param Int</h4><h4>    int_default Int</h4><h4>    float_param float64</h4><h4>    float_default float64</h4><h4>}</h4><h4>func Newsimple(let _string_param String,</h4><h4>let _string_param_rw String,</h4><h4>let _int_param Int,</h4><h4>let _float_param float64,)*simple{</h4><h4></h4><h4>    return &amp;simple{</h4><h4>        string_param:string_param,</h4><h4>        string_default:"string default",</h4><h4>        string_param_rw:string_param_rw,</h4><h4>        int_param:int_param,</h4><h4>        int_default:0,</h4><h4>        float_param:float_param,</h4><h4>        float_default:0.0,</h4><h4>    }</h4><h4>}</h4><h4>func (in * simple ) String() string {</h4><h4>     return fmt.Sprintf("%s-%s-%s-%4d-%4d-%f-%f",in.string_param,in.string_default,in.string_param_rw,in.int_param,in.int_default,in.float_param,in.float_default);}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>swift</h1><hr></hr><h2>array03.swift</h2><pre>    let array3 : [[[Int]]] =  [ [ [0,1,2], [10,11,12], [20,21,22]], [ [100,101,102], [110,111,112], [120,121,122]], [ [200,201,202], [210,211,212], [220,221,222]]];
+
+    print(array3)</pre><hr></hr><h2>array10.swift</h2><pre>    let array : [Int] =  [1,2,3,4,5,6,7,8,9,10];
+
+    print(array)</pre><hr></hr><h2>array20.swift</h2><pre>    let array : [Int] =  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+
+    print(array)</pre><hr></hr><h2>hash10.swift</h2><pre>    let hashf :  [ Int:String ]  = [ 1:"string1",
+     2:"string2",
+     3:"string3",
+     4:"string4",
+     5:"string5",
+     6:"string6",
+     7:"string7",
+     8:"string8",
+     9:"string9",
+     10:"string10"];
+
+    print(hashf)</pre><hr></hr><h2>nested.swift</h2><pre>    let list_of_list_v : [[String]] =  [ ["1","2"], ["3","4"], ["5","6"]];
+    let list_of_hash_v : [ [ String:String ] ] =  [[ "1":"1",
+     "2":"2"],[ "3":"3",
+     "4":"4"],[ "5":"5",
+     "6":"6"]];
+    let map_list_of_list_of_hash_of_hash_v : [[ [ String: [ String:String ]  ] ]] =  [ [[ "hello1":[ "hello2":"hello4"]]]];
+
+    print(list_of_list_v)
+    print(list_of_hash_v)
+    print(map_list_of_list_of_hash_of_hash_v)</pre><hr></hr><h2>simple.swift</h2><pre>package src
+import "fmt"
+
+type simple struct {
+    fmt.Stringer
+    string_param String
+    string_default String
+    string_param_rw String
+    int_param Int
+    int_default Int
+    float_param float64
+    float_default float64
+}
+func Newsimple(let _string_param String,
+let _string_param_rw String,
+let _int_param Int,
+let _float_param float64,)*simple{
+
+    return &amp;simple{
+        string_param:string_param,
+        string_default:"string default",
+        string_param_rw:string_param_rw,
+        int_param:int_param,
+        int_default:0,
+        float_param:float_param,
+        float_default:0.0,
+    }
+}
+func (in * simple ) String() string {
+     return fmt.Sprintf("%s-%s-%s-%4d-%4d-%f-%f",in.string_param,in.string_default,in.string_param_rw,in.int_param,in.int_default,in.float_param,in.float_default);}</pre></html>

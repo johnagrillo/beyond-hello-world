@@ -1,2 +1,511 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>fpc</h1><hr></hr><h2>array10</h2><h4>unit Array10;</h4><h4>{$mode objfpc}</h4><h4>interface</h4><h4>uses sysutils;</h4><h4></h4><h4>type</h4><h4>   Array10C = class</h4><h4>   private</h4><h4>      _ [ Integer ] * array;</h4><h4>   public</h4><h4></h4><h4></h4><h4></h4><h4>      constructor create();</h4><h4>       function toString: ansiString;override;</h4><h4>end;</h4><h4>function Array10_compare(item1 : Pointer; </h4><h4>                               item2 : Pointer) : Integer;</h4><h4>operator &lt;(l : Array10C; r : Array10C) : Boolean;inline;</h4><h4>operator &gt;(l : Array10C; r : Array10C) : Boolean;inline;</h4><h4>implementation</h4><h4>      constructor Array10C.create();</h4><h4>begin</h4><h4></h4><h4>end;</h4><h4>operator &lt;(l : Array10C; r : Array10C) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4>operator &gt;(l : Array10C; r : Array10C) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4></h4><h4>function Array10_compare(item1 : Pointer; item2 : Pointer) : Integer;</h4><h4>var</h4><h4>   citem1 : Array10C;</h4><h4>   citem2 : Array10C;</h4><h4>begin</h4><h4>   citem1 := Array10C(item1);</h4><h4>   citem2 := Array10C(item2);</h4><h4>     Result := 0;</h4><h4></h4><h4>end;</h4><h4>function Array10C.toString: ansiString;</h4><h4>begin</h4><h4>Result := format('',[]);</h4><h4>end;</h4><h4></h4><h4>end.</h4><hr></hr><h2>array20</h2><h4>unit Array20;</h4><h4>{$mode objfpc}</h4><h4>interface</h4><h4>uses sysutils;</h4><h4></h4><h4>type</h4><h4>   Array20C = class</h4><h4>   private</h4><h4>      _ [ Integer ] * array;</h4><h4>   public</h4><h4></h4><h4></h4><h4></h4><h4>      constructor create();</h4><h4>       function toString: ansiString;override;</h4><h4>end;</h4><h4>function Array20_compare(item1 : Pointer; </h4><h4>                               item2 : Pointer) : Integer;</h4><h4>operator &lt;(l : Array20C; r : Array20C) : Boolean;inline;</h4><h4>operator &gt;(l : Array20C; r : Array20C) : Boolean;inline;</h4><h4>implementation</h4><h4>      constructor Array20C.create();</h4><h4>begin</h4><h4></h4><h4>end;</h4><h4>operator &lt;(l : Array20C; r : Array20C) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4>operator &gt;(l : Array20C; r : Array20C) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4></h4><h4>function Array20_compare(item1 : Pointer; item2 : Pointer) : Integer;</h4><h4>var</h4><h4>   citem1 : Array20C;</h4><h4>   citem2 : Array20C;</h4><h4>begin</h4><h4>   citem1 := Array20C(item1);</h4><h4>   citem2 := Array20C(item2);</h4><h4>     Result := 0;</h4><h4></h4><h4>end;</h4><h4>function Array20C.toString: ansiString;</h4><h4>begin</h4><h4>Result := format('',[]);</h4><h4>end;</h4><h4></h4><h4>end.</h4><hr></hr><h2>array03</h2><h4>unit Array03;</h4><h4>{$mode objfpc}</h4><h4>interface</h4><h4>uses sysutils;</h4><h4></h4><h4>type</h4><h4>   Array03C = class</h4><h4>   private</h4><h4>      _ [ [[Integer; 3]; 3] ] * array3;</h4><h4>   public</h4><h4></h4><h4></h4><h4></h4><h4>      constructor create();</h4><h4>       function toString: ansiString;override;</h4><h4>end;</h4><h4>function Array03_compare(item1 : Pointer; </h4><h4>                               item2 : Pointer) : Integer;</h4><h4>operator &lt;(l : Array03C; r : Array03C) : Boolean;inline;</h4><h4>operator &gt;(l : Array03C; r : Array03C) : Boolean;inline;</h4><h4>implementation</h4><h4>      constructor Array03C.create();</h4><h4>begin</h4><h4></h4><h4>end;</h4><h4>operator &lt;(l : Array03C; r : Array03C) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4>operator &gt;(l : Array03C; r : Array03C) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4></h4><h4>function Array03_compare(item1 : Pointer; item2 : Pointer) : Integer;</h4><h4>var</h4><h4>   citem1 : Array03C;</h4><h4>   citem2 : Array03C;</h4><h4>begin</h4><h4>   citem1 := Array03C(item1);</h4><h4>   citem2 := Array03C(item2);</h4><h4>     Result := 0;</h4><h4></h4><h4>end;</h4><h4>function Array03C.toString: ansiString;</h4><h4>begin</h4><h4>Result := format('',[]);</h4><h4>end;</h4><h4></h4><h4>end.</h4><hr></hr><h2>hash10</h2><h4>unit Hash10;</h4><h4>{$mode objfpc}</h4><h4>interface</h4><h4>uses sysutils;</h4><h4></h4><h4>type</h4><h4>   Hash10C = class</h4><h4>   private</h4><h4>(*Hash*)</h4><h4>   public</h4><h4></h4><h4></h4><h4></h4><h4>      constructor create();</h4><h4>       function toString: ansiString;override;</h4><h4>end;</h4><h4>function Hash10_compare(item1 : Pointer; </h4><h4>                               item2 : Pointer) : Integer;</h4><h4>operator &lt;(l : Hash10C; r : Hash10C) : Boolean;inline;</h4><h4>operator &gt;(l : Hash10C; r : Hash10C) : Boolean;inline;</h4><h4>implementation</h4><h4>      constructor Hash10C.create();</h4><h4>begin</h4><h4></h4><h4>end;</h4><h4>operator &lt;(l : Hash10C; r : Hash10C) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4>operator &gt;(l : Hash10C; r : Hash10C) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4></h4><h4>function Hash10_compare(item1 : Pointer; item2 : Pointer) : Integer;</h4><h4>var</h4><h4>   citem1 : Hash10C;</h4><h4>   citem2 : Hash10C;</h4><h4>begin</h4><h4>   citem1 := Hash10C(item1);</h4><h4>   citem2 := Hash10C(item2);</h4><h4>     Result := 0;</h4><h4></h4><h4>end;</h4><h4>function Hash10C.toString: ansiString;</h4><h4>begin</h4><h4>Result := format('',[]);</h4><h4>end;</h4><h4></h4><h4>end.</h4><hr></hr><h2>nested</h2><h4>unit Nested;</h4><h4>{$mode objfpc}</h4><h4>interface</h4><h4>uses sysutils;</h4><h4></h4><h4>type</h4><h4>   NestedC = class</h4><h4>   private</h4><h4>      _ [ [String; 2] ] * listOfListV;</h4><h4>      _ [ Hash ] * listOfHashV;</h4><h4>      _ [ [Hash; 1] ] * mapListOfListOfHashOfHashV;</h4><h4>   public</h4><h4></h4><h4></h4><h4></h4><h4>      constructor create();</h4><h4>       function toString: ansiString;override;</h4><h4>end;</h4><h4>function Nested_compare(item1 : Pointer; </h4><h4>                               item2 : Pointer) : Integer;</h4><h4>operator &lt;(l : NestedC; r : NestedC) : Boolean;inline;</h4><h4>operator &gt;(l : NestedC; r : NestedC) : Boolean;inline;</h4><h4>implementation</h4><h4>      constructor NestedC.create();</h4><h4>begin</h4><h4></h4><h4>end;</h4><h4>operator &lt;(l : NestedC; r : NestedC) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4>operator &gt;(l : NestedC; r : NestedC) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4></h4><h4>function Nested_compare(item1 : Pointer; item2 : Pointer) : Integer;</h4><h4>var</h4><h4>   citem1 : NestedC;</h4><h4>   citem2 : NestedC;</h4><h4>begin</h4><h4>   citem1 := NestedC(item1);</h4><h4>   citem2 := NestedC(item2);</h4><h4>     Result := 0;</h4><h4></h4><h4>end;</h4><h4>function NestedC.toString: ansiString;</h4><h4>begin</h4><h4>Result := format('',[]);</h4><h4>end;</h4><h4></h4><h4></h4><h4></h4><h4>end.</h4><hr></hr><h2>simple</h2><h4>unit Simple;</h4><h4>{$mode objfpc}</h4><h4>interface</h4><h4>uses sysutils;</h4><h4></h4><h4>type</h4><h4>   SimpleC = class</h4><h4>   private</h4><h4>      _stringParam:String;</h4><h4>      _stringDefault:String;</h4><h4>      _stringParamRw:String;</h4><h4>      _intParam:Integer;</h4><h4>      _intDefault:Integer;</h4><h4>      _floatParam:Real;</h4><h4>      _floatDefault:Real;</h4><h4>   public</h4><h4>      Function getStringParam:String;</h4><h4></h4><h4>      Function getStringParamRw:String;</h4><h4>      Procedure setStringParamRw(value:String);</h4><h4></h4><h4>      Function getIntParam:Integer;</h4><h4></h4><h4>      Function getFloatParam:Real;</h4><h4></h4><h4></h4><h4>      property stringParam:String read getStringParam;</h4><h4>      property stringParamRw:String read getStringParamRw write setStringParamRw;</h4><h4>      property intParam:Integer read getIntParam;</h4><h4>      property floatParam:Real read getFloatParam;</h4><h4></h4><h4>      constructor create(stringParam_:String;</h4><h4>                         stringParamRw_:String;</h4><h4>                         intParam_:Integer;</h4><h4>                         floatParam_:Real);</h4><h4>       function toString: ansiString;override;</h4><h4>end;</h4><h4>function Simple_compare(item1 : Pointer; </h4><h4>                               item2 : Pointer) : Integer;</h4><h4>operator &lt;(l : SimpleC; r : SimpleC) : Boolean;inline;</h4><h4>operator &gt;(l : SimpleC; r : SimpleC) : Boolean;inline;</h4><h4>implementation</h4><h4>      constructor SimpleC.create(stringParam_:String;</h4><h4>                         stringParamRw_:String;</h4><h4>                         intParam_:Integer;</h4><h4>                         floatParam_:Real);</h4><h4>begin</h4><h4>   _stringParam:='string param';</h4><h4>   _stringParamRw:='string param rw';</h4><h4>   _intParam:=0;</h4><h4>   _floatParam:=0.0;</h4><h4>end;</h4><h4>operator &lt;(l : SimpleC; r : SimpleC) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4>operator &gt;(l : SimpleC; r : SimpleC) : Boolean;</h4><h4>begin</h4><h4>   Result := False</h4><h4>end;</h4><h4></h4><h4>function Simple_compare(item1 : Pointer; item2 : Pointer) : Integer;</h4><h4>var</h4><h4>   citem1 : SimpleC;</h4><h4>   citem2 : SimpleC;</h4><h4>begin</h4><h4>   citem1 := SimpleC(item1);</h4><h4>   citem2 := SimpleC(item2);</h4><h4>   if citem1._stringParam &lt; citem2._stringParam then</h4><h4>      Result := -1</h4><h4>   else if citem1._stringParam &gt; citem2._stringParam then</h4><h4>      Result := 1</h4><h4>   else if citem1._stringDefault &lt; citem2._stringDefault then</h4><h4>      Result := -1</h4><h4>   else if citem1._stringDefault &gt; citem2._stringDefault then</h4><h4>      Result := 1</h4><h4>   else if citem1._stringParamRw &lt; citem2._stringParamRw then</h4><h4>      Result := -1</h4><h4>   else if citem1._stringParamRw &gt; citem2._stringParamRw then</h4><h4>      Result := 1</h4><h4>   else if citem1._intParam &lt; citem2._intParam then</h4><h4>      Result := -1</h4><h4>   else if citem1._intParam &gt; citem2._intParam then</h4><h4>      Result := 1</h4><h4>   else if citem1._intDefault &lt; citem2._intDefault then</h4><h4>      Result := -1</h4><h4>   else if citem1._intDefault &gt; citem2._intDefault then</h4><h4>      Result := 1</h4><h4>   else if citem1._floatParam &lt; citem2._floatParam then</h4><h4>      Result := -1</h4><h4>   else if citem1._floatParam &gt; citem2._floatParam then</h4><h4>      Result := 1</h4><h4>   else if citem1._floatDefault &lt; citem2._floatDefault then</h4><h4>      Result := -1</h4><h4>   else if citem1._floatDefault &gt; citem2._floatDefault then</h4><h4>      Result := 1</h4><h4>   else</h4><h4></h4><h4>     Result := 0;</h4><h4></h4><h4>end;</h4><h4>function SimpleC.toString: ansiString;</h4><h4>begin</h4><h4>Result := format('%s-%s-%s-%4d-%4d-%f-%f',[_stringParam,_stringDefault,_stringParamRw,_intParam,_intDefault,_floatParam,_floatDefault]);</h4><h4>end;</h4><h4>Function SimpleC.getStringParam:String;</h4><h4>begin</h4><h4>   Result := _stringParam;</h4><h4>end;</h4><h4></h4><h4>Function SimpleC.getStringParamRw:String;</h4><h4>begin</h4><h4>   Result := _stringParamRw;</h4><h4>end;</h4><h4>Procedure SimpleC.setStringParamRw(value:String);</h4><h4>begin</h4><h4>end;</h4><h4>Function SimpleC.getIntParam:Integer;</h4><h4>begin</h4><h4>   Result := _intParam;</h4><h4>end;</h4><h4></h4><h4>Function SimpleC.getFloatParam:Real;</h4><h4>begin</h4><h4>   Result := _floatParam;</h4><h4>end;</h4><h4></h4><h4>end.</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>fpc</h1><hr></hr><h2>#Simple.pp#</h2><pre>unit Simple;
+{$mode objfpc}
+interface
+uses sysutils;
+
+type
+   SimpleC = class
+   private
+      _stringParam:String;
+      _stringDefault:String;
+      _stringParamRw:String;
+      _intParam:Integer;
+      _intDefault:Integer;
+      _floatParam:Real;
+      _floatDefault:Real;
+   public
+      Function getStringParam:String;
+
+      Function getStringParamRw:String;
+      Procedure setStringParamRw(value:String);
+
+      Function getIntParam:Integer;
+
+      Function getFloatParam:Real;
+
+
+      property stringParam:String read getStringParam;
+      property stringParamRw:String read getStringParamRw write setStringParamRw;
+      property intParam:Integer read getIntParam;
+      property floatParam:Real read getFloatParam;
+
+      constructor create(stringParam_:String;
+                         stringParamRw_:String;
+                         intParam_:Integer;
+                         floatParam_:Real);
+       function toString: ansiString;override;
+end;
+function Simple_compare(item1 : Pointer; 
+                               item2 : Pointer) : Integer;
+operator &lt;(l : SimpleC; r : SimpleC) : Boolean;inline;
+operator &gt;(l : SimpleC; r : SimpleC) : Boolean;inline;
+implementation
+      constructor SimpleC.create(stringParam_:String;
+                         stringParamRw_:String;
+                         intParam_:Integer;
+                         floatParam_:Real);
+begin
+   _stringParam:='string param';
+   _stringParamRw:='string param rw';
+   _intParam:=0;
+   _floatParam:=0.0;
+end;
+operator &lt;(l : SimpleC; r : SimpleC) : Boolean;
+begin
+   Result := False
+end;
+operator &gt;(l : SimpleC; r : SimpleC) : Boolean;
+begin
+   Result := False
+end;
+
+function Simple_compare(item1 : Pointer; item2 : Pointer) : Integer;
+var
+   citem1 : SimpleC;
+   citem2 : SimpleC;
+begin
+   citem1 := SimpleC(item1);
+   citem2 := SimpleC(item2);
+   if citem1._stringParam &lt; citem2._stringParam then
+      Result := -1
+   else if citem1._stringParam &gt; citem2._stringParam then
+      Result := 1
+   else if citem1._stringDefault &lt; citem2._stringDefault then
+      Result := -1
+   else if citem1._stringDefault &gt; citem2._stringDefault then
+      Result := 1
+   else if citem1._stringParamRw &lt; citem2._stringParamRw then
+      Result := -1
+   else if citem1._stringParamRw &gt; citem2._stringParamRw then
+      Result := 1
+   else if citem1._intParam &lt; citem2._intParam then
+      Result := -1
+   else if citem1._intParam &gt; citem2._intParam then
+      Result := 1
+   else if citem1._intDefault &lt; citem2._intDefault then
+      Result := -1
+   else if citem1._intDefault &gt; citem2._intDefault then
+      Result := 1
+   else if citem1._floatParam &lt; citem2._floatParam then
+      Result := -1
+   else if citem1._floatParam &gt; citem2._floatParam then
+      Result := 1
+   else if citem1._floatDefault &lt; citem2._floatDefault then
+      Result := -1
+   else if citem1._floatDefault &gt; citem2._floatDefault then
+      Result := 1
+   else
+
+     Result := 0;
+
+end;
+function SimpleC.toString: ansiString;
+begin
+Result := format('%s-%s-%s-%4d-%4d-%f-%f',[_stringParam,_stringDefault,_stringParamRw,_intParam,_intDefault,_floatParam,_floatDefault]);
+end;
+Function SimpleC.getStringParam:String;
+begin
+   Result := _stringParam;
+end;
+
+Function SimpleC.getStringParamRw:String;
+begin
+   Result := _stringParamRw;
+end;
+Procedure SimpleC.setStringParamRw(value:String);
+begin
+end;
+Function SimpleC.getIntParam:Integer;
+begin
+   Result := _intParam;
+end;
+
+Function SimpleC.getFloatParam:Real;
+begin
+   Result := _floatParam;
+end;
+xend.
+</pre><hr></hr><h2>.#Simple.pp</h2><pre>john@DESKTOP-SH8OU9R.23336:1724062197</pre><hr></hr><h2>Array03.pp</h2><pre>unit Array03;
+{$mode objfpc}
+interface
+uses sysutils;
+
+type
+   Array03C = class
+   private
+      _ [ [[Integer; 3]; 3] ] * array3;
+   public
+
+
+
+      constructor create();
+       function toString: ansiString;override;
+end;
+function Array03_compare(item1 : Pointer; 
+                               item2 : Pointer) : Integer;
+operator &lt;(l : Array03C; r : Array03C) : Boolean;inline;
+operator &gt;(l : Array03C; r : Array03C) : Boolean;inline;
+implementation
+      constructor Array03C.create();
+begin
+
+end;
+operator &lt;(l : Array03C; r : Array03C) : Boolean;
+begin
+   Result := False
+end;
+operator &gt;(l : Array03C; r : Array03C) : Boolean;
+begin
+   Result := False
+end;
+
+function Array03_compare(item1 : Pointer; item2 : Pointer) : Integer;
+var
+   citem1 : Array03C;
+   citem2 : Array03C;
+begin
+   citem1 := Array03C(item1);
+   citem2 := Array03C(item2);
+     Result := 0;
+
+end;
+function Array03C.toString: ansiString;
+begin
+Result := format('',[]);
+end;
+
+end.
+</pre><hr></hr><h2>Array10.pp</h2><pre>unit Array10;
+{$mode objfpc}
+interface
+uses sysutils;
+
+type
+   Array10C = class
+   private
+      _ [ Integer ] * array;
+   public
+
+
+
+      constructor create();
+       function toString: ansiString;override;
+end;
+function Array10_compare(item1 : Pointer; 
+                               item2 : Pointer) : Integer;
+operator &lt;(l : Array10C; r : Array10C) : Boolean;inline;
+operator &gt;(l : Array10C; r : Array10C) : Boolean;inline;
+implementation
+      constructor Array10C.create();
+begin
+
+end;
+operator &lt;(l : Array10C; r : Array10C) : Boolean;
+begin
+   Result := False
+end;
+operator &gt;(l : Array10C; r : Array10C) : Boolean;
+begin
+   Result := False
+end;
+
+function Array10_compare(item1 : Pointer; item2 : Pointer) : Integer;
+var
+   citem1 : Array10C;
+   citem2 : Array10C;
+begin
+   citem1 := Array10C(item1);
+   citem2 := Array10C(item2);
+     Result := 0;
+
+end;
+function Array10C.toString: ansiString;
+begin
+Result := format('',[]);
+end;
+
+end.
+</pre><hr></hr><h2>Array20.pp</h2><pre>unit Array20;
+{$mode objfpc}
+interface
+uses sysutils;
+
+type
+   Array20C = class
+   private
+      _ [ Integer ] * array;
+   public
+
+
+
+      constructor create();
+       function toString: ansiString;override;
+end;
+function Array20_compare(item1 : Pointer; 
+                               item2 : Pointer) : Integer;
+operator &lt;(l : Array20C; r : Array20C) : Boolean;inline;
+operator &gt;(l : Array20C; r : Array20C) : Boolean;inline;
+implementation
+      constructor Array20C.create();
+begin
+
+end;
+operator &lt;(l : Array20C; r : Array20C) : Boolean;
+begin
+   Result := False
+end;
+operator &gt;(l : Array20C; r : Array20C) : Boolean;
+begin
+   Result := False
+end;
+
+function Array20_compare(item1 : Pointer; item2 : Pointer) : Integer;
+var
+   citem1 : Array20C;
+   citem2 : Array20C;
+begin
+   citem1 := Array20C(item1);
+   citem2 := Array20C(item2);
+     Result := 0;
+
+end;
+function Array20C.toString: ansiString;
+begin
+Result := format('',[]);
+end;
+
+end.
+</pre><hr></hr><h2>Hash10.pp</h2><pre>unit Hash10;
+{$mode objfpc}
+interface
+uses sysutils;
+
+type
+   Hash10C = class
+   private
+(*Hash*)
+   public
+
+
+
+      constructor create();
+       function toString: ansiString;override;
+end;
+function Hash10_compare(item1 : Pointer; 
+                               item2 : Pointer) : Integer;
+operator &lt;(l : Hash10C; r : Hash10C) : Boolean;inline;
+operator &gt;(l : Hash10C; r : Hash10C) : Boolean;inline;
+implementation
+      constructor Hash10C.create();
+begin
+
+end;
+operator &lt;(l : Hash10C; r : Hash10C) : Boolean;
+begin
+   Result := False
+end;
+operator &gt;(l : Hash10C; r : Hash10C) : Boolean;
+begin
+   Result := False
+end;
+
+function Hash10_compare(item1 : Pointer; item2 : Pointer) : Integer;
+var
+   citem1 : Hash10C;
+   citem2 : Hash10C;
+begin
+   citem1 := Hash10C(item1);
+   citem2 := Hash10C(item2);
+     Result := 0;
+
+end;
+function Hash10C.toString: ansiString;
+begin
+Result := format('',[]);
+end;
+
+end.
+</pre><hr></hr><h2>Nested.pp</h2><pre>unit Nested;
+{$mode objfpc}
+interface
+uses sysutils;
+
+type
+   NestedC = class
+   private
+      _ [ [String; 2] ] * listOfListV;
+      _ [ Hash ] * listOfHashV;
+      _ [ [Hash; 1] ] * mapListOfListOfHashOfHashV;
+   public
+
+
+
+      constructor create();
+       function toString: ansiString;override;
+end;
+function Nested_compare(item1 : Pointer; 
+                               item2 : Pointer) : Integer;
+operator &lt;(l : NestedC; r : NestedC) : Boolean;inline;
+operator &gt;(l : NestedC; r : NestedC) : Boolean;inline;
+implementation
+      constructor NestedC.create();
+begin
+
+end;
+operator &lt;(l : NestedC; r : NestedC) : Boolean;
+begin
+   Result := False
+end;
+operator &gt;(l : NestedC; r : NestedC) : Boolean;
+begin
+   Result := False
+end;
+
+function Nested_compare(item1 : Pointer; item2 : Pointer) : Integer;
+var
+   citem1 : NestedC;
+   citem2 : NestedC;
+begin
+   citem1 := NestedC(item1);
+   citem2 := NestedC(item2);
+     Result := 0;
+
+end;
+function NestedC.toString: ansiString;
+begin
+Result := format('',[]);
+end;
+
+
+
+end.
+</pre><hr></hr><h2>Simple.pp</h2><pre>unit Simple;
+{$mode objfpc}
+interface
+uses sysutils;
+
+type
+   SimpleC = class
+   private
+      _stringParam:String;
+      _stringDefault:String;
+      _stringParamRw:String;
+      _intParam:Integer;
+      _intDefault:Integer;
+      _floatParam:Real;
+      _floatDefault:Real;
+   public
+      Function getStringParam:String;
+
+      Function getStringParamRw:String;
+      Procedure setStringParamRw(value:String);
+
+      Function getIntParam:Integer;
+
+      Function getFloatParam:Real;
+
+
+      property stringParam:String read getStringParam;
+      property stringParamRw:String read getStringParamRw write setStringParamRw;
+      property intParam:Integer read getIntParam;
+      property floatParam:Real read getFloatParam;
+
+      constructor create(stringParam_:String;
+                         stringParamRw_:String;
+                         intParam_:Integer;
+                         floatParam_:Real);
+       function toString: ansiString;override;
+end;
+function Simple_compare(item1 : Pointer; 
+                               item2 : Pointer) : Integer;
+operator &lt;(l : SimpleC; r : SimpleC) : Boolean;inline;
+operator &gt;(l : SimpleC; r : SimpleC) : Boolean;inline;
+implementation
+      constructor SimpleC.create(stringParam_:String;
+                         stringParamRw_:String;
+                         intParam_:Integer;
+                         floatParam_:Real);
+begin
+   _stringParam:='string param';
+   _stringParamRw:='string param rw';
+   _intParam:=0;
+   _floatParam:=0.0;
+end;
+operator &lt;(l : SimpleC; r : SimpleC) : Boolean;
+begin
+   Result := False
+end;
+operator &gt;(l : SimpleC; r : SimpleC) : Boolean;
+begin
+   Result := False
+end;
+
+function Simple_compare(item1 : Pointer; item2 : Pointer) : Integer;
+var
+   citem1 : SimpleC;
+   citem2 : SimpleC;
+begin
+   citem1 := SimpleC(item1);
+   citem2 := SimpleC(item2);
+   if citem1._stringParam &lt; citem2._stringParam then
+      Result := -1
+   else if citem1._stringParam &gt; citem2._stringParam then
+      Result := 1
+   else if citem1._stringDefault &lt; citem2._stringDefault then
+      Result := -1
+   else if citem1._stringDefault &gt; citem2._stringDefault then
+      Result := 1
+   else if citem1._stringParamRw &lt; citem2._stringParamRw then
+      Result := -1
+   else if citem1._stringParamRw &gt; citem2._stringParamRw then
+      Result := 1
+   else if citem1._intParam &lt; citem2._intParam then
+      Result := -1
+   else if citem1._intParam &gt; citem2._intParam then
+      Result := 1
+   else if citem1._intDefault &lt; citem2._intDefault then
+      Result := -1
+   else if citem1._intDefault &gt; citem2._intDefault then
+      Result := 1
+   else if citem1._floatParam &lt; citem2._floatParam then
+      Result := -1
+   else if citem1._floatParam &gt; citem2._floatParam then
+      Result := 1
+   else if citem1._floatDefault &lt; citem2._floatDefault then
+      Result := -1
+   else if citem1._floatDefault &gt; citem2._floatDefault then
+      Result := 1
+   else
+
+     Result := 0;
+
+end;
+function SimpleC.toString: ansiString;
+begin
+Result := format('%s-%s-%s-%4d-%4d-%f-%f',[_stringParam,_stringDefault,_stringParamRw,_intParam,_intDefault,_floatParam,_floatDefault]);
+end;
+Function SimpleC.getStringParam:String;
+begin
+   Result := _stringParam;
+end;
+
+Function SimpleC.getStringParamRw:String;
+begin
+   Result := _stringParamRw;
+end;
+Procedure SimpleC.setStringParamRw(value:String);
+begin
+end;
+Function SimpleC.getIntParam:Integer;
+begin
+   Result := _intParam;
+end;
+
+Function SimpleC.getFloatParam:Real;
+begin
+   Result := _floatParam;
+end;
+
+end.
+</pre></html>

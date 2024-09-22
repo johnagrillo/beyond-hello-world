@@ -1,2 +1,248 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>d</h1><hr></hr><h2>array10</h2><h4>    </h4><h4></h4><h4>    </h4><h4>import std.stdio;</h4><h4>import std.bigint;</h4><h4>    </h4><h4>int main(string [] argv)</h4><h4>{</h4><h4>    int []  array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];</h4><h4></h4><h4></h4><h4>    </h4><h4>    std.stdio.writefln("%s",array);</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>array20</h2><h4>    </h4><h4></h4><h4>    </h4><h4>import std.stdio;</h4><h4>import std.bigint;</h4><h4>    </h4><h4>int main(string [] argv)</h4><h4>{</h4><h4>    int []  array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];</h4><h4></h4><h4></h4><h4>    </h4><h4>    std.stdio.writefln("%s",array);</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>array03</h2><h4>    </h4><h4></h4><h4>    </h4><h4>import std.stdio;</h4><h4>import std.bigint;</h4><h4>    </h4><h4>int main(string [] argv)</h4><h4>{</h4><h4>    int []  []  []  array3=[</h4><h4>        [</h4><h4>            [0, 1, 2], </h4><h4>            [10, 11, 12], </h4><h4>            [20, 21, 22]], </h4><h4>        [</h4><h4>            [100, 101, 102], </h4><h4>            [110, 111, 112], </h4><h4>            [120, 121, 122]], </h4><h4>        [</h4><h4>            [200, 201, 202], </h4><h4>            [210, 211, 212], </h4><h4>            [220, 221, 222]]];</h4><h4></h4><h4></h4><h4>    </h4><h4>    std.stdio.writefln("%s",array3);</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>hash10</h2><h4>    </h4><h4></h4><h4>    </h4><h4>import std.stdio;</h4><h4>import std.bigint;</h4><h4>    </h4><h4>int main(string [] argv)</h4><h4>{</h4><h4>    string[int] hashf=[1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"];</h4><h4></h4><h4></h4><h4>    </h4><h4>    std.stdio.writefln("%s",hashf);</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>nested</h2><h4>    </h4><h4></h4><h4>    </h4><h4>import std.stdio;</h4><h4>import std.bigint;</h4><h4>    </h4><h4>int main(string [] argv)</h4><h4>{</h4><h4>    string []  []  listOfListV=[</h4><h4>        ["1", "2"], </h4><h4>        ["3", "4"], </h4><h4>        ["5", "6"]];</h4><h4></h4><h4>    string[string] []  listOfHashV=[["1":"1","2":"2"], ["3":"3","4":"4"], ["5":"5","6":"6"]];</h4><h4></h4><h4>    string[string][string] []  []  mapListOfListOfHashOfHashV=[</h4><h4>        [["hello1":["hello2":"hello4"]]]];</h4><h4></h4><h4></h4><h4>    </h4><h4>    std.stdio.writefln("%s",listOfListV);</h4><h4>    std.stdio.writefln("%s",listOfHashV);</h4><h4>    std.stdio.writefln("%s",mapListOfListOfHashOfHashV);</h4><h4>    return 0;</h4><h4>}</h4><hr></hr><h2>simple</h2><h4>module src.simple;</h4><h4>import std.string;</h4><h4>import std.string;</h4><h4>import std.typecons;</h4><h4>class Simple {</h4><h4>public:</h4><h4></h4><h4>  this (string stringParam,string stringParamRw,int intParam,float floatParam)</h4><h4>  {</h4><h4>    this.m_stringParam = stringParam;</h4><h4>    this.m_stringParamRw = stringParamRw;</h4><h4>    this.m_intParam = intParam;</h4><h4>    this.m_floatParam = floatParam;</h4><h4>    this.m_stringDefault = "string default";</h4><h4>    this.m_intDefault = 0;</h4><h4>    this.m_floatDefault = 0.0;</h4><h4>  }</h4><h4></h4><h4>  @property stringParam() pure {return m_stringParam;}</h4><h4>  @property stringParamRw() pure {return m_stringParamRw;}</h4><h4>  @property stringParamRw(string stringParamRw) { m_stringParamRw=stringParamRw;}</h4><h4></h4><h4>  @property intParam() pure {return m_intParam;}</h4><h4>  @property floatParam() pure {return m_floatParam;}</h4><h4></h4><h4></h4><h4>    static string getKey(string stringParam,</h4><h4>                         string stringDefault,</h4><h4>                         string stringParamRw,</h4><h4>                         int intParam,</h4><h4>                         int intDefault,</h4><h4>                         float floatParam,</h4><h4>                         float floatDefault)</h4><h4>    {</h4><h4>        return std.string.format("%s-%s-%s-%4s-%4s-%s-%s",#&lt;bhw::member:0x000001ed261cf3a8&gt;,#&lt;bhw::member:0x000001ed261cf0d8&gt;,#&lt;bhw::member:0x000001ed261ceef8&gt;,#&lt;bhw::member:0x000001ed261ced90&gt;,#&lt;bhw::member:0x000001ed261ceb60&gt;,#&lt;bhw::member:0x000001ed261ce908&gt;,#&lt;bhw::member:0x000001ed261ce5c0&gt;);</h4><h4>    }</h4><h4></h4><h4>    override string toString()</h4><h4>    {</h4><h4>        return(Simple.getKey(m_#&lt;bhw::member:0x000001ed261cf3a8&gt;,m_#&lt;bhw::member:0x000001ed261cf0d8&gt;,m_#&lt;bhw::member:0x000001ed261ceef8&gt;,m_#&lt;bhw::member:0x000001ed261ced90&gt;,m_#&lt;bhw::member:0x000001ed261ceb60&gt;,m_#&lt;bhw::member:0x000001ed261ce908&gt;,m_#&lt;bhw::member:0x000001ed261ce5c0&gt;));</h4><h4>    }</h4><h4></h4><h4>    override hash_t toHash()</h4><h4>    {</h4><h4>    return typeid(m_stringParam).getHash(&amp;m_stringParam) +</h4><h4>        typeid(m_stringDefault).getHash(&amp;m_stringDefault) +</h4><h4>        typeid(m_stringParamRw).getHash(&amp;m_stringParamRw) +</h4><h4>        this.m_intParam +</h4><h4>        this.m_intDefault +</h4><h4>        cast(int)m_floatParam +</h4><h4>        cast(int)m_floatDefault;</h4><h4>    }</h4><h4></h4><h4>    override int opCmp(Object rhs_object)</h4><h4>    {</h4><h4>Simple rhs = cast(Simple) rhs_object;</h4><h4>  if (this.m_stringParam &lt; rhs.m_stringParam){</h4><h4>    return -1;</h4><h4>  }</h4><h4>  else if (this.m_stringParam &gt; rhs.m_stringParam){</h4><h4>    return 1;</h4><h4>  }</h4><h4>  else if (this.m_stringDefault &lt; rhs.m_stringDefault){</h4><h4>    return -1;</h4><h4>  }</h4><h4>  else if (this.m_stringDefault &gt; rhs.m_stringDefault){</h4><h4>    return 1;</h4><h4>  }</h4><h4>  else if (this.m_stringParamRw &lt; rhs.m_stringParamRw){</h4><h4>    return -1;</h4><h4>  }</h4><h4>  else if (this.m_stringParamRw &gt; rhs.m_stringParamRw){</h4><h4>    return 1;</h4><h4>  }</h4><h4>  else if (this.m_intParam &lt; rhs.m_intParam){</h4><h4>    return -1;</h4><h4>  }</h4><h4>  else if (this.m_intParam &gt; rhs.m_intParam){</h4><h4>    return 1;</h4><h4>  }</h4><h4>  else if (this.m_intDefault &lt; rhs.m_intDefault){</h4><h4>    return -1;</h4><h4>  }</h4><h4>  else if (this.m_intDefault &gt; rhs.m_intDefault){</h4><h4>    return 1;</h4><h4>  }</h4><h4>  else if (this.m_floatParam &lt; rhs.m_floatParam){</h4><h4>    return -1;</h4><h4>  }</h4><h4>  else if (this.m_floatParam &gt; rhs.m_floatParam){</h4><h4>    return 1;</h4><h4>  }</h4><h4>  else if (this.m_floatDefault &lt; rhs.m_floatDefault){</h4><h4>    return -1;</h4><h4>  }</h4><h4>  else if (this.m_floatDefault &gt; rhs.m_floatDefault){</h4><h4>    return 1;</h4><h4>  }</h4><h4>return 0;</h4><h4></h4><h4>    }</h4><h4>    override bool opEquals(Object rhs_object)</h4><h4>    {</h4><h4>        Simple rhs = cast(Simple) rhs_object;</h4><h4>  return (this.m_stringParam == rhs.m_stringParam) &amp;&amp; </h4><h4>         (this.m_stringDefault == rhs.m_stringDefault) &amp;&amp; </h4><h4>         (this.m_stringParamRw == rhs.m_stringParamRw) &amp;&amp; </h4><h4>         (this.m_intParam == rhs.m_intParam) &amp;&amp; </h4><h4>         (this.m_intDefault == rhs.m_intDefault) &amp;&amp; </h4><h4>         (this.m_floatParam == rhs.m_floatParam) &amp;&amp; </h4><h4>         (this.m_floatDefault == rhs.m_floatDefault);</h4><h4>    }</h4><h4></h4><h4>private:</h4><h4>    string m_#&lt;bhw::member:0x000001ed261cf3a8&gt;;</h4><h4>    string m_#&lt;bhw::member:0x000001ed261cf0d8&gt;;</h4><h4>    string m_#&lt;bhw::member:0x000001ed261ceef8&gt;;</h4><h4>    int m_#&lt;bhw::member:0x000001ed261ced90&gt;;</h4><h4>    int m_#&lt;bhw::member:0x000001ed261ceb60&gt;;</h4><h4>    float m_#&lt;bhw::member:0x000001ed261ce908&gt;;</h4><h4>    float m_#&lt;bhw::member:0x000001ed261ce5c0&gt;;</h4><h4>}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>d</h1><hr></hr><h2>array03.d</h2><pre>    
+
+    
+import std.stdio;
+import std.bigint;
+    
+int main(string [] argv)
+{
+    int []  []  []  array3=[
+        [
+            [0, 1, 2], 
+            [10, 11, 12], 
+            [20, 21, 22]], 
+        [
+            [100, 101, 102], 
+            [110, 111, 112], 
+            [120, 121, 122]], 
+        [
+            [200, 201, 202], 
+            [210, 211, 212], 
+            [220, 221, 222]]];
+
+    
+    std.stdio.writefln("%s",array3);
+    return 0;
+}
+</pre><hr></hr><h2>array10.d</h2><pre>    
+
+    
+import std.stdio;
+import std.bigint;
+    
+int main(string [] argv)
+{
+    int []  array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    
+    std.stdio.writefln("%s",array);
+    return 0;
+}
+</pre><hr></hr><h2>array20.d</h2><pre>    
+
+    
+import std.stdio;
+import std.bigint;
+    
+int main(string [] argv)
+{
+    int []  array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+
+    
+    std.stdio.writefln("%s",array);
+    return 0;
+}
+</pre><hr></hr><h2>hash10.d</h2><pre>    
+
+    
+import std.stdio;
+import std.bigint;
+    
+int main(string [] argv)
+{
+    string[int] hashf=[1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"];
+
+    
+    std.stdio.writefln("%s",hashf);
+    return 0;
+}
+</pre><hr></hr><h2>integers.d</h2><pre>    
+
+    
+import std.stdio;
+import std.bigint;
+    
+int main(string [] argv)
+{
+    ubyte int_8_unsigned=0;
+    ushort int_16_unsigned=0;
+    uint int_32_unsigned=0;
+    ulong int_64_unsigned=0;
+    usize int_word_unsigned=0;
+    byte int_8_signed=0;
+    short int_16_signed=0;
+    int int_32_signed=0;
+    long int_64_signed=0;
+    size int_word_signed=0;
+    BigInt int_ap=0;
+
+    
+    std.stdio.writefln("%s",int_8_unsigned);
+    std.stdio.writefln("%s",int_16_unsigned);
+    std.stdio.writefln("%s",int_32_unsigned);
+    std.stdio.writefln("%s",int_64_unsigned);
+    std.stdio.writefln("%s",int_word_unsigned);
+    std.stdio.writefln("%s",int_8_signed);
+    std.stdio.writefln("%s",int_16_signed);
+    std.stdio.writefln("%s",int_32_signed);
+    std.stdio.writefln("%s",int_64_signed);
+    std.stdio.writefln("%s",int_word_signed);
+    std.stdio.writefln("%s",int_ap);
+    return 0;
+}
+</pre><hr></hr><h2>nested.d</h2><pre>    
+
+    
+import std.stdio;
+import std.bigint;
+    
+int main(string [] argv)
+{
+    string []  []  listOfListV=[
+        ["1", "2"], 
+        ["3", "4"], 
+        ["5", "6"]];
+    string[string] []  listOfHashV=[["1":"1","2":"2"], ["3":"3","4":"4"], ["5":"5","6":"6"]];
+    string[string][string] []  []  mapListOfListOfHashOfHashV=[
+        [["hello1":["hello2":"hello4"]]]];
+
+    
+    std.stdio.writefln("%s",listOfListV);
+    std.stdio.writefln("%s",listOfHashV);
+    std.stdio.writefln("%s",mapListOfListOfHashOfHashV);
+    return 0;
+}
+</pre><hr></hr><h2>simple.d</h2><pre>module src.simple;
+import std.string;
+import std.string;
+import std.typecons;
+class Simple {
+public:
+
+  this (string stringParam,string stringParamRw,int intParam,float floatParam)
+  {
+    this.m_stringParam = stringParam;
+    this.m_stringParamRw = stringParamRw;
+    this.m_intParam = intParam;
+    this.m_floatParam = floatParam;
+    this.m_stringDefault = "string default";
+    this.m_intDefault = 0;
+    this.m_floatDefault = 0.0;
+  }
+
+  @property stringParam() pure {return m_stringParam;}
+  @property stringParamRw() pure {return m_stringParamRw;}
+  @property stringParamRw(string stringParamRw) { m_stringParamRw=stringParamRw;}
+
+  @property intParam() pure {return m_intParam;}
+  @property floatParam() pure {return m_floatParam;}
+
+
+    static string getKey(string stringParam,
+                         string stringDefault,
+                         string stringParamRw,
+                         int intParam,
+                         int intDefault,
+                         float floatParam,
+                         float floatDefault)
+    {
+        return std.string.format("%s-%s-%s-%4s-%4s-%s-%s",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
+    }
+
+    override string toString()
+    {
+        return(Simple.getKey(m_stringParam,m_stringDefault,m_stringParamRw,m_intParam,m_intDefault,m_floatParam,m_floatDefault));
+    }
+
+    override hash_t toHash()
+    {
+    return typeid(m_stringParam).getHash(&amp;m_stringParam) +
+        typeid(m_stringDefault).getHash(&amp;m_stringDefault) +
+        typeid(m_stringParamRw).getHash(&amp;m_stringParamRw) +
+        this.m_intParam +
+        this.m_intDefault +
+        cast(int)m_floatParam +
+        cast(int)m_floatDefault;
+    }
+
+    override int opCmp(Object rhs_object)
+    {
+Simple rhs = cast(Simple) rhs_object;
+  if (this.m_stringParam &lt; rhs.m_stringParam){
+    return -1;
+  }
+  else if (this.m_stringParam &gt; rhs.m_stringParam){
+    return 1;
+  }
+  else if (this.m_stringDefault &lt; rhs.m_stringDefault){
+    return -1;
+  }
+  else if (this.m_stringDefault &gt; rhs.m_stringDefault){
+    return 1;
+  }
+  else if (this.m_stringParamRw &lt; rhs.m_stringParamRw){
+    return -1;
+  }
+  else if (this.m_stringParamRw &gt; rhs.m_stringParamRw){
+    return 1;
+  }
+  else if (this.m_intParam &lt; rhs.m_intParam){
+    return -1;
+  }
+  else if (this.m_intParam &gt; rhs.m_intParam){
+    return 1;
+  }
+  else if (this.m_intDefault &lt; rhs.m_intDefault){
+    return -1;
+  }
+  else if (this.m_intDefault &gt; rhs.m_intDefault){
+    return 1;
+  }
+  else if (this.m_floatParam &lt; rhs.m_floatParam){
+    return -1;
+  }
+  else if (this.m_floatParam &gt; rhs.m_floatParam){
+    return 1;
+  }
+  else if (this.m_floatDefault &lt; rhs.m_floatDefault){
+    return -1;
+  }
+  else if (this.m_floatDefault &gt; rhs.m_floatDefault){
+    return 1;
+  }
+return 0;
+
+    }
+    override bool opEquals(Object rhs_object)
+    {
+        Simple rhs = cast(Simple) rhs_object;
+  return (this.m_stringParam == rhs.m_stringParam) &amp;&amp; 
+         (this.m_stringDefault == rhs.m_stringDefault) &amp;&amp; 
+         (this.m_stringParamRw == rhs.m_stringParamRw) &amp;&amp; 
+         (this.m_intParam == rhs.m_intParam) &amp;&amp; 
+         (this.m_intDefault == rhs.m_intDefault) &amp;&amp; 
+         (this.m_floatParam == rhs.m_floatParam) &amp;&amp; 
+         (this.m_floatDefault == rhs.m_floatDefault);
+    }
+
+private:
+    string m_stringParam;
+    string m_stringDefault;
+    string m_stringParamRw;
+    int m_intParam;
+    int m_intDefault;
+    float m_floatParam;
+    float m_floatDefault;
+}
+</pre></html>

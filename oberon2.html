@@ -1,2 +1,107 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>oberon2</h1><hr></hr><h2>array10</h2><h4>MODULE Array10;</h4><h4>IMPORT Out;</h4><h4>TYPE</h4><h4>    String = ARRAY 256 OF CHAR;</h4><h4></h4><h4>VAR</h4><h4>        array:ARRAY  10 OF INTEGER;</h4><h4></h4><h4>BEGIN</h4><h4>        array := ;</h4><h4></h4><h4>  Out.String("Array");Out.Ln();</h4><h4>END Array10.</h4><hr></hr><h2>array20</h2><h4>MODULE Array20;</h4><h4>IMPORT Out;</h4><h4>TYPE</h4><h4>    String = ARRAY 256 OF CHAR;</h4><h4></h4><h4>VAR</h4><h4>        array:ARRAY  20 OF INTEGER;</h4><h4></h4><h4>BEGIN</h4><h4>        array := ;</h4><h4></h4><h4>  Out.String("Array");Out.Ln();</h4><h4>END Array20.</h4><hr></hr><h2>array03</h2><h4>MODULE Array03;</h4><h4>IMPORT Out;</h4><h4>TYPE</h4><h4>    String = ARRAY 256 OF CHAR;</h4><h4></h4><h4>VAR</h4><h4>        array3:ARRAY  3 OF ARRAY  3 OF ARRAY  3 OF INTEGER;</h4><h4></h4><h4>BEGIN</h4><h4>        array3 := ;</h4><h4></h4><h4>  Out.String("Array");Out.Ln();</h4><h4>END Array03.</h4><hr></hr><h2>hash10</h2><h4>MODULE Hash10;</h4><h4>IMPORT Out;</h4><h4>TYPE</h4><h4>    String = ARRAY 256 OF CHAR;</h4><h4></h4><h4>VAR</h4><h4>        hashf:HASH[ INTEGER,String];</h4><h4></h4><h4>BEGIN</h4><h4>        hashf := (*  *);</h4><h4></h4><h4>  Out.String("Hash");Out.Ln();</h4><h4>END Hash10.</h4><hr></hr><h2>nested</h2><h4>MODULE Nested;</h4><h4>IMPORT Out;</h4><h4>TYPE</h4><h4>    String = ARRAY 256 OF CHAR;</h4><h4></h4><h4>VAR</h4><h4>        listOfListV:ARRAY  3 OF ARRAY  2 OF String;</h4><h4>        listOfHashV:ARRAY  3 OF HASH[ String,String];</h4><h4>        mapListOfListOfHashOfHashV:ARRAY  1 OF ARRAY  1 OF HASH[ String,HASH[ String,String]];</h4><h4></h4><h4>BEGIN</h4><h4>        listOfListV := ;</h4><h4>        listOfHashV := ;</h4><h4>        mapListOfListOfHashOfHashV := ;</h4><h4></h4><h4>  Out.String("List");Out.Ln();</h4><h4>  Out.String("List");Out.Ln();</h4><h4>  Out.String("List");Out.Ln();</h4><h4>END Nested.</h4><hr></hr><h2>simple</h2><h4>(*-oberon-*-*)</h4><h4>MODULE Simple;</h4><h4>TYPE</h4><h4>   String = ARRAY 256 OF CHAR;</h4><h4></h4><h4>   T = POINTER TO TDesc;</h4><h4>   TDesc = RECORD</h4><h4>      stringParam : String;</h4><h4>      stringDefault : String;</h4><h4>      stringParamRw : String;</h4><h4>      intParam : INTEGER;</h4><h4>      intDefault : INTEGER;</h4><h4>      floatParam : REAL;</h4><h4>      floatDefault : REAL;</h4><h4>   END;</h4><h4>   PROCEDURE New*(stringParam:String;</h4><h4>                  stringParamRw:String;</h4><h4>                  intParam:INTEGER;</h4><h4>                  floatParam:REAL)  : T;</h4><h4>      VAR t:T;</h4><h4>   BEGIN</h4><h4>      NEW(t);</h4><h4>      t.stringParam := stringParam;</h4><h4>      t.stringParamRw := stringParamRw;</h4><h4>      t.intParam := intParam;</h4><h4>      t.floatParam := floatParam;</h4><h4>      t.stringDefault  := "string default";</h4><h4>      t.intDefault  := 0;</h4><h4>      t.floatDefault  := 0.0;</h4><h4>      RETURN t;</h4><h4></h4><h4>   END New;</h4><h4></h4><h4>END Simple.</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>oberon2</h1><hr></hr><h2>Array03.m</h2><pre>MODULE Array03;
+IMPORT Out;
+TYPE
+    String = ARRAY 256 OF CHAR;
+
+VAR
+        array3:ARRAY  3 OF ARRAY  3 OF ARRAY  3 OF INTEGER;
+
+BEGIN
+        array3 := ;
+
+  Out.String("Array");Out.Ln();
+END Array03.
+</pre><hr></hr><h2>Array10.m</h2><pre>MODULE Array10;
+IMPORT Out;
+TYPE
+    String = ARRAY 256 OF CHAR;
+
+VAR
+        array:ARRAY  10 OF INTEGER;
+
+BEGIN
+        array := ;
+
+  Out.String("Array");Out.Ln();
+END Array10.
+</pre><hr></hr><h2>Array20.m</h2><pre>MODULE Array20;
+IMPORT Out;
+TYPE
+    String = ARRAY 256 OF CHAR;
+
+VAR
+        array:ARRAY  20 OF INTEGER;
+
+BEGIN
+        array := ;
+
+  Out.String("Array");Out.Ln();
+END Array20.
+</pre><hr></hr><h2>Hash10.m</h2><pre>MODULE Hash10;
+IMPORT Out;
+TYPE
+    String = ARRAY 256 OF CHAR;
+
+VAR
+        hashf:HASH[ INTEGER,String];
+
+BEGIN
+        hashf := (*  *);
+
+  Out.String("Hash");Out.Ln();
+END Hash10.
+</pre><hr></hr><h2>Nested.m</h2><pre>MODULE Nested;
+IMPORT Out;
+TYPE
+    String = ARRAY 256 OF CHAR;
+
+VAR
+        listOfListV:ARRAY  3 OF ARRAY  2 OF String;
+        listOfHashV:ARRAY  3 OF HASH[ String,String];
+        mapListOfListOfHashOfHashV:ARRAY  1 OF ARRAY  1 OF HASH[ String,HASH[ String,String]];
+
+BEGIN
+        listOfListV := ;
+        listOfHashV := ;
+        mapListOfListOfHashOfHashV := ;
+
+  Out.String("List");Out.Ln();
+  Out.String("List");Out.Ln();
+  Out.String("List");Out.Ln();
+END Nested.
+</pre><hr></hr><h2>Simple.m</h2><pre>(*-oberon-*-*)
+MODULE Simple;
+TYPE
+   String = ARRAY 256 OF CHAR;
+
+   T = POINTER TO TDesc;
+   TDesc = RECORD
+      stringParam : String;
+      stringDefault : String;
+      stringParamRw : String;
+      intParam : INTEGER;
+      intDefault : INTEGER;
+      floatParam : REAL;
+      floatDefault : REAL;
+   END;
+   PROCEDURE New*(stringParam:String;
+                  stringParamRw:String;
+                  intParam:INTEGER;
+                  floatParam:REAL)  : T;
+      VAR t:T;
+   BEGIN
+      NEW(t);
+      t.stringParam := stringParam;
+      t.stringParamRw := stringParamRw;
+      t.intParam := intParam;
+      t.floatParam := floatParam;
+      t.stringDefault  := "string default";
+      t.intDefault  := 0;
+      t.floatDefault  := 0.0;
+      RETURN t;
+
+   END New;
+
+END Simple.
+</pre></html>

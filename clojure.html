@@ -1,2 +1,100 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>clojure</h1><hr></hr><h2>array10</h2><h4>    </h4><h4>(ns test.test</h4><h4>   )</h4><h4>(let [array [1 2 3 4 5 6 7 8 9 10]]</h4><h4>    (println (str array))</h4><h4>)</h4><hr></hr><h2>array20</h2><h4>    </h4><h4>(ns test.test</h4><h4>   )</h4><h4>(let [array [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]]</h4><h4>    (println (str array))</h4><h4>)</h4><hr></hr><h2>array03</h2><h4>    </h4><h4>(ns test.test</h4><h4>   )</h4><h4>(let [array3 [</h4><h4>        [</h4><h4>            [0 1 2] </h4><h4>            [10 11 12] </h4><h4>            [20 21 22]] </h4><h4>        [</h4><h4>            [100 101 102] </h4><h4>            [110 111 112] </h4><h4>            [120 121 122]] </h4><h4>        [</h4><h4>            [200 201 202] </h4><h4>            [210 211 212] </h4><h4>            [220 221 222]]]]</h4><h4>    (println (str array3))</h4><h4>)</h4><hr></hr><h2>hash10</h2><h4>    </h4><h4>(ns test.test</h4><h4>   )</h4><h4>(let [hashf { 1 "string1"  2 "string2"  3 "string3"  4 "string4"  5 "string5"  6 "string6"  7 "string7"  8 "string8"  9 "string9"  10 "string10"}]</h4><h4>    (println (str hashf))</h4><h4>)</h4><hr></hr><h2>nested</h2><h4>    </h4><h4>(ns test.test</h4><h4>   )</h4><h4>(let [list-of-list-v 00"1"  "2"0  0"3"  "4"0  0"5"  "6"00</h4><h4>      list-of-hash-v 0{ "1" "1"  "2" "2"}  { "3" "3"  "4" "4"}  { "5" "5"  "6" "6"}0</h4><h4>      map-list-of-list-of-hash-of-hash-v 00{ "hello1" { "hello2" "hello4"}}00]</h4><h4>    (println (str list-of-list-v))</h4><h4>    (println (str list-of-hash-v))</h4><h4>    (println (str map-list-of-list-of-hash-of-hash-v))</h4><h4>)</h4><hr></hr><h2>simple</h2><h4>(ns src.simple)</h4><h4>(defrecord Simple[string-param string-default string-param-rw int-param int-default float-param float-default]</h4><h4>  java.lang.Comparable</h4><h4></h4><h4>  (toString  [this]</h4><h4>             (format "%s-%s-%4d-%f"</h4><h4>                      (:string-param this)</h4><h4>                      (:string-param-rw this)</h4><h4>                      (:int-param this)</h4><h4>                      (:float-param this)))</h4><h4></h4><h4>  (compareTo [this other]</h4><h4>     (let [func ( fn [obj] (reduce #(conj %1 (%2 obj)) [] (keys obj)))]</h4><h4>        (.compareTo  (func this) (func other))))</h4><h4>)</h4><h4>(defn make-Simple</h4><h4>[string-param string-param-rw int-param float-param]</h4><h4>(src.simple.Simple. </h4><h4>  string-param</h4><h4>  "string default"</h4><h4>  string-param-rw</h4><h4>  int-param</h4><h4>  0</h4><h4>  float-param</h4><h4>  0.0</h4><h4>)</h4><h4>)</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>clojure</h1><hr></hr><h2>array03.clj</h2><pre>    
+(ns test.test
+   )
+(let [array3 [
+        [
+            [0 1 2] 
+            [10 11 12] 
+            [20 21 22]] 
+        [
+            [100 101 102] 
+            [110 111 112] 
+            [120 121 122]] 
+        [
+            [200 201 202] 
+            [210 211 212] 
+            [220 221 222]]]]
+    (println (str array3))
+)
+</pre><hr></hr><h2>array10.clj</h2><pre>    
+(ns test.test
+   )
+(let [array [1 2 3 4 5 6 7 8 9 10]]
+    (println (str array))
+)
+</pre><hr></hr><h2>array20.clj</h2><pre>    
+(ns test.test
+   )
+(let [array [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]]
+    (println (str array))
+)
+</pre><hr></hr><h2>hash10.clj</h2><pre>    
+(ns test.test
+   )
+(let [hashf { 1 "string1"  2 "string2"  3 "string3"  4 "string4"  5 "string5"  6 "string6"  7 "string7"  8 "string8"  9 "string9"  10 "string10"}]
+    (println (str hashf))
+)
+</pre><hr></hr><h2>integers.clj</h2><pre>    
+(ns test.test
+   )
+(let [int_8_unsigned 0
+      int_16_unsigned 0
+      int_32_unsigned 0
+      int_64_unsigned 0
+      int_word_unsigned 0
+      int_8_signed 0
+      int_16_signed 0
+      int_32_signed 0
+      int_64_signed 0
+      int_word_signed 0
+      int_ap 0]
+    (println (str int_8_unsigned))
+    (println (str int_16_unsigned))
+    (println (str int_32_unsigned))
+    (println (str int_64_unsigned))
+    (println (str int_word_unsigned))
+    (println (str int_8_signed))
+    (println (str int_16_signed))
+    (println (str int_32_signed))
+    (println (str int_64_signed))
+    (println (str int_word_signed))
+    (println (str int_ap))
+)
+</pre><hr></hr><h2>nested.clj</h2><pre>    
+(ns test.test
+   )
+(let [list-of-list-v 00"1"  "2"0  0"3"  "4"0  0"5"  "6"00
+      list-of-hash-v 0{ "1" "1"  "2" "2"}  { "3" "3"  "4" "4"}  { "5" "5"  "6" "6"}0
+      map-list-of-list-of-hash-of-hash-v 00{ "hello1" { "hello2" "hello4"}}00]
+    (println (str list-of-list-v))
+    (println (str list-of-hash-v))
+    (println (str map-list-of-list-of-hash-of-hash-v))
+)
+</pre><hr></hr><h2>simple.clj</h2><pre>(ns src.simple)
+(defrecord Simple[string-param string-default string-param-rw int-param int-default float-param float-default]
+  java.lang.Comparable
+
+  (toString  [this]
+             (format "%s-%s-%4d-%f"
+                      (:string-param this)
+                      (:string-param-rw this)
+                      (:int-param this)
+                      (:float-param this)))
+
+  (compareTo [this other]
+     (let [func ( fn [obj] (reduce #(conj %1 (%2 obj)) [] (keys obj)))]
+        (.compareTo  (func this) (func other))))
+)
+(defn make-Simple
+[string-param string-param-rw int-param float-param]
+(src.simple.Simple. 
+  string-param
+  "string default"
+  string-param-rw
+  int-param
+  0
+  float-param
+  0.0
+)
+)</pre></html>

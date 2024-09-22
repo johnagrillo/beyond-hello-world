@@ -1,2 +1,64 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>coffee</h1><hr></hr><h2>array10</h2><h4></h4><h4>array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</h4><h4>console.log array.toString() </h4><hr></hr><h2>array20</h2><h4></h4><h4>array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</h4><h4>console.log array.toString() </h4><hr></hr><h2>array03</h2><h4></h4><h4>array3=[</h4><h4>[</h4><h4>[0, 1, 2], </h4><h4>[10, 11, 12], </h4><h4>[20, 21, 22]], </h4><h4>[</h4><h4>[100, 101, 102], </h4><h4>[110, 111, 112], </h4><h4>[120, 121, 122]], </h4><h4>[</h4><h4>[200, 201, 202], </h4><h4>[210, 211, 212], </h4><h4>[220, 221, 222]]]</h4><h4>console.log array3.toString() </h4><hr></hr><h2>hash10</h2><h4></h4><h4>hashf={ 1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"}</h4><h4>console.log hashf.toString() </h4><hr></hr><h2>nested</h2><h4></h4><h4>listOfListV=[</h4><h4>["1", "2"], </h4><h4>["3", "4"], </h4><h4>["5", "6"]]</h4><h4>listOfHashV=[{ "1":"1","2":"2"}, { "3":"3","4":"4"}, { "5":"5","6":"6"}]</h4><h4>mapListOfListOfHashOfHashV=[</h4><h4>[{ "hello1":{ "hello2":"hello4"}}]]</h4><h4>console.log listOfListV.toString() </h4><h4>console.log listOfHashV.toString() </h4><h4>console.log mapListOfListOfHashOfHashV.toString() </h4><hr></hr><h2>simple</h2><h4>class Simple</h4><h4>  constructor: (@#&lt;bhw::member:0x000001ed261cf3a8&gt;,@#&lt;bhw::member:0x000001ed261ceef8&gt;,@#&lt;bhw::member:0x000001ed261ced90&gt;,@#&lt;bhw::member:0x000001ed261ce908&gt;) -&gt;</h4><h4></h4><h4>  #&lt;bhw::member:0x000001ed261cf0d8&gt; : "string default"</h4><h4>  #&lt;bhw::member:0x000001ed261ceb60&gt; : 0</h4><h4>  #&lt;bhw::member:0x000001ed261ce5c0&gt; : 0.0</h4><h4></h4><h4></h4><h4>  toString: -&gt; </h4><h4>    "" + "," + @#&lt;bhw::member:0x000001ed261cf3a8&gt; + "," + @#&lt;bhw::member:0x000001ed261cf0d8&gt; + "," + @#&lt;bhw::member:0x000001ed261ceef8&gt; + "," + @#&lt;bhw::member:0x000001ed261ced90&gt; + "," + @#&lt;bhw::member:0x000001ed261ceb60&gt; + "," + @#&lt;bhw::member:0x000001ed261ce908&gt; + "," + @#&lt;bhw::member:0x000001ed261ce5c0&gt;</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>coffee</h1><hr></hr><h2>Array03.coffee</h2><pre>
+array3=[
+[
+[0, 1, 2], 
+[10, 11, 12], 
+[20, 21, 22]], 
+[
+[100, 101, 102], 
+[110, 111, 112], 
+[120, 121, 122]], 
+[
+[200, 201, 202], 
+[210, 211, 212], 
+[220, 221, 222]]]
+console.log array3.toString() </pre><hr></hr><h2>Array10.coffee</h2><pre>
+array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+console.log array.toString() </pre><hr></hr><h2>Array20.coffee</h2><pre>
+array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+console.log array.toString() </pre><hr></hr><h2>Hash10.coffee</h2><pre>
+hashf={ 1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"}
+console.log hashf.toString() </pre><hr></hr><h2>Integers.coffee</h2><pre>
+int_8_unsigned=0
+int_16_unsigned=0
+int_32_unsigned=0
+int_64_unsigned=0
+int_word_unsigned=0
+int_8_signed=0
+int_16_signed=0
+int_32_signed=0
+int_64_signed=0
+int_word_signed=0
+int_ap=0
+console.log int_8_unsigned.toString() 
+console.log int_16_unsigned.toString() 
+console.log int_32_unsigned.toString() 
+console.log int_64_unsigned.toString() 
+console.log int_word_unsigned.toString() 
+console.log int_8_signed.toString() 
+console.log int_16_signed.toString() 
+console.log int_32_signed.toString() 
+console.log int_64_signed.toString() 
+console.log int_word_signed.toString() 
+console.log int_ap.toString() </pre><hr></hr><h2>Nested.coffee</h2><pre>
+listOfListV=[
+["1", "2"], 
+["3", "4"], 
+["5", "6"]]
+listOfHashV=[{ "1":"1","2":"2"}, { "3":"3","4":"4"}, { "5":"5","6":"6"}]
+mapListOfListOfHashOfHashV=[
+[{ "hello1":{ "hello2":"hello4"}}]]
+console.log listOfListV.toString() 
+console.log listOfHashV.toString() 
+console.log mapListOfListOfHashOfHashV.toString() </pre><hr></hr><h2>Simple.coffee</h2><pre>class Simple
+  constructor: (@stringParam,@stringParamRw,@intParam,@floatParam) -&gt;
+
+  stringDefault : "string default"
+  intDefault : 0
+  floatDefault : 0.0
+
+
+  toString: -&gt; 
+    "" + "," + @stringParam + "," + @stringDefault + "," + @stringParamRw + "," + @intParam + "," + @intDefault + "," + @floatParam + "," + @floatDefault
+</pre></html>

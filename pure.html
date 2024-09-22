@@ -1,2 +1,96 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>pure</h1><hr></hr><h2>array10</h2><h4>using system;    </h4><h4></h4><h4></h4><h4>let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];</h4><h4></h4><h4>puts array;</h4><h4> </h4><hr></hr><h2>array20</h2><h4>using system;    </h4><h4></h4><h4></h4><h4>let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];</h4><h4></h4><h4>puts array;</h4><h4> </h4><hr></hr><h2>array03</h2><h4>using system;    </h4><h4></h4><h4></h4><h4>let array3 = [</h4><h4>        [</h4><h4>            [0, 1, 2], </h4><h4>            [10, 11, 12], </h4><h4>            [20, 21, 22]], </h4><h4>        [</h4><h4>            [100, 101, 102], </h4><h4>            [110, 111, 112], </h4><h4>            [120, 121, 122]], </h4><h4>        [</h4><h4>            [200, 201, 202], </h4><h4>            [210, 211, 212], </h4><h4>            [220, 221, 222]]];</h4><h4></h4><h4>puts array3;</h4><h4> </h4><hr></hr><h2>hash10</h2><h4>using system;    </h4><h4></h4><h4></h4><h4>let hashf = dict [1=&gt;"string1",2=&gt;"string2",3=&gt;"string3",4=&gt;"string4",5=&gt;"string5",6=&gt;"string6",7=&gt;"string7",8=&gt;"string8",9=&gt;"string9",10=&gt;"string10"];</h4><h4></h4><h4>puts hashf;</h4><h4> </h4><hr></hr><h2>nested</h2><h4>using system;    </h4><h4></h4><h4></h4><h4>let listOfListV = [</h4><h4>        ["1", "2"], </h4><h4>        ["3", "4"], </h4><h4>        ["5", "6"]];</h4><h4>let listOfHashV = [dict ["1"=&gt;"1","2"=&gt;"2"], dict ["3"=&gt;"3","4"=&gt;"4"], dict ["5"=&gt;"5","6"=&gt;"6"]];</h4><h4>let mapListOfListOfHashOfHashV = [</h4><h4>        [dict ["hello1"=&gt;dict ["hello2"=&gt;"hello4"]]]];</h4><h4></h4><h4>puts listOfListV;</h4><h4>puts listOfHashV;</h4><h4>puts mapListOfListOfHashOfHashV;</h4><h4> </h4><hr></hr><h2>simple</h2><h4>using system,dict,set;</h4><h4>type simple( Simple stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault);</h4><h4></h4><h4>simple stringParam stringParamRw intParam floatParam = Simple (stringParam) ("string default") (stringParamRw) (intParam) (0) (floatParam) (0.0);</h4><h4></h4><h4>to_string (Simple stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault) =</h4><h4>        join "-" [sprintf "%s" #&lt;bhw::member:0x000001ed261cf3a8&gt;,</h4><h4>                  sprintf "%s" #&lt;bhw::member:0x000001ed261cf0d8&gt;,</h4><h4>                  sprintf "%s" #&lt;bhw::member:0x000001ed261ceef8&gt;,</h4><h4>                  sprintf "%4d" #&lt;bhw::member:0x000001ed261ced90&gt;,</h4><h4>                  sprintf "%4d" #&lt;bhw::member:0x000001ed261ceb60&gt;,</h4><h4>                  sprintf "%f" #&lt;bhw::member:0x000001ed261ce908&gt;,</h4><h4>                  sprintf "%f" #&lt;bhw::member:0x000001ed261ce5c0&gt;];</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>pure</h1><hr></hr><h2>Array03.pure</h2><pre>using system;    
+
+
+let array3 = [
+        [
+            [0, 1, 2], 
+            [10, 11, 12], 
+            [20, 21, 22]], 
+        [
+            [100, 101, 102], 
+            [110, 111, 112], 
+            [120, 121, 122]], 
+        [
+            [200, 201, 202], 
+            [210, 211, 212], 
+            [220, 221, 222]]];
+
+puts array3;
+ 
+</pre><hr></hr><h2>Array10.pure</h2><pre>using system;    
+
+
+let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+puts array;
+ 
+</pre><hr></hr><h2>Array20.pure</h2><pre>using system;    
+
+
+let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+
+puts array;
+ 
+</pre><hr></hr><h2>Hash10.pure</h2><pre>using system;    
+
+
+let hashf = dict [1=&gt;"string1",2=&gt;"string2",3=&gt;"string3",4=&gt;"string4",5=&gt;"string5",6=&gt;"string6",7=&gt;"string7",8=&gt;"string8",9=&gt;"string9",10=&gt;"string10"];
+
+puts hashf;
+ 
+</pre><hr></hr><h2>Integers.pure</h2><pre>using system;    
+
+
+let int_8_unsigned = 0;
+let int_16_unsigned = 0;
+let int_32_unsigned = 0;
+let int_64_unsigned = 0;
+let int_word_unsigned = 0;
+let int_8_signed = 0;
+let int_16_signed = 0;
+let int_32_signed = 0;
+let int_64_signed = 0;
+let int_word_signed = 0;
+let int_ap = 0;
+
+puts int_8_unsigned;
+puts int_16_unsigned;
+puts int_32_unsigned;
+puts int_64_unsigned;
+puts int_word_unsigned;
+puts int_8_signed;
+puts int_16_signed;
+puts int_32_signed;
+puts int_64_signed;
+puts int_word_signed;
+puts int_ap;
+ 
+</pre><hr></hr><h2>Nested.pure</h2><pre>using system;    
+
+
+let listOfListV = [
+        ["1", "2"], 
+        ["3", "4"], 
+        ["5", "6"]];
+let listOfHashV = [dict ["1"=&gt;"1","2"=&gt;"2"], dict ["3"=&gt;"3","4"=&gt;"4"], dict ["5"=&gt;"5","6"=&gt;"6"]];
+let mapListOfListOfHashOfHashV = [
+        [dict ["hello1"=&gt;dict ["hello2"=&gt;"hello4"]]]];
+
+puts listOfListV;
+puts listOfHashV;
+puts mapListOfListOfHashOfHashV;
+ 
+</pre><hr></hr><h2>Simple.pure</h2><pre>using system,dict,set;
+type simple( Simple stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault);
+
+simple stringParam stringParamRw intParam floatParam = Simple (stringParam) ("string default") (stringParamRw) (intParam) (0) (floatParam) (0.0);
+
+to_string (Simple stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault) =
+        join "-" [sprintf "%s" stringParam,
+                  sprintf "%s" stringDefault,
+                  sprintf "%s" stringParamRw,
+                  sprintf "%4d" intParam,
+                  sprintf "%4d" intDefault,
+                  sprintf "%f" floatParam,
+                  sprintf "%f" floatDefault];</pre></html>

@@ -1,2 +1,144 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>haskell</h1><hr></hr><h2>array10</h2><h4>    </h4><h4>import Data.Map</h4><h4>import Data.Set</h4><h4>    </h4><h4></h4><h4>main :: IO ()</h4><h4>main = do</h4><h4>    </h4><h4>    let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</h4><h4>    </h4><h4>    putStrLn (show array)</h4><h4></h4><h4>    return ()</h4><hr></hr><h2>array20</h2><h4>    </h4><h4>import Data.Map</h4><h4>import Data.Set</h4><h4>    </h4><h4></h4><h4>main :: IO ()</h4><h4>main = do</h4><h4>    </h4><h4>    let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</h4><h4>    </h4><h4>    putStrLn (show array)</h4><h4></h4><h4>    return ()</h4><hr></hr><h2>array03</h2><h4>    </h4><h4>import Data.Map</h4><h4>import Data.Set</h4><h4>    </h4><h4></h4><h4>main :: IO ()</h4><h4>main = do</h4><h4>    </h4><h4>    let array3 = [[[0, 1, 2], [10, 11, 12], [20, 21, 22]], [[100, 101, 102], [110, 111, 112], [120, 121, 122]], [[200, 201, 202], [210, 211, 212], [220, 221, 222]]]</h4><h4>    </h4><h4>    putStrLn (show array3)</h4><h4></h4><h4>    return ()</h4><hr></hr><h2>hash10</h2><h4>    </h4><h4>import Data.Map</h4><h4>import Data.Set</h4><h4>    </h4><h4></h4><h4>main :: IO ()</h4><h4>main = do</h4><h4>    </h4><h4>    let hashf = (Data.Map.fromList [(1,"string1"),(2,"string2"),(3,"string3"),(4,"string4"),(5,"string5"),(6,"string6"),(7,"string7"),(8,"string8"),(9,"string9"),(10,"string10")])</h4><h4>    </h4><h4>    putStrLn (show hashf)</h4><h4></h4><h4>    return ()</h4><hr></hr><h2>nested</h2><h4>    </h4><h4>import Data.Map</h4><h4>import Data.Set</h4><h4>    </h4><h4></h4><h4>main :: IO ()</h4><h4>main = do</h4><h4>    </h4><h4>    let listOfListV = [["1", "2"], ["3", "4"], ["5", "6"]]</h4><h4>    let listOfHashV = [(Data.Map.fromList [("1","1"),("2","2")]), (Data.Map.fromList [("3","3"),("4","4")]), (Data.Map.fromList [("5","5"),("6","6")])]</h4><h4>    let mapListOfListOfHashOfHashV = [[(Data.Map.fromList [("hello1",(Data.Map.fromList [("hello2","hello4")]))])]]</h4><h4>    </h4><h4>    putStrLn (show listOfListV)</h4><h4>    putStrLn (show listOfHashV)</h4><h4>    putStrLn (show mapListOfListOfHashOfHashV)</h4><h4></h4><h4>    return ()</h4><hr></hr><h2>simple</h2><h4>module Simple where</h4><h4></h4><h4>import Text.Printf</h4><h4>import Data.Map</h4><h4>import Data.Set</h4><h4></h4><h4>data Simple = Simple {</h4><h4>  stringParam :: String,</h4><h4>  stringDefault :: String,</h4><h4>  stringParamRw :: String,</h4><h4>  intParam :: Int,</h4><h4>  intDefault :: Int,</h4><h4>  floatParam :: Float,</h4><h4>  floatDefault :: Float</h4><h4>} deriving(Eq,Ord)</h4><h4></h4><h4>new :: String -&gt; String -&gt; Int -&gt; Float -&gt; Simple</h4><h4>new _stringParam _stringParamRw _intParam _floatParam = Simple</h4><h4>  _stringParam</h4><h4>  "string default"</h4><h4>  _stringParamRw</h4><h4>  _intParam</h4><h4>  0</h4><h4>  _floatParam</h4><h4>  0.0</h4><h4></h4><h4></h4><h4></h4><h4>getKey :: String -&gt; String -&gt; String -&gt; Int -&gt; Int -&gt; Float -&gt; Float -&gt; String</h4><h4>getKey #&lt;bhw::member:0x000001ed261cf3a8&gt; #&lt;bhw::member:0x000001ed261cf0d8&gt; #&lt;bhw::member:0x000001ed261ceef8&gt; #&lt;bhw::member:0x000001ed261ced90&gt; #&lt;bhw::member:0x000001ed261ceb60&gt; #&lt;bhw::member:0x000001ed261ce908&gt; #&lt;bhw::member:0x000001ed261ce5c0&gt;=</h4><h4>        printf "%s-%s-%s-%4d-%4d-%f-%f" #&lt;bhw::member:0x000001ed261cf3a8&gt; #&lt;bhw::member:0x000001ed261cf0d8&gt; #&lt;bhw::member:0x000001ed261ceef8&gt; #&lt;bhw::member:0x000001ed261ced90&gt; #&lt;bhw::member:0x000001ed261ceb60&gt; #&lt;bhw::member:0x000001ed261ce908&gt; #&lt;bhw::member:0x000001ed261ce5c0&gt;</h4><h4></h4><h4>instance Show Simple where</h4><h4>  show #&lt;bhw::class:0x000001ed261cf6a0&gt; =</h4><h4>    Simple.getKey (#&lt;bhw::member:0x000001ed261cf3a8&gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;)</h4><h4>           (#&lt;bhw::member:0x000001ed261cf0d8&gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;)</h4><h4>           (#&lt;bhw::member:0x000001ed261ceef8&gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;)</h4><h4>           (#&lt;bhw::member:0x000001ed261ced90&gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;)</h4><h4>           (#&lt;bhw::member:0x000001ed261ceb60&gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;)</h4><h4>           (#&lt;bhw::member:0x000001ed261ce908&gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;)</h4><h4>           (#&lt;bhw::member:0x000001ed261ce5c0&gt; #&lt;bhw::class:0x000001ed261cf6a0&gt;)</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>haskell</h1><hr></hr><h2>Array03.hs</h2><pre>    
+import Data.Map
+import Data.Set
+    
+
+main :: IO ()
+main = do
+    
+    let array3 = [[[0, 1, 2], [10, 11, 12], [20, 21, 22]], [[100, 101, 102], [110, 111, 112], [120, 121, 122]], [[200, 201, 202], [210, 211, 212], [220, 221, 222]]]
+    
+    putStrLn (show array3)
+
+    return ()
+</pre><hr></hr><h2>Array10.hs</h2><pre>    
+import Data.Map
+import Data.Set
+    
+
+main :: IO ()
+main = do
+    
+    let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    
+    putStrLn (show array)
+
+    return ()
+</pre><hr></hr><h2>Array20.hs</h2><pre>    
+import Data.Map
+import Data.Set
+    
+
+main :: IO ()
+main = do
+    
+    let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    
+    putStrLn (show array)
+
+    return ()
+</pre><hr></hr><h2>Hash10.hs</h2><pre>    
+import Data.Map
+import Data.Set
+    
+
+main :: IO ()
+main = do
+    
+    let hashf = (Data.Map.fromList [(1,"string1"),(2,"string2"),(3,"string3"),(4,"string4"),(5,"string5"),(6,"string6"),(7,"string7"),(8,"string8"),(9,"string9"),(10,"string10")])
+    
+    putStrLn (show hashf)
+
+    return ()
+</pre><hr></hr><h2>Integers.hs</h2><pre>    
+import Data.Map
+import Data.Set
+    
+
+main :: IO ()
+main = do
+    
+    let int_8_unsigned = 0
+    let int_16_unsigned = 0
+    let int_32_unsigned = 0
+    let int_64_unsigned = 0
+    let int_word_unsigned = 0
+    let int_8_signed = 0
+    let int_16_signed = 0
+    let int_32_signed = 0
+    let int_64_signed = 0
+    let int_word_signed = 0
+    let int_ap = 0
+    
+    putStrLn (show int_8_unsigned)
+    putStrLn (show int_16_unsigned)
+    putStrLn (show int_32_unsigned)
+    putStrLn (show int_64_unsigned)
+    putStrLn (show int_word_unsigned)
+    putStrLn (show int_8_signed)
+    putStrLn (show int_16_signed)
+    putStrLn (show int_32_signed)
+    putStrLn (show int_64_signed)
+    putStrLn (show int_word_signed)
+    putStrLn (show int_ap)
+
+    return ()
+</pre><hr></hr><h2>Nested.hs</h2><pre>    
+import Data.Map
+import Data.Set
+    
+
+main :: IO ()
+main = do
+    
+    let listOfListV = [["1", "2"], ["3", "4"], ["5", "6"]]
+    let listOfHashV = [(Data.Map.fromList [("1","1"),("2","2")]), (Data.Map.fromList [("3","3"),("4","4")]), (Data.Map.fromList [("5","5"),("6","6")])]
+    let mapListOfListOfHashOfHashV = [[(Data.Map.fromList [("hello1",(Data.Map.fromList [("hello2","hello4")]))])]]
+    
+    putStrLn (show listOfListV)
+    putStrLn (show listOfHashV)
+    putStrLn (show mapListOfListOfHashOfHashV)
+
+    return ()
+</pre><hr></hr><h2>Simple.hs</h2><pre>module Simple where
+
+import Text.Printf
+import Data.Map
+import Data.Set
+
+data Simple = Simple {
+  stringParam :: String,
+  stringDefault :: String,
+  stringParamRw :: String,
+  intParam :: Int,
+  intDefault :: Int,
+  floatParam :: Float,
+  floatDefault :: Float
+} deriving(Eq,Ord)
+
+new :: String -&gt; String -&gt; Int -&gt; Float -&gt; Simple
+new _stringParam _stringParamRw _intParam _floatParam = Simple
+  _stringParam
+  "string default"
+  _stringParamRw
+  _intParam
+  0
+  _floatParam
+  0.0
+
+
+
+getKey :: String -&gt; String -&gt; String -&gt; Int -&gt; Int -&gt; Float -&gt; Float -&gt; String
+getKey stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault=
+        printf "%s-%s-%s-%4d-%4d-%f-%f" stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault
+
+instance Show Simple where
+  show simple =
+    Simple.getKey (stringParam simple)
+           (stringDefault simple)
+           (stringParamRw simple)
+           (intParam simple)
+           (intDefault simple)
+           (floatParam simple)
+           (floatDefault simple)</pre></html>

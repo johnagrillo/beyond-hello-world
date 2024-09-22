@@ -1,2 +1,198 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>oorexx</h1><hr></hr><h2>array10</h2><h4>    </h4><h4>array=..array~of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)</h4><h4></h4><h4>say array</h4><h4></h4><h4>    </h4><h4>    </h4><h4>::routine fromlist</h4><h4>use arg list</h4><h4>t = .Table~new</h4><h4>supplier = list~supplier</h4><h4>do while supplier~available</h4><h4>  t[supplier~item[0]] = supplier~item[1]</h4><h4>  supplier~next</h4><h4>end </h4><h4>return t</h4><h4>    </h4><h4></h4><h4></h4><h4>    </h4><hr></hr><h2>array20</h2><h4>    </h4><h4>array=..array~of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)</h4><h4></h4><h4>say array</h4><h4></h4><h4>    </h4><h4>    </h4><h4>::routine fromlist</h4><h4>use arg list</h4><h4>t = .Table~new</h4><h4>supplier = list~supplier</h4><h4>do while supplier~available</h4><h4>  t[supplier~item[0]] = supplier~item[1]</h4><h4>  supplier~next</h4><h4>end </h4><h4>return t</h4><h4>    </h4><h4></h4><h4></h4><h4>    </h4><hr></hr><h2>array03</h2><h4>    </h4><h4>array3=..array~of(.array~of(.array~of(0, 1, 2), .array~of(10, 11, 12), .array~of(20, 21, 22)), .array~of(.array~of(100, 101, 102), .array~of(110, 111, 112), .array~of(120, 121, 122)), .array~of(.array~of(200, 201, 202), .array~of(210, 211, 212), .array~of(220, 221, 222)))</h4><h4></h4><h4>say array3</h4><h4></h4><h4>    </h4><h4>    </h4><h4>::routine fromlist</h4><h4>use arg list</h4><h4>t = .Table~new</h4><h4>supplier = list~supplier</h4><h4>do while supplier~available</h4><h4>  t[supplier~item[0]] = supplier~item[1]</h4><h4>  supplier~next</h4><h4>end </h4><h4>return t</h4><h4>    </h4><h4></h4><h4></h4><h4>    </h4><hr></hr><h2>hash10</h2><h4>    </h4><h4>hashf=.fromlist .array~of(.list~of(1,"string1"), .list~of(2,"string2"), .list~of(3,"string3"), .list~of(4,"string4"), .list~of(5,"string5"), .list~of(6,"string6"), .list~of(7,"string7"), .list~of(8,"string8"), .list~of(9,"string9"), .list~of(10,"string10"))</h4><h4></h4><h4>say hashf</h4><h4></h4><h4>    </h4><h4>    </h4><h4>::routine fromlist</h4><h4>use arg list</h4><h4>t = .Table~new</h4><h4>supplier = list~supplier</h4><h4>do while supplier~available</h4><h4>  t[supplier~item[0]] = supplier~item[1]</h4><h4>  supplier~next</h4><h4>end </h4><h4>return t</h4><h4>    </h4><h4></h4><h4></h4><h4>    </h4><hr></hr><h2>nested</h2><h4>    </h4><h4>listOfListV=..array~of(.array~of("1", "2"), .array~of("3", "4"), .array~of("5", "6"))</h4><h4>listOfHashV=..array~of(fromlist .array~of(.list~of("1","1"), .list~of("2","2")), fromlist .array~of(.list~of("3","3"), .list~of("4","4")), fromlist .array~of(.list~of("5","5"), .list~of("6","6")))</h4><h4>mapListOfListOfHashOfHashV=..array~of(.array~of(fromlist .array~of(.list~of("hello1",fromlist .array~of(.list~of("hello2","hello4"))))))</h4><h4></h4><h4>say listOfListV</h4><h4>say listOfHashV</h4><h4>say mapListOfListOfHashOfHashV</h4><h4></h4><h4>    </h4><h4>    </h4><h4>::routine fromlist</h4><h4>use arg list</h4><h4>t = .Table~new</h4><h4>supplier = list~supplier</h4><h4>do while supplier~available</h4><h4>  t[supplier~item[0]] = supplier~item[1]</h4><h4>  supplier~next</h4><h4>end </h4><h4>return t</h4><h4>    </h4><h4></h4><h4></h4><h4>    </h4><hr></hr><h2>simple</h2><h4>::class Simple public inherit Comparable</h4><h4></h4><h4>::attribute #&lt;bhw::member:0x000001ed261cf3a8&gt;</h4><h4>::attribute #&lt;bhw::member:0x000001ed261cf0d8&gt;</h4><h4>::attribute #&lt;bhw::member:0x000001ed261ceef8&gt;</h4><h4>::attribute #&lt;bhw::member:0x000001ed261ced90&gt;</h4><h4>::attribute #&lt;bhw::member:0x000001ed261ceb60&gt;</h4><h4>::attribute #&lt;bhw::member:0x000001ed261ce908&gt;</h4><h4>::attribute #&lt;bhw::member:0x000001ed261ce5c0&gt;</h4><h4></h4><h4>::method init</h4><h4>expose #&lt;bhw::member:0x000001ed261cf3a8&gt; #&lt;bhw::member:0x000001ed261cf0d8&gt; #&lt;bhw::member:0x000001ed261ceef8&gt; #&lt;bhw::member:0x000001ed261ced90&gt; #&lt;bhw::member:0x000001ed261ceb60&gt; #&lt;bhw::member:0x000001ed261ce908&gt; #&lt;bhw::member:0x000001ed261ce5c0&gt;</h4><h4>use arg #&lt;bhw::member:0x000001ed261cf3a8&gt;,#&lt;bhw::member:0x000001ed261ceef8&gt;,#&lt;bhw::member:0x000001ed261ced90&gt;,#&lt;bhw::member:0x000001ed261ce908&gt;</h4><h4>   self~stringParam = #&lt;bhw::member:0x000001ed261cf3a8&gt;</h4><h4>   self~stringParamRw = #&lt;bhw::member:0x000001ed261ceef8&gt;</h4><h4>   self~intParam = #&lt;bhw::member:0x000001ed261ced90&gt;</h4><h4>   self~floatParam = #&lt;bhw::member:0x000001ed261ce908&gt;</h4><h4>   self~stringDefault = "string default"</h4><h4>   self~intDefault = 0</h4><h4>   self~floatDefault = 0.0</h4><h4></h4><h4>   </h4><h4></h4><h4></h4><h4>::method defaultName</h4><h4>   return self~stringParam|| "-" || self~stringDefault|| "-" || self~stringParamRw|| "-" || translate(format(self~#&lt;bhw::member:0x000001ed261ced90&gt;,4), #&lt;bhw::member:0x000001ed261ced90&gt;,,)|| "-" || translate(format(self~#&lt;bhw::member:0x000001ed261ceb60&gt;,4), #&lt;bhw::member:0x000001ed261ceb60&gt;,,)|| "-" || self~floatParam|| "-" || self~floatDefault</h4><h4></h4><h4>::method hashCode</h4><h4>   return self~#&lt;bhw::member:0x000001ed261cf3a8&gt;~hashCode() || self~#&lt;bhw::member:0x000001ed261cf0d8&gt;~hashCode() || self~#&lt;bhw::member:0x000001ed261ceef8&gt;~hashCode() || self~#&lt;bhw::member:0x000001ed261ced90&gt;~hashCode() || self~#&lt;bhw::member:0x000001ed261ceb60&gt;~hashCode() || self~#&lt;bhw::member:0x000001ed261ce908&gt;~hashCode() || self~#&lt;bhw::member:0x000001ed261ce5c0&gt;~hashCode()</h4><h4></h4><h4>::method '=='</h4><h4>   use arg other</h4><h4>   return self~#&lt;bhw::member:0x000001ed261cf3a8&gt; == other~#&lt;bhw::member:0x000001ed261cf3a8&gt; &amp; self~#&lt;bhw::member:0x000001ed261cf0d8&gt; == other~#&lt;bhw::member:0x000001ed261cf0d8&gt; &amp; self~#&lt;bhw::member:0x000001ed261ceef8&gt; == other~#&lt;bhw::member:0x000001ed261ceef8&gt; &amp; self~#&lt;bhw::member:0x000001ed261ced90&gt; == other~#&lt;bhw::member:0x000001ed261ced90&gt; &amp; self~#&lt;bhw::member:0x000001ed261ceb60&gt; == other~#&lt;bhw::member:0x000001ed261ceb60&gt; &amp; self~#&lt;bhw::member:0x000001ed261ce908&gt; == other~#&lt;bhw::member:0x000001ed261ce908&gt; &amp; self~#&lt;bhw::member:0x000001ed261ce5c0&gt; == other~#&lt;bhw::member:0x000001ed261ce5c0&gt;</h4><h4></h4><h4></h4><h4>::method compareTo</h4><h4>   use arg other</h4><h4>   ret = self~#&lt;bhw::member:0x000001ed261cf3a8&gt;~compareTo(other~#&lt;bhw::member:0x000001ed261cf3a8&gt;)</h4><h4>   if (ret &lt;&gt; 0) then return ret</h4><h4>   ret = self~#&lt;bhw::member:0x000001ed261cf0d8&gt;~compareTo(other~#&lt;bhw::member:0x000001ed261cf0d8&gt;)</h4><h4>   if (ret &lt;&gt; 0) then return ret</h4><h4>   ret = self~#&lt;bhw::member:0x000001ed261ceef8&gt;~compareTo(other~#&lt;bhw::member:0x000001ed261ceef8&gt;)</h4><h4>   if (ret &lt;&gt; 0) then return ret</h4><h4>   ret = self~#&lt;bhw::member:0x000001ed261ced90&gt;~compareTo(other~#&lt;bhw::member:0x000001ed261ced90&gt;)</h4><h4>   if (ret &lt;&gt; 0) then return ret</h4><h4>   ret = self~#&lt;bhw::member:0x000001ed261ceb60&gt;~compareTo(other~#&lt;bhw::member:0x000001ed261ceb60&gt;)</h4><h4>   if (ret &lt;&gt; 0) then return ret</h4><h4>   ret = self~#&lt;bhw::member:0x000001ed261ce908&gt;~compareTo(other~#&lt;bhw::member:0x000001ed261ce908&gt;)</h4><h4>   if (ret &lt;&gt; 0) then return ret</h4><h4>   ret = self~#&lt;bhw::member:0x000001ed261ce5c0&gt;~compareTo(other~#&lt;bhw::member:0x000001ed261ce5c0&gt;)</h4><h4>   if (ret &lt;&gt; 0) then return ret</h4><h4></h4><h4>   return ret</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>oorexx</h1><hr></hr><h2>array03.rex</h2><pre>    
+array3=..array~of(.array~of(.array~of(0, 1, 2), .array~of(10, 11, 12), .array~of(20, 21, 22)), .array~of(.array~of(100, 101, 102), .array~of(110, 111, 112), .array~of(120, 121, 122)), .array~of(.array~of(200, 201, 202), .array~of(210, 211, 212), .array~of(220, 221, 222)))
+
+say array3
+
+    
+    
+::routine fromlist
+use arg list
+t = .Table~new
+supplier = list~supplier
+do while supplier~available
+  t[supplier~item[0]] = supplier~item[1]
+  supplier~next
+end 
+return t
+    
+
+
+    
+</pre><hr></hr><h2>array10.rex</h2><pre>    
+array=..array~of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+say array
+
+    
+    
+::routine fromlist
+use arg list
+t = .Table~new
+supplier = list~supplier
+do while supplier~available
+  t[supplier~item[0]] = supplier~item[1]
+  supplier~next
+end 
+return t
+    
+
+
+    
+</pre><hr></hr><h2>array20.rex</h2><pre>    
+array=..array~of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+
+say array
+
+    
+    
+::routine fromlist
+use arg list
+t = .Table~new
+supplier = list~supplier
+do while supplier~available
+  t[supplier~item[0]] = supplier~item[1]
+  supplier~next
+end 
+return t
+    
+
+
+    
+</pre><hr></hr><h2>hash10.rex</h2><pre>    
+hashf=.fromlist .array~of(.list~of(1,"string1"), .list~of(2,"string2"), .list~of(3,"string3"), .list~of(4,"string4"), .list~of(5,"string5"), .list~of(6,"string6"), .list~of(7,"string7"), .list~of(8,"string8"), .list~of(9,"string9"), .list~of(10,"string10"))
+
+say hashf
+
+    
+    
+::routine fromlist
+use arg list
+t = .Table~new
+supplier = list~supplier
+do while supplier~available
+  t[supplier~item[0]] = supplier~item[1]
+  supplier~next
+end 
+return t
+    
+
+
+    
+</pre><hr></hr><h2>integers.rex</h2><pre>    
+int_8_unsigned=.0
+int_16_unsigned=.0
+int_32_unsigned=.0
+int_64_unsigned=.0
+int_word_unsigned=.0
+int_8_signed=.0
+int_16_signed=.0
+int_32_signed=.0
+int_64_signed=.0
+int_word_signed=.0
+int_ap=.0
+
+say int_8_unsigned
+say int_16_unsigned
+say int_32_unsigned
+say int_64_unsigned
+say int_word_unsigned
+say int_8_signed
+say int_16_signed
+say int_32_signed
+say int_64_signed
+say int_word_signed
+say int_ap
+
+    
+    
+::routine fromlist
+use arg list
+t = .Table~new
+supplier = list~supplier
+do while supplier~available
+  t[supplier~item[0]] = supplier~item[1]
+  supplier~next
+end 
+return t
+    
+
+
+    
+</pre><hr></hr><h2>nested.rex</h2><pre>    
+listOfListV=..array~of(.array~of("1", "2"), .array~of("3", "4"), .array~of("5", "6"))
+listOfHashV=..array~of(fromlist .array~of(.list~of("1","1"), .list~of("2","2")), fromlist .array~of(.list~of("3","3"), .list~of("4","4")), fromlist .array~of(.list~of("5","5"), .list~of("6","6")))
+mapListOfListOfHashOfHashV=..array~of(.array~of(fromlist .array~of(.list~of("hello1",fromlist .array~of(.list~of("hello2","hello4"))))))
+
+say listOfListV
+say listOfHashV
+say mapListOfListOfHashOfHashV
+
+    
+    
+::routine fromlist
+use arg list
+t = .Table~new
+supplier = list~supplier
+do while supplier~available
+  t[supplier~item[0]] = supplier~item[1]
+  supplier~next
+end 
+return t
+    
+
+
+    
+</pre><hr></hr><h2>simple.rex</h2><pre>::class Simple public inherit Comparable
+
+::attribute stringParam
+::attribute stringDefault
+::attribute stringParamRw
+::attribute intParam
+::attribute intDefault
+::attribute floatParam
+::attribute floatDefault
+
+::method init
+expose stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault
+use arg stringParam,stringParamRw,intParam,floatParam
+   self~stringParam = stringParam
+   self~stringParamRw = stringParamRw
+   self~intParam = intParam
+   self~floatParam = floatParam
+   self~stringDefault = "string default"
+   self~intDefault = 0
+   self~floatDefault = 0.0
+
+   
+
+
+::method defaultName
+   return self~stringParam|| "-" || self~stringDefault|| "-" || self~stringParamRw|| "-" || translate(format(self~#&lt;bhw::member:0x000055d39baff900&gt;,4), #&lt;bhw::member:0x000055d39baff900&gt;,,)|| "-" || translate(format(self~#&lt;bhw::member:0x000055d39baff720&gt;,4), #&lt;bhw::member:0x000055d39baff720&gt;,,)|| "-" || self~floatParam|| "-" || self~floatDefault
+
+::method hashCode
+   return self~stringParam~hashCode() || self~stringDefault~hashCode() || self~stringParamRw~hashCode() || self~intParam~hashCode() || self~intDefault~hashCode() || self~floatParam~hashCode() || self~floatDefault~hashCode()
+
+::method '=='
+   use arg other
+   return self~stringParam == other~stringParam &amp; self~stringDefault == other~stringDefault &amp; self~stringParamRw == other~stringParamRw &amp; self~intParam == other~intParam &amp; self~intDefault == other~intDefault &amp; self~floatParam == other~floatParam &amp; self~floatDefault == other~floatDefault
+
+
+::method compareTo
+   use arg other
+   ret = self~stringParam~compareTo(other~stringParam)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~stringDefault~compareTo(other~stringDefault)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~stringParamRw~compareTo(other~stringParamRw)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~intParam~compareTo(other~intParam)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~intDefault~compareTo(other~intDefault)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~floatParam~compareTo(other~floatParam)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~floatDefault~compareTo(other~floatDefault)
+   if (ret &lt;&gt; 0) then return ret
+
+   return ret</pre></html>

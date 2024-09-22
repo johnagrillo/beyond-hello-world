@@ -1,2 +1,125 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>scala</h1><hr></hr><h2>array10</h2><h4>object Array10</h4><h4>{</h4><h4>    def main (args : Array[String]) = {</h4><h4>        val array=Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)</h4><h4></h4><h4>        System.out.println(array)</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>array20</h2><h4>object Array20</h4><h4>{</h4><h4>    def main (args : Array[String]) = {</h4><h4>        val array=Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)</h4><h4></h4><h4>        System.out.println(array)</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>array03</h2><h4>object Array03</h4><h4>{</h4><h4>    def main (args : Array[String]) = {</h4><h4>        val array3=Array(</h4><h4>        Array(</h4><h4>            Array(0, 1, 2), </h4><h4>            Array(10, 11, 12), </h4><h4>            Array(20, 21, 22)), </h4><h4>        Array(</h4><h4>            Array(100, 101, 102), </h4><h4>            Array(110, 111, 112), </h4><h4>            Array(120, 121, 122)), </h4><h4>        Array(</h4><h4>            Array(200, 201, 202), </h4><h4>            Array(210, 211, 212), </h4><h4>            Array(220, 221, 222)))</h4><h4></h4><h4>        System.out.println(array3)</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>hash10</h2><h4>object Hash10</h4><h4>{</h4><h4>    def main (args : Array[String]) = {</h4><h4>        val hashf=collection.mutable.HashMap(1-&gt;"string1",2-&gt;"string2",3-&gt;"string3",4-&gt;"string4",5-&gt;"string5",6-&gt;"string6",7-&gt;"string7",8-&gt;"string8",9-&gt;"string9",10-&gt;"string10")</h4><h4></h4><h4>        System.out.println(hashf)</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>nested</h2><h4>object Nested</h4><h4>{</h4><h4>    def main (args : Array[String]) = {</h4><h4>        val listOfListV=scala.List(</h4><h4>        scala.List("1", "2"), </h4><h4>        scala.List("3", "4"), </h4><h4>        scala.List("5", "6"))</h4><h4>        val listOfHashV=scala.List(collection.mutable.HashMap("1"-&gt;"1","2"-&gt;"2"), collection.mutable.HashMap("3"-&gt;"3","4"-&gt;"4"), collection.mutable.HashMap("5"-&gt;"5","6"-&gt;"6"))</h4><h4>        val mapListOfListOfHashOfHashV=scala.List(</h4><h4>        scala.List(collection.mutable.HashMap("hello1"-&gt;collection.mutable.HashMap("hello2"-&gt;"hello4"))))</h4><h4></h4><h4>        System.out.println(listOfListV)</h4><h4>        System.out.println(listOfHashV)</h4><h4>        System.out.println(mapListOfListOfHashOfHashV)</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>simple</h2><h4>case class Simple private (var #&lt;bhw::member:0x000001ed261cf3a8&gt;:String,</h4><h4>                           var #&lt;bhw::member:0x000001ed261cf0d8&gt;:String,</h4><h4>                           var #&lt;bhw::member:0x000001ed261ceef8&gt;:String,</h4><h4>                           var #&lt;bhw::member:0x000001ed261ced90&gt;:scala.Int,</h4><h4>                           var #&lt;bhw::member:0x000001ed261ceb60&gt;:scala.Int,</h4><h4>                           var #&lt;bhw::member:0x000001ed261ce908&gt;:scala.Double,</h4><h4>                           var #&lt;bhw::member:0x000001ed261ce5c0&gt;:scala.Double) </h4><h4> extends Ordered[Simple]{</h4><h4>  def this (#&lt;bhw::member:0x000001ed261cf3a8&gt;:String,</h4><h4>           #&lt;bhw::member:0x000001ed261ceef8&gt;:String,</h4><h4>           #&lt;bhw::member:0x000001ed261ced90&gt;:scala.Int,</h4><h4>           #&lt;bhw::member:0x000001ed261ce908&gt;:scala.Double)</h4><h4>  {</h4><h4>    this(stringParam,</h4><h4>          "",</h4><h4>          stringParamRw,</h4><h4>          intParam,</h4><h4>          0,</h4><h4>          floatParam,</h4><h4>          0.0  );</h4><h4>  }</h4><h4></h4><h4>  override def toString = "%s-%s-%s-%4d-%4d-%s-%s".format(stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault)</h4><h4></h4><h4>    override def compare(rhs:Simple) : Int = {</h4><h4>        var ret:Int=0</h4><h4>        ret = #&lt;bhw::member:0x000001ed261cf3a8&gt;.compare(rhs.#&lt;bhw::member:0x000001ed261cf3a8&gt;);</h4><h4>        if (ret !=0) return ret;</h4><h4>        ret = #&lt;bhw::member:0x000001ed261cf0d8&gt;.compare(rhs.#&lt;bhw::member:0x000001ed261cf0d8&gt;);</h4><h4>        if (ret !=0) return ret;</h4><h4>        ret = #&lt;bhw::member:0x000001ed261ceef8&gt;.compare(rhs.#&lt;bhw::member:0x000001ed261ceef8&gt;);</h4><h4>        if (ret !=0) return ret;</h4><h4>        ret = #&lt;bhw::member:0x000001ed261ced90&gt;.compare(rhs.#&lt;bhw::member:0x000001ed261ced90&gt;);</h4><h4>        if (ret !=0) return ret;</h4><h4>        ret = #&lt;bhw::member:0x000001ed261ceb60&gt;.compare(rhs.#&lt;bhw::member:0x000001ed261ceb60&gt;);</h4><h4>        if (ret !=0) return ret;</h4><h4>        ret = #&lt;bhw::member:0x000001ed261ce908&gt;.compare(rhs.#&lt;bhw::member:0x000001ed261ce908&gt;);</h4><h4>        if (ret !=0) return ret;</h4><h4>        ret = #&lt;bhw::member:0x000001ed261ce5c0&gt;.compare(rhs.#&lt;bhw::member:0x000001ed261ce5c0&gt;);</h4><h4>        if (ret !=0) return ret;</h4><h4>        return ret;</h4><h4>    }</h4><h4></h4><h4></h4><h4>}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>scala</h1><hr></hr><h2>Array03.scala</h2><pre>object Array03
+{
+    def main (args : Array[String]) = {
+        val array3=Array(
+        Array(
+            Array(0, 1, 2), 
+            Array(10, 11, 12), 
+            Array(20, 21, 22)), 
+        Array(
+            Array(100, 101, 102), 
+            Array(110, 111, 112), 
+            Array(120, 121, 122)), 
+        Array(
+            Array(200, 201, 202), 
+            Array(210, 211, 212), 
+            Array(220, 221, 222)))
+
+        System.out.println(array3)
+    }
+}
+</pre><hr></hr><h2>Array10.scala</h2><pre>object Array10
+{
+    def main (args : Array[String]) = {
+        val array=Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+        System.out.println(array)
+    }
+}
+</pre><hr></hr><h2>Array20.scala</h2><pre>object Array20
+{
+    def main (args : Array[String]) = {
+        val array=Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+
+        System.out.println(array)
+    }
+}
+</pre><hr></hr><h2>Hash10.scala</h2><pre>object Hash10
+{
+    def main (args : Array[String]) = {
+        val hashf=collection.mutable.HashMap(1-&gt;"string1",2-&gt;"string2",3-&gt;"string3",4-&gt;"string4",5-&gt;"string5",6-&gt;"string6",7-&gt;"string7",8-&gt;"string8",9-&gt;"string9",10-&gt;"string10")
+
+        System.out.println(hashf)
+    }
+}
+</pre><hr></hr><h2>Integers.scala</h2><pre>object Integers
+{
+    def main (args : Array[String]) = {
+        
+
+        System.out.println(int_8_unsigned)
+        System.out.println(int_16_unsigned)
+        System.out.println(int_32_unsigned)
+        System.out.println(int_64_unsigned)
+        System.out.println(int_word_unsigned)
+        System.out.println(int_8_signed)
+        System.out.println(int_16_signed)
+        System.out.println(int_32_signed)
+        System.out.println(int_64_signed)
+        System.out.println(int_word_signed)
+        System.out.println(int_ap)
+    }
+}
+</pre><hr></hr><h2>Nested.scala</h2><pre>object Nested
+{
+    def main (args : Array[String]) = {
+        val listOfListV=scala.List(
+        scala.List("1", "2"), 
+        scala.List("3", "4"), 
+        scala.List("5", "6"))
+        val listOfHashV=scala.List(collection.mutable.HashMap("1"-&gt;"1","2"-&gt;"2"), collection.mutable.HashMap("3"-&gt;"3","4"-&gt;"4"), collection.mutable.HashMap("5"-&gt;"5","6"-&gt;"6"))
+        val mapListOfListOfHashOfHashV=scala.List(
+        scala.List(collection.mutable.HashMap("hello1"-&gt;collection.mutable.HashMap("hello2"-&gt;"hello4"))))
+
+        System.out.println(listOfListV)
+        System.out.println(listOfHashV)
+        System.out.println(mapListOfListOfHashOfHashV)
+    }
+}
+</pre><hr></hr><h2>Simple.scala</h2><pre>case class Simple private (var stringParam:String,
+                           var stringDefault:String,
+                           var stringParamRw:String,
+                           var intParam:scala.Int,
+                           var intDefault:scala.Int,
+                           var floatParam:scala.Double,
+                           var floatDefault:scala.Double) 
+ extends Ordered[Simple]{
+  def this (stringParam:String,
+           stringParamRw:String,
+           intParam:scala.Int,
+           floatParam:scala.Double)
+  {
+    this(stringParam,
+          "",
+          stringParamRw,
+          intParam,
+          0,
+          floatParam,
+          0.0  );
+  }
+
+  override def toString = "%s-%s-%s-%4d-%4d-%s-%s".format(stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault)
+
+    override def compare(rhs:Simple) : Int = {
+        var ret:Int=0
+        ret = stringParam.compare(rhs.stringParam);
+        if (ret !=0) return ret;
+        ret = stringDefault.compare(rhs.stringDefault);
+        if (ret !=0) return ret;
+        ret = stringParamRw.compare(rhs.stringParamRw);
+        if (ret !=0) return ret;
+        ret = intParam.compare(rhs.intParam);
+        if (ret !=0) return ret;
+        ret = intDefault.compare(rhs.intDefault);
+        if (ret !=0) return ret;
+        ret = floatParam.compare(rhs.floatParam);
+        if (ret !=0) return ret;
+        ret = floatDefault.compare(rhs.floatDefault);
+        if (ret !=0) return ret;
+        return ret;
+    }
+
+
+}
+</pre></html>

@@ -1,2 +1,75 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>lua</h1><hr></hr><h2>array10</h2><h4>array</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25ca2e70&gt;)</h4><hr></hr><h2>array20</h2><h4>array</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25c99208&gt;)</h4><hr></hr><h2>array03</h2><h4>array3</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25c5ae90&gt;)</h4><hr></hr><h2>hash10</h2><h4>hashf</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25c3b5e0&gt;)</h4><hr></hr><h2>nested</h2><h4>list of list v</h4><h4>list of hash v</h4><h4>map list of list of hash of hash v</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25c2cce8&gt;)</h4><h4>print(#&lt;bhw::member:0x000001ed25bfb080&gt;)</h4><h4>print(#&lt;bhw::member:0x000001ed25bf9410&gt;)</h4><hr></hr><h2>simple</h2><h4>Simple= {}</h4><h4>function Simple:new(</h4><h4>stringParam,</h4><h4>                    stringParamRw,</h4><h4>                    intParam,</h4><h4>                    floatParam</h4><h4>)</h4><h4></h4><h4>    local object = {#&lt;bhw::member:0x000001ed261cf3a8&gt; = stringParam,</h4><h4>              #&lt;bhw::member:0x000001ed261ceef8&gt; = stringParamRw,</h4><h4>              #&lt;bhw::member:0x000001ed261ced90&gt; = intParam,</h4><h4>              #&lt;bhw::member:0x000001ed261ce908&gt; = floatParam,</h4><h4>              #&lt;bhw::member:0x000001ed261cf0d8&gt; = "string default",</h4><h4>              #&lt;bhw::member:0x000001ed261ceb60&gt; = 0,</h4><h4>              #&lt;bhw::member:0x000001ed261ce5c0&gt; = 0.0}</h4><h4>    setmetatable(object,</h4><h4>                        { __index = Class1,</h4><h4>	                        __tostring = function() return string.format("%s-%s-%s-%4d-%4d-%f-%f",object.stringParam,object.stringDefault,object.stringParamRw,object.intParam,object.intDefault,object.floatParam,object.floatDefault)</h4><h4> end</h4><h4>                        })</h4><h4>    return object</h4><h4>end</h4><h4></h4><h4>function Simple:getStringParam()</h4><h4>    return self.stringParam</h4><h4>end</h4><h4></h4><h4>function Simple:getStringParamRw()</h4><h4>    return self.stringParamRw</h4><h4>end</h4><h4>function Simple:setStringParamRw(val)</h4><h4>    self.stringParamRw = val</h4><h4>end</h4><h4></h4><h4>function Simple:getIntParam()</h4><h4>    return self.intParam</h4><h4>end</h4><h4></h4><h4>function Simple:getFloatParam()</h4><h4>    return self.floatParam</h4><h4>end</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>lua</h1><hr></hr><h2>array03.lua</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbb031c8&gt;)
+</pre><hr></hr><h2>array10.lua</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbaebcf8&gt;)
+</pre><hr></hr><h2>array20.lua</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbaeaf88&gt;)
+</pre><hr></hr><h2>hash10.lua</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbae32d8&gt;)
+</pre><hr></hr><h2>integers.lua</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbb0de70&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0da38&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0d6f0&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0d380&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0d038&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0ccf0&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0c9a8&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0c660&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0c318&gt;)
+print(#&lt;bhw::member:0x000055f3bbaf3bd8&gt;)
+print(#&lt;bhw::member:0x000055f3bbaf3930&gt;)
+</pre><hr></hr><h2>nested.lua</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbae0fb0&gt;)
+print(#&lt;bhw::member:0x000055f3bbae05d8&gt;)
+print(#&lt;bhw::member:0x000055f3bbadbd58&gt;)
+</pre><hr></hr><h2>simple.lua</h2><pre>Simple= {}
+function Simple:new(
+stringParam,
+                    stringParamRw,
+                    intParam,
+                    floatParam
+)
+
+    local object = {#&lt;bhw::member:0x000055d39baffea0&gt; = stringParam,
+              #&lt;bhw::member:0x000055d39baffa68&gt; = stringParamRw,
+              #&lt;bhw::member:0x000055d39baff900&gt; = intParam,
+              #&lt;bhw::member:0x000055d39baff590&gt; = floatParam,
+              #&lt;bhw::member:0x000055d39baffc20&gt; = "string default",
+              #&lt;bhw::member:0x000055d39baff720&gt; = 0,
+              #&lt;bhw::member:0x000055d39baff360&gt; = 0.0}
+    setmetatable(object,
+                        { __index = Class1,
+	                        __tostring = function() return string.format("%s-%s-%s-%4d-%4d-%f-%f",object.stringParam,object.stringDefault,object.stringParamRw,object.intParam,object.intDefault,object.floatParam,object.floatDefault)
+ end
+                        })
+    return object
+end
+
+function Simple:getStringParam()
+    return self.stringParam
+end
+
+function Simple:getStringParamRw()
+    return self.stringParamRw
+end
+function Simple:setStringParamRw(val)
+    self.stringParamRw = val
+end
+
+function Simple:getIntParam()
+    return self.intParam
+end
+
+function Simple:getFloatParam()
+    return self.floatParam
+end
+
+
+</pre></html>

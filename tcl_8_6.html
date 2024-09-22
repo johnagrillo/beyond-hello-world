@@ -1,2 +1,160 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>tcl_8_6</h1><hr></hr><h2>array10</h2><h4></h4><h4></h4><h4>set array [ list 1  2  3  4  5  6  7  8  9  10];</h4><h4></h4><h4></h4><h4>puts $array</h4><hr></hr><h2>array20</h2><h4></h4><h4></h4><h4>set array [ list 1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  19  20];</h4><h4></h4><h4></h4><h4>puts $array</h4><hr></hr><h2>array03</h2><h4></h4><h4></h4><h4>set array3 [ list </h4><h4>    [ list </h4><h4>      [ list 0  1  2]  </h4><h4>      [ list 10  11  12]  </h4><h4>      [ list 20  21  22]]  </h4><h4>    [ list </h4><h4>      [ list 100  101  102]  </h4><h4>      [ list 110  111  112]  </h4><h4>      [ list 120  121  122]]  </h4><h4>    [ list </h4><h4>      [ list 200  201  202]  </h4><h4>      [ list 210  211  212]  </h4><h4>      [ list 220  221  222]]];</h4><h4></h4><h4></h4><h4>puts $array3</h4><hr></hr><h2>hash10</h2><h4></h4><h4></h4><h4>set hashf [ dict create  1 "string1"  2 "string2"  3 "string3"  4 "string4"  5 "string5"  6 "string6"  7 "string7"  8 "string8"  9 "string9"  10 "string10"];</h4><h4></h4><h4></h4><h4>puts $hashf</h4><hr></hr><h2>nested</h2><h4></h4><h4></h4><h4>set list_of_list_v [ list </h4><h4>    [ list "1"  "2"]  </h4><h4>    [ list "3"  "4"]  </h4><h4>    [ list "5"  "6"]];</h4><h4>set list_of_hash_v [ list [ dict create  "1" "1"  "2" "2"]  [ dict create  "3" "3"  "4" "4"]  [ dict create  "5" "5"  "6" "6"]];</h4><h4>set map_list_of_list_of_hash_of_hash_v [ list </h4><h4>    [ list [ dict create  "hello1" [ dict create  "hello2" "hello4"]]]];</h4><h4></h4><h4></h4><h4>puts $list_of_list_v</h4><h4>puts $list_of_hash_v</h4><h4>puts $map_list_of_list_of_hash_of_hash_v</h4><hr></hr><h2>simple</h2><h4>package require TclOO</h4><h4>oo::class create simple {</h4><h4>  variable string_param</h4><h4>  variable string_default</h4><h4>  variable string_param_rw</h4><h4>  variable int_param</h4><h4>  variable int_default</h4><h4>  variable float_param</h4><h4>  variable float_default</h4><h4></h4><h4>  constructor {string_param_ string_param_rw_ int_param_ float_param_} {</h4><h4>    set string_param $string_param_</h4><h4>    set string_param_rw $string_param_rw_</h4><h4>    set int_param $int_param_</h4><h4>    set float_param $float_param_</h4><h4></h4><h4>    set string_default  "string default"</h4><h4>    set int_default  0</h4><h4>    set float_default  0.0</h4><h4>  }</h4><h4>    method get_string_param {} {</h4><h4>      return $string_param</h4><h4>    }</h4><h4></h4><h4>    method get_string_param_rw {} {</h4><h4>      return $string_param_rw</h4><h4>    }</h4><h4>    method set_string_param_rw {string_param_rw} {</h4><h4>      set string_param_rw $string_param_rw</h4><h4>    }</h4><h4></h4><h4>    method get_int_param {} {</h4><h4>      return $int_param</h4><h4>    }</h4><h4></h4><h4>    method get_float_param {} {</h4><h4>      return $float_param</h4><h4>    }</h4><h4></h4><h4></h4><h4>  method to_string  {} {</h4><h4>    return [format "%s-%s-%s-%4d-%4d-%f-%f" $string_param $string_default $string_param_rw $int_param $int_default $float_param $float_default ]</h4><h4>    }</h4><h4></h4><h4>}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>tcl_8_6</h1><hr></hr><h2>#simple.tcl#</h2><pre>package require TclOO
+oo::class create simple {
+  variable string_param
+  variable string_default
+  variable string_param_rw
+  variable int_param
+  variable int_default
+  variable float_param
+  variable float_default
+
+  constructor {string_param_ string_param_rw_ int_param_ float_param_} {
+    set string_param $string_param_
+    set string_param_rw $string_param_rw_
+    set int_param $int_param_
+    set float_param $float_param_
+
+    set string_default  "string default"
+    set int_default  0
+    set float_default  0.0
+  }
+    method get_string_param {} {
+      return $string_param
+    }
+
+    method get_string_param_rw {} {
+      return $string_param_rw
+    }
+    method set_string_param_rw {string_param_rw} {
+      set string_param_rw $string_param_rw
+    }
+
+    method get_int_param {} {
+      return $int_param
+    }
+
+    method get_float_param {} {
+      return $float_param
+    }
+
+
+  method to_string  {} {
+    return [format "%s-%s-%s-%4d-%4d-%f-%f" $string_param $string_default $string_param_rw $int_param $int_default $float_param $float_default ]
+    }
+
+}</pre><hr></hr><h2>.#simple.tcl</h2><pre>john@DESKTOP-SH8OU9R.23336:1724062197</pre><hr></hr><h2>array03.tcl</h2><pre>
+
+set array3 [ list 
+    [ list 
+      [ list 0  1  2]  
+      [ list 10  11  12]  
+      [ list 20  21  22]]  
+    [ list 
+      [ list 100  101  102]  
+      [ list 110  111  112]  
+      [ list 120  121  122]]  
+    [ list 
+      [ list 200  201  202]  
+      [ list 210  211  212]  
+      [ list 220  221  222]]];
+
+
+puts $array3</pre><hr></hr><h2>array10.tcl</h2><pre>
+
+set array [ list 1  2  3  4  5  6  7  8  9  10];
+
+
+puts $array</pre><hr></hr><h2>array20.tcl</h2><pre>
+
+set array [ list 1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  19  20];
+
+
+puts $array</pre><hr></hr><h2>hash10.tcl</h2><pre>
+
+set hashf [ dict create  1 "string1"  2 "string2"  3 "string3"  4 "string4"  5 "string5"  6 "string6"  7 "string7"  8 "string8"  9 "string9"  10 "string10"];
+
+
+puts $hashf</pre><hr></hr><h2>integers.tcl</h2><pre>
+
+set int_8_unsigned 0;
+set int_16_unsigned 0;
+set int_32_unsigned 0;
+set int_64_unsigned 0;
+set int_word_unsigned 0;
+set int_8_signed 0;
+set int_16_signed 0;
+set int_32_signed 0;
+set int_64_signed 0;
+set int_word_signed 0;
+set int_ap 0;
+
+
+puts $int_8_unsigned
+puts $int_16_unsigned
+puts $int_32_unsigned
+puts $int_64_unsigned
+puts $int_word_unsigned
+puts $int_8_signed
+puts $int_16_signed
+puts $int_32_signed
+puts $int_64_signed
+puts $int_word_signed
+puts $int_ap</pre><hr></hr><h2>nested.tcl</h2><pre>
+
+set list_of_list_v [ list 
+    [ list "1"  "2"]  
+    [ list "3"  "4"]  
+    [ list "5"  "6"]];
+set list_of_hash_v [ list [ dict create  "1" "1"  "2" "2"]  [ dict create  "3" "3"  "4" "4"]  [ dict create  "5" "5"  "6" "6"]];
+set map_list_of_list_of_hash_of_hash_v [ list 
+    [ list [ dict create  "hello1" [ dict create  "hello2" "hello4"]]]];
+
+
+puts $list_of_list_v
+puts $list_of_hash_v
+puts $map_list_of_list_of_hash_of_hash_v</pre><hr></hr><h2>simple.tcl</h2><pre>package require TclOO
+oo::class create simple {
+  variable string_param
+  variable string_default
+  variable string_param_rw
+  variable int_param
+  variable int_default
+  variable float_param
+  variable float_default
+
+  constructor {string_param_ string_param_rw_ int_param_ float_param_} {
+    set string_param $string_param_
+    set string_param_rw $string_param_rw_
+    set int_param $int_param_
+    set float_param $float_param_
+
+    set string_default  "string default"
+    set int_default  0
+    set float_default  0.0
+  }
+    method get_string_param {} {
+      return $string_param
+    }
+
+    method get_string_param_rw {} {
+      return $string_param_rw
+    }
+    method set_string_param_rw {string_param_rw} {
+      set string_param_rw $string_param_rw
+    }
+
+    method get_int_param {} {
+      return $int_param
+    }
+
+    method get_float_param {} {
+      return $float_param
+    }
+
+
+  method to_string  {} {
+    return [format "%s-%s-%s-%4d-%4d-%f-%f" $string_param $string_default $string_param_rw $int_param $int_default $float_param $float_default ]
+    }
+
+}</pre></html>

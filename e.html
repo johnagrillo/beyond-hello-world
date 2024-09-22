@@ -1,2 +1,103 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>e</h1><hr></hr><h2>array10</h2><h4>def makeArray := &lt;this:Array&gt;</h4><h4>def [1,2,3,4,5,6,7,8,9,10]:=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</h4><h4>println(array.toString())</h4><hr></hr><h2>array20</h2><h4>def makeArray := &lt;this:Array&gt;</h4><h4>def [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]:=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</h4><h4>println(array.toString())</h4><hr></hr><h2>array03</h2><h4>def makeArray3 := &lt;this:Array3&gt;</h4><h4>def [[[0,1,2],[10,11,12],[20,21,22]],[[100,101,102],[110,111,112],[120,121,122]],[[200,201,202],[210,211,212],[220,221,222]]]:=[</h4><h4>        [</h4><h4>            [0, 1, 2], </h4><h4>            [10, 11, 12], </h4><h4>            [20, 21, 22]], </h4><h4>        [</h4><h4>            [100, 101, 102], </h4><h4>            [110, 111, 112], </h4><h4>            [120, 121, 122]], </h4><h4>        [</h4><h4>            [200, 201, 202], </h4><h4>            [210, 211, 212], </h4><h4>            [220, 221, 222]]]</h4><h4>println(array3.toString())</h4><hr></hr><h2>hash10</h2><h4>def makeHashf := &lt;this:Hashf&gt;</h4><h4>def {1=&gt;"string1",2=&gt;"string2",3=&gt;"string3",4=&gt;"string4",5=&gt;"string5",6=&gt;"string6",7=&gt;"string7",8=&gt;"string8",9=&gt;"string9",10=&gt;"string10"}:=[ 1=&gt;"string1", 2=&gt;"string2", 3=&gt;"string3", 4=&gt;"string4", 5=&gt;"string5", 6=&gt;"string6", 7=&gt;"string7", 8=&gt;"string8", 9=&gt;"string9", 10=&gt;"string10"]</h4><h4>println(hashf.toString())</h4><hr></hr><h2>nested</h2><h4>def makeListOfListV := &lt;this:ListOfListV&gt;</h4><h4>def [["1","2"],["3","4"],["5","6"]]:=[</h4><h4>        ["1", "2"], </h4><h4>        ["3", "4"], </h4><h4>        ["5", "6"]]</h4><h4>println(listOfListV.toString())</h4><h4>def makeListOfHashV := &lt;this:ListOfHashV&gt;</h4><h4>def [{"1"=&gt;"1","2"=&gt;"2"},{"3"=&gt;"3","4"=&gt;"4"},{"5"=&gt;"5","6"=&gt;"6"}]:=[[ "1"=&gt;"1", "2"=&gt;"2"], [ "3"=&gt;"3", "4"=&gt;"4"], [ "5"=&gt;"5", "6"=&gt;"6"]]</h4><h4>println(listOfHashV.toString())</h4><h4>def makeMapListOfListOfHashOfHashV := &lt;this:MapListOfListOfHashOfHashV&gt;</h4><h4>def [[{"hello1"=&gt;{"hello2"=&gt;"hello4"}}]]:=[</h4><h4>        [[ "hello1"=&gt;[ "hello2"=&gt;"hello4"]]]]</h4><h4>println(mapListOfListOfHashOfHashV.toString())</h4><hr></hr><h2>simple</h2><h4>def makeSimple(_#&lt;bhw::member:0x000001ed261cf3a8&gt;,_#&lt;bhw::member:0x000001ed261ceef8&gt;,_#&lt;bhw::member:0x000001ed261ced90&gt;,_#&lt;bhw::member:0x000001ed261ce908&gt;) : any {</h4><h4>   var stringParam := _#&lt;bhw::member:0x000001ed261cf3a8&gt;;</h4><h4>   var stringParamRw := _#&lt;bhw::member:0x000001ed261ceef8&gt;;</h4><h4>   var intParam := _#&lt;bhw::member:0x000001ed261ced90&gt;;</h4><h4>   var floatParam := _#&lt;bhw::member:0x000001ed261ce908&gt;;</h4><h4>    var #&lt;bhw::member:0x000001ed261cf0d8&gt;:= "string default"</h4><h4>    var #&lt;bhw::member:0x000001ed261ceb60&gt;:= 0</h4><h4>    var #&lt;bhw::member:0x000001ed261ce5c0&gt;:= 0.0</h4><h4>    def Simple{</h4><h4>        to getStringParam() : any {return #&lt;bhw::member:0x000001ed261cf3a8&gt;}</h4><h4></h4><h4>        to getStringParamRw() : any {return #&lt;bhw::member:0x000001ed261ceef8&gt;}</h4><h4>        to setStringParamRw(#&lt;bhw::member:0x000001ed261ceef8&gt;_) {#&lt;bhw::member:0x000001ed261ceef8&gt;:=#&lt;bhw::member:0x000001ed261ceef8&gt;_}</h4><h4></h4><h4>        to getIntParam() : any {return #&lt;bhw::member:0x000001ed261ced90&gt;}</h4><h4></h4><h4>        to getFloatParam() : any {return #&lt;bhw::member:0x000001ed261ce908&gt;}</h4><h4></h4><h4></h4><h4>        to toString(){</h4><h4>            return ""  +#&lt;bhw::member:0x000001ed261cf3a8&gt; + "-" + </h4><h4>                   #&lt;bhw::member:0x000001ed261cf0d8&gt; + "-" + </h4><h4>                   #&lt;bhw::member:0x000001ed261ceef8&gt; + "-" + </h4><h4>                   &lt;import:java.lang.makeLong&gt;.toString(#&lt;bhw::member:0x000001ed261ced90&gt;) + "-" + </h4><h4>                   &lt;import:java.lang.makeLong&gt;.toString(#&lt;bhw::member:0x000001ed261ceb60&gt;) + "-" + </h4><h4>                   &lt;import:java.lang.makeFloat&gt;.toString(#&lt;bhw::member:0x000001ed261ce908&gt;) + "-" + </h4><h4>                   &lt;import:java.lang.makeFloat&gt;.toString(#&lt;bhw::member:0x000001ed261ce5c0&gt;)</h4><h4>        }</h4><h4>    }</h4><h4>    return Simple</h4><h4>}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>e</h1><hr></hr><h2>Array03.emaker</h2><pre>def makeArray3 := &lt;this:Array3&gt;
+def [[[0,1,2],[10,11,12],[20,21,22]],[[100,101,102],[110,111,112],[120,121,122]],[[200,201,202],[210,211,212],[220,221,222]]]:=[
+        [
+            [0, 1, 2], 
+            [10, 11, 12], 
+            [20, 21, 22]], 
+        [
+            [100, 101, 102], 
+            [110, 111, 112], 
+            [120, 121, 122]], 
+        [
+            [200, 201, 202], 
+            [210, 211, 212], 
+            [220, 221, 222]]]
+println(array3.toString())
+</pre><hr></hr><h2>Array10.emaker</h2><pre>def makeArray := &lt;this:Array&gt;
+def [1,2,3,4,5,6,7,8,9,10]:=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+println(array.toString())
+</pre><hr></hr><h2>Array20.emaker</h2><pre>def makeArray := &lt;this:Array&gt;
+def [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]:=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+println(array.toString())
+</pre><hr></hr><h2>Hash10.emaker</h2><pre>def makeHashf := &lt;this:Hashf&gt;
+def {1=&gt;"string1",2=&gt;"string2",3=&gt;"string3",4=&gt;"string4",5=&gt;"string5",6=&gt;"string6",7=&gt;"string7",8=&gt;"string8",9=&gt;"string9",10=&gt;"string10"}:=[ 1=&gt;"string1", 2=&gt;"string2", 3=&gt;"string3", 4=&gt;"string4", 5=&gt;"string5", 6=&gt;"string6", 7=&gt;"string7", 8=&gt;"string8", 9=&gt;"string9", 10=&gt;"string10"]
+println(hashf.toString())
+</pre><hr></hr><h2>Integers.emaker</h2><pre>def makeInt_8_unsigned := &lt;this:Int_8_unsigned&gt;
+def 0:=0
+println(int_8_unsigned.toString())
+def makeInt_16_unsigned := &lt;this:Int_16_unsigned&gt;
+def 0:=0
+println(int_16_unsigned.toString())
+def makeInt_32_unsigned := &lt;this:Int_32_unsigned&gt;
+def 0:=0
+println(int_32_unsigned.toString())
+def makeInt_64_unsigned := &lt;this:Int_64_unsigned&gt;
+def 0:=0
+println(int_64_unsigned.toString())
+def makeInt_word_unsigned := &lt;this:Int_word_unsigned&gt;
+def 0:=0
+println(int_word_unsigned.toString())
+def makeInt_8_signed := &lt;this:Int_8_signed&gt;
+def 0:=0
+println(int_8_signed.toString())
+def makeInt_16_signed := &lt;this:Int_16_signed&gt;
+def 0:=0
+println(int_16_signed.toString())
+def makeInt_32_signed := &lt;this:Int_32_signed&gt;
+def 0:=0
+println(int_32_signed.toString())
+def makeInt_64_signed := &lt;this:Int_64_signed&gt;
+def 0:=0
+println(int_64_signed.toString())
+def makeInt_word_signed := &lt;this:Int_word_signed&gt;
+def 0:=0
+println(int_word_signed.toString())
+def makeInt_ap := &lt;this:Int_ap&gt;
+def 0:=0
+println(int_ap.toString())
+</pre><hr></hr><h2>Nested.emaker</h2><pre>def makeListOfListV := &lt;this:ListOfListV&gt;
+def [["1","2"],["3","4"],["5","6"]]:=[
+        ["1", "2"], 
+        ["3", "4"], 
+        ["5", "6"]]
+println(listOfListV.toString())
+def makeListOfHashV := &lt;this:ListOfHashV&gt;
+def [{"1"=&gt;"1","2"=&gt;"2"},{"3"=&gt;"3","4"=&gt;"4"},{"5"=&gt;"5","6"=&gt;"6"}]:=[[ "1"=&gt;"1", "2"=&gt;"2"], [ "3"=&gt;"3", "4"=&gt;"4"], [ "5"=&gt;"5", "6"=&gt;"6"]]
+println(listOfHashV.toString())
+def makeMapListOfListOfHashOfHashV := &lt;this:MapListOfListOfHashOfHashV&gt;
+def [[{"hello1"=&gt;{"hello2"=&gt;"hello4"}}]]:=[
+        [[ "hello1"=&gt;[ "hello2"=&gt;"hello4"]]]]
+println(mapListOfListOfHashOfHashV.toString())
+</pre><hr></hr><h2>Simple.emaker</h2><pre>def makeSimple(_stringParam,_stringParamRw,_intParam,_floatParam) : any {
+   var stringParam := _stringParam;
+   var stringParamRw := _stringParamRw;
+   var intParam := _intParam;
+   var floatParam := _floatParam;
+    var stringDefault:= "string default"
+    var intDefault:= 0
+    var floatDefault:= 0.0
+    def Simple{
+        to getStringParam() : any {return #&lt;bhw::member:0x000055d39baffea0&gt;}
+
+        to getStringParamRw() : any {return #&lt;bhw::member:0x000055d39baffa68&gt;}
+        to setStringParamRw(#&lt;bhw::member:0x000055d39baffa68&gt;_) {#&lt;bhw::member:0x000055d39baffa68&gt;:=#&lt;bhw::member:0x000055d39baffa68&gt;_}
+
+        to getIntParam() : any {return #&lt;bhw::member:0x000055d39baff900&gt;}
+
+        to getFloatParam() : any {return #&lt;bhw::member:0x000055d39baff590&gt;}
+
+
+        to toString(){
+            return ""  +stringParam + "-" + 
+                   stringDefault + "-" + 
+                   stringParamRw + "-" + 
+                   &lt;import:java.lang.makeLong&gt;.toString(#&lt;bhw::member:0x000055d39baff900&gt;) + "-" + 
+                   &lt;import:java.lang.makeLong&gt;.toString(#&lt;bhw::member:0x000055d39baff720&gt;) + "-" + 
+                   &lt;import:java.lang.makeFloat&gt;.toString(#&lt;bhw::member:0x000055d39baff590&gt;) + "-" + 
+                   &lt;import:java.lang.makeFloat&gt;.toString(#&lt;bhw::member:0x000055d39baff360&gt;)
+        }
+    }
+    return Simple
+}
+</pre></html>

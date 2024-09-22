@@ -1,2 +1,59 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>groovy</h1><hr></hr><h2>array10</h2><h4>array</h4><h4></h4><h4>System.out.println(array)</h4><hr></hr><h2>array20</h2><h4>array</h4><h4></h4><h4>System.out.println(array)</h4><hr></hr><h2>array03</h2><h4>array3</h4><h4></h4><h4>System.out.println(array3)</h4><hr></hr><h2>hash10</h2><h4>hashf</h4><h4></h4><h4>System.out.println(hashf)</h4><hr></hr><h2>nested</h2><h4>list of list v</h4><h4>list of hash v</h4><h4>map list of list of hash of hash v</h4><h4></h4><h4>System.out.println(listOfListV)</h4><h4>System.out.println(listOfHashV)</h4><h4>System.out.println(mapListOfListOfHashOfHashV)</h4><hr></hr><h2>simple</h2><h4>class Simple{</h4><h4>    Simple(_stringParam,_stringParamRw,_intParam,_floatParam){</h4><h4>        stringParam = _stringParam</h4><h4>        stringParamRw = _stringParamRw</h4><h4>        intParam = _intParam</h4><h4>        floatParam = _floatParam</h4><h4>        stringDefault = "string default"</h4><h4>        intDefault = 0</h4><h4>        floatDefault = 0.0</h4><h4>}</h4><h4></h4><h4></h4><h4></h4><h4>    def String toString()</h4><h4>    {</h4><h4>        return String.format("%s-%s-%s-%4d-%4d-%f-%f",#&lt;bhw::member:0x000001ed261cf3a8&gt;,#&lt;bhw::member:0x000001ed261cf0d8&gt;,#&lt;bhw::member:0x000001ed261ceef8&gt;,#&lt;bhw::member:0x000001ed261ced90&gt;,#&lt;bhw::member:0x000001ed261ceb60&gt;,#&lt;bhw::member:0x000001ed261ce908&gt;,#&lt;bhw::member:0x000001ed261ce5c0&gt;);</h4><h4>    }</h4><h4></h4><h4>    def stringParam</h4><h4>    def stringDefault</h4><h4>    def stringParamRw</h4><h4>    def intParam</h4><h4>    def intDefault</h4><h4>    def floatParam</h4><h4>    def floatDefault</h4><h4></h4><h4>}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>groovy</h1><hr></hr><h2>Array03.groovy</h2><pre>
+
+System.out.println(array3)
+</pre><hr></hr><h2>Array10.groovy</h2><pre>
+
+System.out.println(array)
+</pre><hr></hr><h2>Array20.groovy</h2><pre>
+
+System.out.println(array)
+</pre><hr></hr><h2>Hash10.groovy</h2><pre>
+
+System.out.println(hashf)
+</pre><hr></hr><h2>Integers.groovy</h2><pre>
+
+System.out.println(int_8_unsigned)
+System.out.println(int_16_unsigned)
+System.out.println(int_32_unsigned)
+System.out.println(int_64_unsigned)
+System.out.println(int_word_unsigned)
+System.out.println(int_8_signed)
+System.out.println(int_16_signed)
+System.out.println(int_32_signed)
+System.out.println(int_64_signed)
+System.out.println(int_word_signed)
+System.out.println(int_ap)
+</pre><hr></hr><h2>Nested.groovy</h2><pre>
+
+System.out.println(listOfListV)
+System.out.println(listOfHashV)
+System.out.println(mapListOfListOfHashOfHashV)
+</pre><hr></hr><h2>Simple.groovy</h2><pre>class Simple{
+    Simple(_stringParam,_stringParamRw,_intParam,_floatParam){
+        stringParam = _stringParam
+        stringParamRw = _stringParamRw
+        intParam = _intParam
+        floatParam = _floatParam
+        stringDefault = "string default"
+        intDefault = 0
+        floatDefault = 0.0
+}
+
+
+
+    def String toString()
+    {
+        return String.format("%s-%s-%s-%4d-%4d-%f-%f",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
+    }
+
+    def stringParam
+    def stringDefault
+    def stringParamRw
+    def intParam
+    def intDefault
+    def floatParam
+    def floatDefault
+
+}
+</pre></html>

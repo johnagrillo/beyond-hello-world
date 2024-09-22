@@ -1,2 +1,108 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>python</h1><hr></hr><h2>array10</h2><h4>array</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25ca2e70&gt;)</h4><hr></hr><h2>array20</h2><h4>array</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25c99208&gt;)</h4><hr></hr><h2>array03</h2><h4>array3</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25c5ae90&gt;)</h4><hr></hr><h2>hash10</h2><h4>hashf</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25c3b5e0&gt;)</h4><hr></hr><h2>nested</h2><h4>list of list v</h4><h4>list of hash v</h4><h4>map list of list of hash of hash v</h4><h4></h4><h4>print(#&lt;bhw::member:0x000001ed25c2cce8&gt;)</h4><h4>print(#&lt;bhw::member:0x000001ed25bfb080&gt;)</h4><h4>print(#&lt;bhw::member:0x000001ed25bf9410&gt;)</h4><hr></hr><h2>simple</h2><h4>class Simple(object):</h4><h4></h4><h4>  def __init__(self,</h4><h4>               _stringParam,</h4><h4>               _stringParamRw,</h4><h4>               _intParam,</h4><h4>               _floatParam):</h4><h4>    self._stringParam = _stringParam</h4><h4>    self._stringParamRw = _stringParamRw</h4><h4>    self._intParam = _intParam</h4><h4>    self._floatParam = _floatParam</h4><h4>    self._stringDefault = "string default"</h4><h4>    self._intDefault = 0</h4><h4>    self._floatDefault = 0.0</h4><h4>    pass</h4><h4></h4><h4></h4><h4></h4><h4>  @property</h4><h4>  def #&lt;bhw::member:0x000001ed261cf3a8&gt;(self):</h4><h4>    return self._stringParam</h4><h4></h4><h4>  @property</h4><h4>  def #&lt;bhw::member:0x000001ed261ceef8&gt;(self):</h4><h4>    return self._stringParamRw</h4><h4>  @#&lt;bhw::member:0x000001ed261ceef8&gt;.setter</h4><h4>  def #&lt;bhw::member:0x000001ed261ceef8&gt;(self, _#&lt;bhw::member:0x000001ed261ceef8&gt;):</h4><h4>    self._stringParamRw = _#&lt;bhw::member:0x000001ed261ceef8&gt;</h4><h4></h4><h4>  @property</h4><h4>  def #&lt;bhw::member:0x000001ed261ced90&gt;(self):</h4><h4>    return self._intParam</h4><h4></h4><h4>  @property</h4><h4>  def #&lt;bhw::member:0x000001ed261ce908&gt;(self):</h4><h4>    return self._floatParam</h4><h4></h4><h4></h4><h4>  def __repr__(self):</h4><h4>    return "%s-%s-%s-%4d-%4d-%f-%f"%(self._stringParam,self._stringDefault,self._stringParamRw,self._intParam,self._intDefault,self._floatParam,self._floatDefault)</h4><h4></h4><h4>  def __cmp__(self,rhs):</h4><h4>    ret = cmp(self._stringParam,rhs.stringParam)</h4><h4>    if ret != 0:</h4><h4>      return ret</h4><h4>    ret = cmp(self._stringDefault,rhs.stringDefault)</h4><h4>    if ret != 0:</h4><h4>      return ret</h4><h4>    ret = cmp(self._stringParamRw,rhs.stringParamRw)</h4><h4>    if ret != 0:</h4><h4>      return ret</h4><h4>    ret = cmp(self._intParam,rhs.intParam)</h4><h4>    if ret != 0:</h4><h4>      return ret</h4><h4>    ret = cmp(self._intDefault,rhs.intDefault)</h4><h4>    if ret != 0:</h4><h4>      return ret</h4><h4>    ret = cmp(self._floatParam,rhs.floatParam)</h4><h4>    if ret != 0:</h4><h4>      return ret</h4><h4>    ret = cmp(self._floatDefault,rhs.floatDefault)</h4><h4>    if ret != 0:</h4><h4>      return ret</h4><h4>    return ret</h4><h4></h4><h4></h4><h4></h4><h4>  def __eq__(self,rhs):</h4><h4>    return self.#&lt;bhw::member:0x000001ed261cf3a8&gt; == rhs.#&lt;bhw::member:0x000001ed261cf3a8&gt; and self.#&lt;bhw::member:0x000001ed261cf0d8&gt; == rhs.#&lt;bhw::member:0x000001ed261cf0d8&gt; and self.#&lt;bhw::member:0x000001ed261ceef8&gt; == rhs.#&lt;bhw::member:0x000001ed261ceef8&gt; and self.#&lt;bhw::member:0x000001ed261ced90&gt; == rhs.#&lt;bhw::member:0x000001ed261ced90&gt; and self.#&lt;bhw::member:0x000001ed261ceb60&gt; == rhs.#&lt;bhw::member:0x000001ed261ceb60&gt; and self.#&lt;bhw::member:0x000001ed261ce908&gt; == rhs.#&lt;bhw::member:0x000001ed261ce908&gt; and self.#&lt;bhw::member:0x000001ed261ce5c0&gt; == rhs.#&lt;bhw::member:0x000001ed261ce5c0&gt;</h4><h4></h4><h4></h4><h4>  def __hash__(self):</h4><h4>    return hash(self._stringParam) + hash(self._stringDefault) + hash(self._stringParamRw) + hash(self._intParam) + hash(self._intDefault) + hash(self._floatParam) + hash(self._floatDefault)</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>python</h1><hr></hr><h2>array03.py</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbb031c8&gt;)
+</pre><hr></hr><h2>array10.py</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbaebcf8&gt;)
+</pre><hr></hr><h2>array20.py</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbaeaf88&gt;)
+</pre><hr></hr><h2>hash10.py</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbae32d8&gt;)
+</pre><hr></hr><h2>integers.py</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbb0de70&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0da38&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0d6f0&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0d380&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0d038&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0ccf0&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0c9a8&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0c660&gt;)
+print(#&lt;bhw::member:0x000055f3bbb0c318&gt;)
+print(#&lt;bhw::member:0x000055f3bbaf3bd8&gt;)
+print(#&lt;bhw::member:0x000055f3bbaf3930&gt;)
+</pre><hr></hr><h2>nested.py</h2><pre>
+
+print(#&lt;bhw::member:0x000055f3bbae0fb0&gt;)
+print(#&lt;bhw::member:0x000055f3bbae05d8&gt;)
+print(#&lt;bhw::member:0x000055f3bbadbd58&gt;)
+</pre><hr></hr><h2>simple.py</h2><pre>class Simple(object):
+
+  def __init__(self,
+               _stringParam,
+               _stringParamRw,
+               _intParam,
+               _floatParam):
+    self._stringParam = _stringParam
+    self._stringParamRw = _stringParamRw
+    self._intParam = _intParam
+    self._floatParam = _floatParam
+    self._stringDefault = "string default"
+    self._intDefault = 0
+    self._floatDefault = 0.0
+    pass
+
+
+
+  @property
+  def stringParam(self):
+    return self._stringParam
+
+  @property
+  def stringParamRw(self):
+    return self._stringParamRw
+  @stringParamRw.setter
+  def stringParamRw(self, _stringParamRw):
+    self._stringParamRw = _stringParamRw
+
+  @property
+  def intParam(self):
+    return self._intParam
+
+  @property
+  def floatParam(self):
+    return self._floatParam
+
+
+  def __repr__(self):
+    return "%s-%s-%s-%4d-%4d-%f-%f"%(self._stringParam,self._stringDefault,self._stringParamRw,self._intParam,self._intDefault,self._floatParam,self._floatDefault)
+
+  def __cmp__(self,rhs):
+    ret = cmp(self._stringParam,rhs.stringParam)
+    if ret != 0:
+      return ret
+    ret = cmp(self._stringDefault,rhs.stringDefault)
+    if ret != 0:
+      return ret
+    ret = cmp(self._stringParamRw,rhs.stringParamRw)
+    if ret != 0:
+      return ret
+    ret = cmp(self._intParam,rhs.intParam)
+    if ret != 0:
+      return ret
+    ret = cmp(self._intDefault,rhs.intDefault)
+    if ret != 0:
+      return ret
+    ret = cmp(self._floatParam,rhs.floatParam)
+    if ret != 0:
+      return ret
+    ret = cmp(self._floatDefault,rhs.floatDefault)
+    if ret != 0:
+      return ret
+    return ret
+
+
+
+  def __eq__(self,rhs):
+    return self.stringParam == rhs.stringParam and self.stringDefault == rhs.stringDefault and self.stringParamRw == rhs.stringParamRw and self.intParam == rhs.intParam and self.intDefault == rhs.intDefault and self.floatParam == rhs.floatParam and self.floatDefault == rhs.floatDefault
+
+
+  def __hash__(self):
+    return hash(self._stringParam) + hash(self._stringDefault) + hash(self._stringParamRw) + hash(self._intParam) + hash(self._intDefault) + hash(self._floatParam) + hash(self._floatDefault)
+
+
+
+</pre></html>

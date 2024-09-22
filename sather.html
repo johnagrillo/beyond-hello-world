@@ -1,2 +1,58 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>sather</h1><hr></hr><h2>array10</h2><h4>class ARRAY10 is</h4><h4>    main is</h4><h4>        array:ARRAY{INT} := |1,2,3,4,5,6,7,8,9,10|;</h4><h4>        </h4><h4>    end;</h4><h4>end</h4><hr></hr><h2>array20</h2><h4>class ARRAY20 is</h4><h4>    main is</h4><h4>        array:ARRAY{INT} := |1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20|;</h4><h4>        </h4><h4>    end;</h4><h4>end</h4><hr></hr><h2>array03</h2><h4>class ARRAY03 is</h4><h4>    main is</h4><h4>        array3:ARRAY{ARRAY{ARRAY{INT}}} := |||0,1,2|,|10,11,12|,|20,21,22||,||100,101,102|,|110,111,112|,|120,121,122||,||200,201,202|,|210,211,212|,|220,221,222|||;</h4><h4>        </h4><h4>    end;</h4><h4>end</h4><hr></hr><h2>hash10</h2><h4>class HASH10 is</h4><h4>    main is</h4><h4>        hashf:MAP{INT,STR} := #MAP{INT,STR}.insert(1,"string1").insert(2,"string2").insert(3,"string3").insert(4,"string4").insert(5,"string5").insert(6,"string6").insert(7,"string7").insert(8,"string8").insert(9,"string9").insert(10,"string10");</h4><h4>        </h4><h4>    end;</h4><h4>end</h4><hr></hr><h2>nested</h2><h4>class NESTED is</h4><h4>    main is</h4><h4>        list_of_list_v:ARRAY{ARRAY{STR}} := ||"1","2"|,|"3","4"|,|"5","6"||;</h4><h4>            list_of_hash_v:ARRAY{MAP{STR,STR}} := |#MAP{STR,STR}.insert("1","1").insert("2","2"),#MAP{STR,STR}.insert("3","3").insert("4","4"),#MAP{STR,STR}.insert("5","5").insert("6","6")|;</h4><h4>            map_list_of_list_of_hash_of_hash_v:ARRAY{ARRAY{MAP{STR,MAP{STR,STR}}}} := ||#MAP{STR,MAP{STR,STR}}.insert("hello1",#MAP{STR,STR}.insert("hello2","hello4"))||;</h4><h4>        </h4><h4>    end;</h4><h4>end</h4><hr></hr><h2>simple</h2><h4>class SIMPLE is</h4><h4>    attr string_param:STR;</h4><h4>    attr string_default:STR;</h4><h4>    attr string_param_rw:STR;</h4><h4>    attr int_param:INT;</h4><h4>    attr int_default:INT;</h4><h4>    attr float_param:FLT;</h4><h4>    attr float_default:FLT;</h4><h4>create(string_param:STR,string_param_rw:STR,int_param:INT,float_param:FLT):SIMPLE  is </h4><h4></h4><h4>    res:SIMPLE :=new ;</h4><h4>    res.string_param := string_param;</h4><h4>    res.string_param_rw := string_param_rw;</h4><h4>    res.int_param := int_param;</h4><h4>    res.float_param := float_param;</h4><h4>    res.string_default := "";</h4><h4>    res.int_default := 0;</h4><h4>    res.float_default := 0.0;</h4><h4>    return res;</h4><h4>end;</h4><h4></h4><h4>str:STR is</h4><h4>    return string_param.str + "-" + string_default.str + "-" + string_param_rw.str + "-" + int_param.str + "-" + int_default.str + "-" + float_param.str + "-" + float_default.str</h4><h4>end;</h4><h4>end;</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>sather</h1><hr></hr><h2>array03.sa</h2><pre>class ARRAY03 is
+    main is
+        array3:ARRAY{ARRAY{ARRAY{INT}}} := |||0,1,2|,|10,11,12|,|20,21,22||,||100,101,102|,|110,111,112|,|120,121,122||,||200,201,202|,|210,211,212|,|220,221,222|||;
+        
+    end;
+end
+</pre><hr></hr><h2>array10.sa</h2><pre>class ARRAY10 is
+    main is
+        array:ARRAY{INT} := |1,2,3,4,5,6,7,8,9,10|;
+        
+    end;
+end
+</pre><hr></hr><h2>array20.sa</h2><pre>class ARRAY20 is
+    main is
+        array:ARRAY{INT} := |1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20|;
+        
+    end;
+end
+</pre><hr></hr><h2>hash10.sa</h2><pre>class HASH10 is
+    main is
+        hashf:MAP{INT,STR} := #MAP{INT,STR}.insert(1,"string1").insert(2,"string2").insert(3,"string3").insert(4,"string4").insert(5,"string5").insert(6,"string6").insert(7,"string7").insert(8,"string8").insert(9,"string9").insert(10,"string10");
+        
+    end;
+end
+</pre><hr></hr><h2>nested.sa</h2><pre>class NESTED is
+    main is
+        list_of_list_v:ARRAY{ARRAY{STR}} := ||"1","2"|,|"3","4"|,|"5","6"||;
+            list_of_hash_v:ARRAY{MAP{STR,STR}} := |#MAP{STR,STR}.insert("1","1").insert("2","2"),#MAP{STR,STR}.insert("3","3").insert("4","4"),#MAP{STR,STR}.insert("5","5").insert("6","6")|;
+            map_list_of_list_of_hash_of_hash_v:ARRAY{ARRAY{MAP{STR,MAP{STR,STR}}}} := ||#MAP{STR,MAP{STR,STR}}.insert("hello1",#MAP{STR,STR}.insert("hello2","hello4"))||;
+        
+    end;
+end
+</pre><hr></hr><h2>simple.sa</h2><pre>class SIMPLE is
+    attr string_param:STR;
+    attr string_default:STR;
+    attr string_param_rw:STR;
+    attr int_param:INT;
+    attr int_default:INT;
+    attr float_param:FLT;
+    attr float_default:FLT;
+create(string_param:STR,string_param_rw:STR,int_param:INT,float_param:FLT):SIMPLE  is 
+
+    res:SIMPLE :=new ;
+    res.string_param := string_param;
+    res.string_param_rw := string_param_rw;
+    res.int_param := int_param;
+    res.float_param := float_param;
+    res.string_default := "";
+    res.int_default := 0;
+    res.float_default := 0.0;
+    return res;
+end;
+
+str:STR is
+    return string_param.str + "-" + string_default.str + "-" + string_param_rw.str + "-" + int_param.str + "-" + int_default.str + "-" + float_param.str + "-" + float_default.str
+end;
+end;</pre></html>

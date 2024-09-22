@@ -1,2 +1,180 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>gcl</h1><hr></hr><h2>array10</h2><h4>;;</h4><h4>;; make hash from a list of key value pairs</h4><h4>;;</h4><h4>    </h4><h4>(defun pg-make-hash-table (key-values)</h4><h4>  (let ( (hash (make-hash-table)))</h4><h4>    (loop for key-value in key-values do </h4><h4>          (setf (gethash (first key-value) hash) (second key-value)))</h4><h4>    hash))</h4><h4>    </h4><h4>;;</h4><h4>;; main starts here</h4><h4>;;</h4><h4>    </h4><h4>(let ((array '(1  2  3  4  5  6  7  8  9  10)))</h4><h4></h4><h4>)</h4><h4>    </h4><h4>    </h4><hr></hr><h2>array20</h2><h4>;;</h4><h4>;; make hash from a list of key value pairs</h4><h4>;;</h4><h4>    </h4><h4>(defun pg-make-hash-table (key-values)</h4><h4>  (let ( (hash (make-hash-table)))</h4><h4>    (loop for key-value in key-values do </h4><h4>          (setf (gethash (first key-value) hash) (second key-value)))</h4><h4>    hash))</h4><h4>    </h4><h4>;;</h4><h4>;; main starts here</h4><h4>;;</h4><h4>    </h4><h4>(let ((array '(1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  19  20)))</h4><h4></h4><h4>)</h4><h4>    </h4><h4>    </h4><hr></hr><h2>array03</h2><h4>;;</h4><h4>;; make hash from a list of key value pairs</h4><h4>;;</h4><h4>    </h4><h4>(defun pg-make-hash-table (key-values)</h4><h4>  (let ( (hash (make-hash-table)))</h4><h4>    (loop for key-value in key-values do </h4><h4>          (setf (gethash (first key-value) hash) (second key-value)))</h4><h4>    hash))</h4><h4>    </h4><h4>;;</h4><h4>;; main starts here</h4><h4>;;</h4><h4>    </h4><h4>(let ((array3 '('('(0  1  2)  '(10  11  12)  '(20  21  22))  '('(100  101  102)  '(110  111  112)  '(120  121  122))  '('(200  201  202)  '(210  211  212)  '(220  221  222)))))</h4><h4></h4><h4>)</h4><h4>    </h4><h4>    </h4><hr></hr><h2>hash10</h2><h4>;;</h4><h4>;; make hash from a list of key value pairs</h4><h4>;;</h4><h4>    </h4><h4>(defun pg-make-hash-table (key-values)</h4><h4>  (let ( (hash (make-hash-table)))</h4><h4>    (loop for key-value in key-values do </h4><h4>          (setf (gethash (first key-value) hash) (second key-value)))</h4><h4>    hash))</h4><h4>    </h4><h4>;;</h4><h4>;; main starts here</h4><h4>;;</h4><h4>    </h4><h4>(let ((hashf (pg-make-hash-table (list (list 1 "string1") (list 2 "string2") (list 3 "string3") (list 4 "string4") (list 5 "string5") (list 6 "string6") (list 7 "string7") (list 8 "string8") (list 9 "string9") (list 10 "string10")))))</h4><h4></h4><h4>)</h4><h4>    </h4><h4>    </h4><hr></hr><h2>nested</h2><h4>;;</h4><h4>;; make hash from a list of key value pairs</h4><h4>;;</h4><h4>    </h4><h4>(defun pg-make-hash-table (key-values)</h4><h4>  (let ( (hash (make-hash-table)))</h4><h4>    (loop for key-value in key-values do </h4><h4>          (setf (gethash (first key-value) hash) (second key-value)))</h4><h4>    hash))</h4><h4>    </h4><h4>;;</h4><h4>;; main starts here</h4><h4>;;</h4><h4>    </h4><h4>(let ((list-of-list-v '('("1"  "2")  '("3"  "4")  '("5"  "6")))</h4><h4>      (list-of-hash-v '((pg-make-hash-table (list (list "1" "1") (list "2" "2")))  (pg-make-hash-table (list (list "3" "3") (list "4" "4")))  (pg-make-hash-table (list (list "5" "5") (list "6" "6")))))</h4><h4>      (map-list-of-list-of-hash-of-hash-v '('((pg-make-hash-table (list (list "hello1" (pg-make-hash-table (list (list "hello2" "hello4"))))))))))</h4><h4></h4><h4>)</h4><h4>    </h4><h4>    </h4><hr></hr><h2>simple</h2><h4>(load "/usr/local/include/pg//commonlisp/pg-timer.lisp")</h4><h4></h4><h4>(defclass simple ()</h4><h4>  ((string-param</h4><h4>  :initarg :string-param</h4><h4>  :initform (error "string-param is a required parameter")</h4><h4>  :accessor string-param)</h4><h4></h4><h4>(string-default</h4><h4>  :initform "string default"</h4><h4>  :accessor string-default)</h4><h4></h4><h4>(string-param-rw</h4><h4>  :initarg :string-param-rw</h4><h4>  :initform (error "string-param-rw is a required parameter")</h4><h4>  :accessor string-param-rw)</h4><h4></h4><h4>(int-param</h4><h4>  :initarg :int-param</h4><h4>  :initform (error "int-param is a required parameter")</h4><h4>  :accessor int-param)</h4><h4></h4><h4>(int-default</h4><h4>  :initform 0</h4><h4>  :accessor int-default)</h4><h4></h4><h4>(float-param</h4><h4>  :initarg :float-param</h4><h4>  :initform (error "float-param is a required parameter")</h4><h4>  :accessor float-param)</h4><h4></h4><h4>(float-default</h4><h4>  :initform 0.0</h4><h4>  :accessor float-default)</h4><h4></h4><h4>)))</h4><h4></h4><h4>(defun simple-get-key (string-param string-default string-param-rw int-param int-default float-param float-default)</h4><h4>  (format nil "~a-~a-~a-~4d-~4d-~f-~f" string-param string-default string-param-rw int-param int-default float-param float-default))</h4><h4></h4><h4></h4><h4>(defun simple-to-string (this)</h4><h4>  (simple-get-key</h4><h4>    (string-param this)</h4><h4>    (string-default this)</h4><h4>    (string-param-rw this)</h4><h4>    (int-param this)</h4><h4>    (int-default this)</h4><h4>    (float-param this)</h4><h4>    (float-default this)</h4><h4>))</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>gcl</h1><hr></hr><h2>array03.lisp</h2><pre>;;
+;; make hash from a list of key value pairs
+;;
+    
+(defun pg-make-hash-table (key-values)
+  (let ( (hash (make-hash-table)))
+    (loop for key-value in key-values do 
+          (setf (gethash (first key-value) hash) (second key-value)))
+    hash))
+    
+;;
+;; main starts here
+;;
+    
+(let ((array3 '('('(0  1  2)  '(10  11  12)  '(20  21  22))  '('(100  101  102)  '(110  111  112)  '(120  121  122))  '('(200  201  202)  '(210  211  212)  '(220  221  222)))))
+
+)
+    
+    
+</pre><hr></hr><h2>array10.lisp</h2><pre>;;
+;; make hash from a list of key value pairs
+;;
+    
+(defun pg-make-hash-table (key-values)
+  (let ( (hash (make-hash-table)))
+    (loop for key-value in key-values do 
+          (setf (gethash (first key-value) hash) (second key-value)))
+    hash))
+    
+;;
+;; main starts here
+;;
+    
+(let ((array '(1  2  3  4  5  6  7  8  9  10)))
+
+)
+    
+    
+</pre><hr></hr><h2>array20.lisp</h2><pre>;;
+;; make hash from a list of key value pairs
+;;
+    
+(defun pg-make-hash-table (key-values)
+  (let ( (hash (make-hash-table)))
+    (loop for key-value in key-values do 
+          (setf (gethash (first key-value) hash) (second key-value)))
+    hash))
+    
+;;
+;; main starts here
+;;
+    
+(let ((array '(1  2  3  4  5  6  7  8  9  10  11  12  13  14  15  16  17  18  19  20)))
+
+)
+    
+    
+</pre><hr></hr><h2>hash10.lisp</h2><pre>;;
+;; make hash from a list of key value pairs
+;;
+    
+(defun pg-make-hash-table (key-values)
+  (let ( (hash (make-hash-table)))
+    (loop for key-value in key-values do 
+          (setf (gethash (first key-value) hash) (second key-value)))
+    hash))
+    
+;;
+;; main starts here
+;;
+    
+(let ((hashf (pg-make-hash-table (list (list 1 "string1") (list 2 "string2") (list 3 "string3") (list 4 "string4") (list 5 "string5") (list 6 "string6") (list 7 "string7") (list 8 "string8") (list 9 "string9") (list 10 "string10")))))
+
+)
+    
+    
+</pre><hr></hr><h2>integers.lisp</h2><pre>;;
+;; make hash from a list of key value pairs
+;;
+    
+(defun pg-make-hash-table (key-values)
+  (let ( (hash (make-hash-table)))
+    (loop for key-value in key-values do 
+          (setf (gethash (first key-value) hash) (second key-value)))
+    hash))
+    
+;;
+;; main starts here
+;;
+    
+(let ((int_8_unsigned 0)
+      (int_16_unsigned 0)
+      (int_32_unsigned 0)
+      (int_64_unsigned 0)
+      (int_word_unsigned 0)
+      (int_8_signed 0)
+      (int_16_signed 0)
+      (int_32_signed 0)
+      (int_64_signed 0)
+      (int_word_signed 0)
+      (int_ap 0))
+
+)
+    
+    
+</pre><hr></hr><h2>nested.lisp</h2><pre>;;
+;; make hash from a list of key value pairs
+;;
+    
+(defun pg-make-hash-table (key-values)
+  (let ( (hash (make-hash-table)))
+    (loop for key-value in key-values do 
+          (setf (gethash (first key-value) hash) (second key-value)))
+    hash))
+    
+;;
+;; main starts here
+;;
+    
+(let ((list-of-list-v '('("1"  "2")  '("3"  "4")  '("5"  "6")))
+      (list-of-hash-v '((pg-make-hash-table (list (list "1" "1") (list "2" "2")))  (pg-make-hash-table (list (list "3" "3") (list "4" "4")))  (pg-make-hash-table (list (list "5" "5") (list "6" "6")))))
+      (map-list-of-list-of-hash-of-hash-v '('((pg-make-hash-table (list (list "hello1" (pg-make-hash-table (list (list "hello2" "hello4"))))))))))
+
+)
+    
+    
+</pre><hr></hr><h2>simple.lisp</h2><pre>(load "/usr/local/include/pg//commonlisp/pg-timer.lisp")
+
+(defclass simple ()
+  ((string-param
+  :initarg :string-param
+  :initform (error "string-param is a required parameter")
+  :accessor string-param)
+
+(string-default
+  :initform "string default"
+  :accessor string-default)
+
+(string-param-rw
+  :initarg :string-param-rw
+  :initform (error "string-param-rw is a required parameter")
+  :accessor string-param-rw)
+
+(int-param
+  :initarg :int-param
+  :initform (error "int-param is a required parameter")
+  :accessor int-param)
+
+(int-default
+  :initform 0
+  :accessor int-default)
+
+(float-param
+  :initarg :float-param
+  :initform (error "float-param is a required parameter")
+  :accessor float-param)
+
+(float-default
+  :initform 0.0
+  :accessor float-default)
+
+)))
+
+(defun simple-get-key (string-param string-default string-param-rw int-param int-default float-param float-default)
+  (format nil "~a-~a-~a-~4d-~4d-~f-~f" string-param string-default string-param-rw int-param int-default float-param float-default))
+
+
+(defun simple-to-string (this)
+  (simple-get-key
+    (string-param this)
+    (string-default this)
+    (string-param-rw this)
+    (int-param this)
+    (int-default this)
+    (float-param this)
+    (float-default this)
+))
+
+</pre></html>

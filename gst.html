@@ -1,2 +1,80 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>gst</h1><hr></hr><h2>array10</h2><h4>#&lt;bhw::member:0x000001ed25ca2e70&gt;:=#(1 2 3 4 5 6 7 8 9 10).</h4><h4>#&lt;bhw::member:0x000001ed25ca2e70&gt; displayNl .</h4><hr></hr><h2>array20</h2><h4>#&lt;bhw::member:0x000001ed25c99208&gt;:=#(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20).</h4><h4>#&lt;bhw::member:0x000001ed25c99208&gt; displayNl .</h4><hr></hr><h2>array03</h2><h4>#&lt;bhw::member:0x000001ed25c5ae90&gt;:=#(#(#(0 1 2) #(10 11 12) #(20 21 22)) #(#(100 101 102) #(110 111 112) #(120 121 122)) #(#(200 201 202) #(210 211 212) #(220 221 222))).</h4><h4>#&lt;bhw::member:0x000001ed25c5ae90&gt; displayNl .</h4><hr></hr><h2>hash10</h2><h4>#&lt;bhw::member:0x000001ed25c3b5e0&gt;:=Dictionary from: {1-&gt;'string1'.2-&gt;'string2'.3-&gt;'string3'.4-&gt;'string4'.5-&gt;'string5'.6-&gt;'string6'.7-&gt;'string7'.8-&gt;'string8'.9-&gt;'string9'.10-&gt;'string10'}.</h4><h4>#&lt;bhw::member:0x000001ed25c3b5e0&gt; displayNl .</h4><hr></hr><h2>nested</h2><h4>#&lt;bhw::member:0x000001ed25c2cce8&gt;:=#(#('1' '2') #('3' '4') #('5' '6')).</h4><h4>#&lt;bhw::member:0x000001ed25bfb080&gt;:=#({'1'=&gt;'1' '2'=&gt;'2'} {'3'=&gt;'3' '4'=&gt;'4'} {'5'=&gt;'5' '6'=&gt;'6'}).</h4><h4>#&lt;bhw::member:0x000001ed25bf9410&gt;:=#(#({'hello1'=&gt;{'hello2'=&gt;'hello4'}})).</h4><h4>#&lt;bhw::member:0x000001ed25c2cce8&gt; displayNl .</h4><h4>#&lt;bhw::member:0x000001ed25bfb080&gt; displayNl .</h4><h4>#&lt;bhw::member:0x000001ed25bf9410&gt; displayNl .</h4><hr></hr><h2>simple</h2><h4>Object subclass: Simple[</h4><h4>    |</h4><h4>        stringParam</h4><h4>        stringDefault</h4><h4>        stringParamRw</h4><h4>        intParam</h4><h4>        intDefault</h4><h4>        floatParam</h4><h4>        floatDefault</h4><h4>    |</h4><h4>    Simple class [</h4><h4>        new: stringParam_ stringParamRw:stringParamRw_ intParam:intParam_ floatParam:floatParam_ [</h4><h4>            ^ ((super new) init: stringParam_ stringParamRw:stringParamRw_ intParam:intParam_ floatParam:floatParam_ )</h4><h4>        ]</h4><h4>    ]</h4><h4></h4><h4>    init: #&lt;bhw::member:0x000001ed261cf3a8&gt;_ #&lt;bhw::member:0x000001ed261ceef8&gt;:#&lt;bhw::member:0x000001ed261ceef8&gt;_  #&lt;bhw::member:0x000001ed261ced90&gt;:#&lt;bhw::member:0x000001ed261ced90&gt;_  #&lt;bhw::member:0x000001ed261ce908&gt;:#&lt;bhw::member:0x000001ed261ce908&gt;_ [</h4><h4>        #&lt;bhw::member:0x000001ed261cf3a8&gt;:= #&lt;bhw::member:0x000001ed261cf3a8&gt;_.</h4><h4>        #&lt;bhw::member:0x000001ed261ceef8&gt;:= #&lt;bhw::member:0x000001ed261ceef8&gt;_.</h4><h4>        #&lt;bhw::member:0x000001ed261ced90&gt;:= #&lt;bhw::member:0x000001ed261ced90&gt;_.</h4><h4>        #&lt;bhw::member:0x000001ed261ce908&gt;:= #&lt;bhw::member:0x000001ed261ce908&gt;_.</h4><h4>        #&lt;bhw::member:0x000001ed261cf0d8&gt;:= 'string default'.</h4><h4>        #&lt;bhw::member:0x000001ed261ceb60&gt;:= 0.</h4><h4>        #&lt;bhw::member:0x000001ed261ce5c0&gt;:= 0.0.</h4><h4>    ]</h4><h4>    displayOn: stream [</h4><h4>        &lt;category: 'printing'&gt;</h4><h4>        stringParam displayOn:stream.</h4><h4>        '-' displayOn:stream.</h4><h4>        stringDefault displayOn:stream.</h4><h4>        '-' displayOn:stream.</h4><h4>        stringParamRw displayOn:stream.</h4><h4>        '-' displayOn:stream.</h4><h4>        intParam displayOn:stream.</h4><h4>        '-' displayOn:stream.</h4><h4>        intDefault displayOn:stream.</h4><h4>        '-' displayOn:stream.</h4><h4>        floatParam displayOn:stream.</h4><h4>        '-' displayOn:stream.</h4><h4>        floatDefault displayOn:stream</h4><h4>    ]</h4><h4>]</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>gst</h1><hr></hr><h2>Array03.st</h2><pre>#&lt;bhw::member:0x000055f3bbb031c8&gt;:=#(#(#(0 1 2) #(10 11 12) #(20 21 22)) #(#(100 101 102) #(110 111 112) #(120 121 122)) #(#(200 201 202) #(210 211 212) #(220 221 222))).
+#&lt;bhw::member:0x000055f3bbb031c8&gt; displayNl .
+</pre><hr></hr><h2>Array10.st</h2><pre>#&lt;bhw::member:0x000055f3bbaebcf8&gt;:=#(1 2 3 4 5 6 7 8 9 10).
+#&lt;bhw::member:0x000055f3bbaebcf8&gt; displayNl .
+</pre><hr></hr><h2>Array20.st</h2><pre>#&lt;bhw::member:0x000055f3bbaeaf88&gt;:=#(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20).
+#&lt;bhw::member:0x000055f3bbaeaf88&gt; displayNl .
+</pre><hr></hr><h2>Hash10.st</h2><pre>#&lt;bhw::member:0x000055f3bbae32d8&gt;:=Dictionary from: {1-&gt;'string1'.2-&gt;'string2'.3-&gt;'string3'.4-&gt;'string4'.5-&gt;'string5'.6-&gt;'string6'.7-&gt;'string7'.8-&gt;'string8'.9-&gt;'string9'.10-&gt;'string10'}.
+#&lt;bhw::member:0x000055f3bbae32d8&gt; displayNl .
+</pre><hr></hr><h2>Integers.st</h2><pre>#&lt;bhw::member:0x000055f3bbb0de70&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0da38&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0d6f0&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0d380&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0d038&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0ccf0&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0c9a8&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0c660&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0c318&gt;:=0.
+#&lt;bhw::member:0x000055f3bbaf3bd8&gt;:=0.
+#&lt;bhw::member:0x000055f3bbaf3930&gt;:=0.
+#&lt;bhw::member:0x000055f3bbb0de70&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbb0da38&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbb0d6f0&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbb0d380&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbb0d038&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbb0ccf0&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbb0c9a8&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbb0c660&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbb0c318&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbaf3bd8&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbaf3930&gt; displayNl .
+</pre><hr></hr><h2>Nested.st</h2><pre>#&lt;bhw::member:0x000055f3bbae0fb0&gt;:=#(#('1' '2') #('3' '4') #('5' '6')).
+#&lt;bhw::member:0x000055f3bbae05d8&gt;:=#({'1'=&gt;'1' '2'=&gt;'2'} {'3'=&gt;'3' '4'=&gt;'4'} {'5'=&gt;'5' '6'=&gt;'6'}).
+#&lt;bhw::member:0x000055f3bbadbd58&gt;:=#(#({'hello1'=&gt;{'hello2'=&gt;'hello4'}})).
+#&lt;bhw::member:0x000055f3bbae0fb0&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbae05d8&gt; displayNl .
+#&lt;bhw::member:0x000055f3bbadbd58&gt; displayNl .
+</pre><hr></hr><h2>Simple.st</h2><pre>Object subclass: Simple[
+    |
+        stringParam
+        stringDefault
+        stringParamRw
+        intParam
+        intDefault
+        floatParam
+        floatDefault
+    |
+    Simple class [
+        new: stringParam_ stringParamRw:stringParamRw_ intParam:intParam_ floatParam:floatParam_ [
+            ^ ((super new) init: stringParam_ stringParamRw:stringParamRw_ intParam:intParam_ floatParam:floatParam_ )
+        ]
+    ]
+
+    init: #&lt;bhw::member:0x000055d39baffea0&gt;_ stringParamRw:stringParamRw_  intParam:intParam_  floatParam:floatParam_ [
+        stringParam:= stringParam_.
+        stringParamRw:= stringParamRw_.
+        intParam:= intParam_.
+        floatParam:= floatParam_.
+        stringDefault:= 'string default'.
+        intDefault:= 0.
+        floatDefault:= 0.0.
+    ]
+    displayOn: stream [
+        &lt;category: 'printing'&gt;
+        stringParam displayOn:stream.
+        '-' displayOn:stream.
+        stringDefault displayOn:stream.
+        '-' displayOn:stream.
+        stringParamRw displayOn:stream.
+        '-' displayOn:stream.
+        intParam displayOn:stream.
+        '-' displayOn:stream.
+        intDefault displayOn:stream.
+        '-' displayOn:stream.
+        floatParam displayOn:stream.
+        '-' displayOn:stream.
+        floatDefault displayOn:stream
+    ]
+]
+</pre></html>

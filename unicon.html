@@ -1,2 +1,181 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>unicon</h1><hr></hr><h2>array10</h2><h4>procedure main (arglist)</h4><h4>    array</h4><h4></h4><h4>    write(array)</h4><h4>    exit(0)</h4><h4>end</h4><h4>    </h4><h4>#</h4><h4># list to table(hash)</h4><h4>#</h4><h4>    </h4><h4>procedure fromlist(args)</h4><h4>    t := table()</h4><h4>    every item := !args do {</h4><h4>	t[item[1]] := item[2]</h4><h4>    }</h4><h4>    return t</h4><h4>end</h4><h4>    </h4><hr></hr><h2>array20</h2><h4>procedure main (arglist)</h4><h4>    array</h4><h4></h4><h4>    write(array)</h4><h4>    exit(0)</h4><h4>end</h4><h4>    </h4><h4>#</h4><h4># list to table(hash)</h4><h4>#</h4><h4>    </h4><h4>procedure fromlist(args)</h4><h4>    t := table()</h4><h4>    every item := !args do {</h4><h4>	t[item[1]] := item[2]</h4><h4>    }</h4><h4>    return t</h4><h4>end</h4><h4>    </h4><hr></hr><h2>array03</h2><h4>procedure main (arglist)</h4><h4>    array3</h4><h4></h4><h4>    write(array3)</h4><h4>    exit(0)</h4><h4>end</h4><h4>    </h4><h4>#</h4><h4># list to table(hash)</h4><h4>#</h4><h4>    </h4><h4>procedure fromlist(args)</h4><h4>    t := table()</h4><h4>    every item := !args do {</h4><h4>	t[item[1]] := item[2]</h4><h4>    }</h4><h4>    return t</h4><h4>end</h4><h4>    </h4><hr></hr><h2>hash10</h2><h4>procedure main (arglist)</h4><h4>    hashf</h4><h4></h4><h4>    write(hashf)</h4><h4>    exit(0)</h4><h4>end</h4><h4>    </h4><h4>#</h4><h4># list to table(hash)</h4><h4>#</h4><h4>    </h4><h4>procedure fromlist(args)</h4><h4>    t := table()</h4><h4>    every item := !args do {</h4><h4>	t[item[1]] := item[2]</h4><h4>    }</h4><h4>    return t</h4><h4>end</h4><h4>    </h4><hr></hr><h2>nested</h2><h4>procedure main (arglist)</h4><h4>    list of list v</h4><h4>    list of hash v</h4><h4>    map list of list of hash of hash v</h4><h4></h4><h4>    write(list_of_list_v)</h4><h4>    write(list_of_hash_v)</h4><h4>    write(map_list_of_list_of_hash_of_hash_v)</h4><h4>    exit(0)</h4><h4>end</h4><h4>    </h4><h4>#</h4><h4># list to table(hash)</h4><h4>#</h4><h4>    </h4><h4>procedure fromlist(args)</h4><h4>    t := table()</h4><h4>    every item := !args do {</h4><h4>	t[item[1]] := item[2]</h4><h4>    }</h4><h4>    return t</h4><h4>end</h4><h4>    </h4><hr></hr><h2>simple</h2><h4>link printf</h4><h4>class Simple (</h4><h4>string_param,</h4><h4>string_default,</h4><h4>string_param_rw,</h4><h4>int_param,</h4><h4>int_default,</h4><h4>float_param,</h4><h4>float_default</h4><h4>  )</h4><h4></h4><h4>  method get_string_param()</h4><h4>    return string_param</h4><h4>  end</h4><h4></h4><h4></h4><h4></h4><h4>  method get_string_param_rw()</h4><h4>    return string_param_rw</h4><h4>  end</h4><h4>  method set_string_param_rw(_string_param_rw)</h4><h4>    string_param_rw := _string_param_rw</h4><h4>  end</h4><h4></h4><h4>  method get_int_param()</h4><h4>    return int_param</h4><h4>  end</h4><h4></h4><h4></h4><h4></h4><h4>  method get_float_param()</h4><h4>    return float_param</h4><h4>  end</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>  method to_string()</h4><h4>    return string_param || "-" || string_default || "-" || string_param_rw || "-" || sprintf("%4d",int_param) || "-" || sprintf("%4d",int_default) || "-" || %f || "-" || %f</h4><h4>  end</h4><h4></h4><h4>  initially(_string_param,_string_param_rw,_int_param,_float_param)</h4><h4>   string_param := _string_param</h4><h4>   string_param_rw := _string_param_rw</h4><h4>   int_param := _int_param</h4><h4>   float_param := _float_param</h4><h4>   string_default := "string default"</h4><h4>   int_default := 0</h4><h4>   float_default := 0.0</h4><h4></h4><h4>    </h4><h4></h4><h4>end</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>unicon</h1><hr></hr><h2>array03.icn</h2><pre>procedure main (arglist)
+    
+
+    write(array3)
+    exit(0)
+end
+    
+#
+# list to table(hash)
+#
+    
+procedure fromlist(args)
+    t := table()
+    every item := !args do {
+	t[item[1]] := item[2]
+    }
+    return t
+end
+    
+</pre><hr></hr><h2>array10.icn</h2><pre>procedure main (arglist)
+    
+
+    write(array)
+    exit(0)
+end
+    
+#
+# list to table(hash)
+#
+    
+procedure fromlist(args)
+    t := table()
+    every item := !args do {
+	t[item[1]] := item[2]
+    }
+    return t
+end
+    
+</pre><hr></hr><h2>array20.icn</h2><pre>procedure main (arglist)
+    
+
+    write(array)
+    exit(0)
+end
+    
+#
+# list to table(hash)
+#
+    
+procedure fromlist(args)
+    t := table()
+    every item := !args do {
+	t[item[1]] := item[2]
+    }
+    return t
+end
+    
+</pre><hr></hr><h2>hash10.icn</h2><pre>procedure main (arglist)
+    
+
+    write(hashf)
+    exit(0)
+end
+    
+#
+# list to table(hash)
+#
+    
+procedure fromlist(args)
+    t := table()
+    every item := !args do {
+	t[item[1]] := item[2]
+    }
+    return t
+end
+    
+</pre><hr></hr><h2>integers.icn</h2><pre>procedure main (arglist)
+    
+
+    write(int_8_unsigned)
+    write(int_16_unsigned)
+    write(int_32_unsigned)
+    write(int_64_unsigned)
+    write(int_word_unsigned)
+    write(int_8_signed)
+    write(int_16_signed)
+    write(int_32_signed)
+    write(int_64_signed)
+    write(int_word_signed)
+    write(int_ap)
+    exit(0)
+end
+    
+#
+# list to table(hash)
+#
+    
+procedure fromlist(args)
+    t := table()
+    every item := !args do {
+	t[item[1]] := item[2]
+    }
+    return t
+end
+    
+</pre><hr></hr><h2>nested.icn</h2><pre>procedure main (arglist)
+    
+
+    write(list_of_list_v)
+    write(list_of_hash_v)
+    write(map_list_of_list_of_hash_of_hash_v)
+    exit(0)
+end
+    
+#
+# list to table(hash)
+#
+    
+procedure fromlist(args)
+    t := table()
+    every item := !args do {
+	t[item[1]] := item[2]
+    }
+    return t
+end
+    
+</pre><hr></hr><h2>simple.icn</h2><pre>link printf
+class Simple (
+string_param,
+string_default,
+string_param_rw,
+int_param,
+int_default,
+float_param,
+float_default
+  )
+
+  method get_string_param()
+    return string_param
+  end
+
+
+
+  method get_string_param_rw()
+    return string_param_rw
+  end
+  method set_string_param_rw(_string_param_rw)
+    string_param_rw := _string_param_rw
+  end
+
+  method get_int_param()
+    return int_param
+  end
+
+
+
+  method get_float_param()
+    return float_param
+  end
+
+
+
+
+
+  method to_string()
+    return string_param || "-" || string_default || "-" || string_param_rw || "-" || sprintf("%4d",int_param) || "-" || sprintf("%4d",int_default) || "-" || %f || "-" || %f
+  end
+
+  initially(_string_param,_string_param_rw,_int_param,_float_param)
+   string_param := _string_param
+   string_param_rw := _string_param_rw
+   int_param := _int_param
+   float_param := _float_param
+   string_default := "string default"
+   int_default := 0
+   float_default := 0.0
+
+    
+
+end</pre></html>

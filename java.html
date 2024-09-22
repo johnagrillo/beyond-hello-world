@@ -1,2 +1,210 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>java</h1><hr></hr><h2>array10</h2><h4>import java.util.*;</h4><h4>import org.javatuples.*;</h4><h4>    </h4><h4>public class Array10</h4><h4>{</h4><h4>    static public void main(final String[] args)</h4><h4>    {</h4><h4>        Integer[] array={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};</h4><h4></h4><h4>        System.out.println(array);</h4><h4>        System.exit(0);</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>array20</h2><h4>import java.util.*;</h4><h4>import org.javatuples.*;</h4><h4>    </h4><h4>public class Array20</h4><h4>{</h4><h4>    static public void main(final String[] args)</h4><h4>    {</h4><h4>        Integer[] array={1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};</h4><h4></h4><h4>        System.out.println(array);</h4><h4>        System.exit(0);</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>array03</h2><h4>import java.util.*;</h4><h4>import org.javatuples.*;</h4><h4>    </h4><h4>public class Array03</h4><h4>{</h4><h4>    static public void main(final String[] args)</h4><h4>    {</h4><h4>        Integer[][][] array3={</h4><h4>        {</h4><h4>            {0, 1, 2}, </h4><h4>            {10, 11, 12}, </h4><h4>            {20, 21, 22}}, </h4><h4>        {</h4><h4>            {100, 101, 102}, </h4><h4>            {110, 111, 112}, </h4><h4>            {120, 121, 122}}, </h4><h4>        {</h4><h4>            {200, 201, 202}, </h4><h4>            {210, 211, 212}, </h4><h4>            {220, 221, 222}}};</h4><h4></h4><h4>        System.out.println(array3);</h4><h4>        System.exit(0);</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>hash10</h2><h4>import java.util.*;</h4><h4>import org.javatuples.*;</h4><h4>    </h4><h4>public class Hash10</h4><h4>{</h4><h4>    static public void main(final String[] args)</h4><h4>    {</h4><h4>        Map&lt;Integer,String&gt; hashf=new TreeMap&lt;Integer,String&gt;(){{</h4><h4> put(1,"string1");</h4><h4> put(2,"string2");</h4><h4> put(3,"string3");</h4><h4> put(4,"string4");</h4><h4> put(5,"string5");</h4><h4> put(6,"string6");</h4><h4> put(7,"string7");</h4><h4> put(8,"string8");</h4><h4> put(9,"string9");</h4><h4> put(10,"string10");</h4><h4></h4><h4>    }};</h4><h4></h4><h4>        System.out.println(hashf);</h4><h4>        System.exit(0);</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>nested</h2><h4>import java.util.*;</h4><h4>import org.javatuples.*;</h4><h4>    </h4><h4>public class Nested</h4><h4>{</h4><h4>    static public void main(final String[] args)</h4><h4>    {</h4><h4>        List&lt;List&lt;String&gt;&gt; listOfListV=new ArrayList&lt; List&lt;String&gt; &gt;();</h4><h4>        List&lt;Map&lt;String,String&gt;&gt; listOfHashV=new ArrayList&lt; Map&lt;String,String&gt; &gt;();</h4><h4>        List&lt;List&lt;Map&lt;String,Map&lt;String,String&gt;&gt;&gt;&gt; mapListOfListOfHashOfHashV=new ArrayList&lt; List&lt;Map&lt;String,Map&lt;String,String&gt;&gt;&gt; &gt;();</h4><h4></h4><h4>        System.out.println(listOfListV);</h4><h4>        System.out.println(listOfHashV);</h4><h4>        System.out.println(mapListOfListOfHashOfHashV);</h4><h4>        System.exit(0);</h4><h4>    }</h4><h4>}</h4><hr></hr><h2>simple</h2><h4>package src;</h4><h4>import java.util.*;</h4><h4>import org.javatuples.*;</h4><h4></h4><h4>public class Simple</h4><h4> implements Comparable&lt;Simple&gt;</h4><h4>{</h4><h4></h4><h4>    public Simple(String stringParam,String stringParamRw,Integer intParam,Double floatParam)</h4><h4>    {</h4><h4>        this.stringParam = #&lt;bhw::member:0x000001ed261cf3a8&gt;;</h4><h4>        this.stringParamRw = #&lt;bhw::member:0x000001ed261ceef8&gt;;</h4><h4>        this.intParam = #&lt;bhw::member:0x000001ed261ced90&gt;;</h4><h4>        this.floatParam = #&lt;bhw::member:0x000001ed261ce908&gt;;</h4><h4>        this.stringDefault = "";</h4><h4>        this.intDefault = 0;</h4><h4>        this.floatDefault = 0.0;</h4><h4>    }</h4><h4>    String getStringParam(){ return this.#&lt;bhw::member:0x000001ed261cf3a8&gt;;}</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>    String getStringParamRw(){ return this.#&lt;bhw::member:0x000001ed261ceef8&gt;;}</h4><h4>    String setStringParamRw(String _stringParamRw){        this.#&lt;bhw::member:0x000001ed261ceef8&gt;=_stringParamRw;        return this.#&lt;bhw::member:0x000001ed261ceef8&gt;;}</h4><h4></h4><h4></h4><h4>    Integer getIntParam(){ return this.#&lt;bhw::member:0x000001ed261ced90&gt;;}</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>    Double getFloatParam(){ return this.#&lt;bhw::member:0x000001ed261ce908&gt;;}</h4><h4></h4><h4></h4><h4></h4><h4></h4><h4></h4><h4>    @Override public String toString()</h4><h4>    {</h4><h4>        return String.format("%s-%s-%s-%4d-%4d-%s-%s",#&lt;bhw::member:0x000001ed261cf3a8&gt;,#&lt;bhw::member:0x000001ed261cf0d8&gt;,#&lt;bhw::member:0x000001ed261ceef8&gt;,#&lt;bhw::member:0x000001ed261ced90&gt;,#&lt;bhw::member:0x000001ed261ceb60&gt;,#&lt;bhw::member:0x000001ed261ce908&gt;,#&lt;bhw::member:0x000001ed261ce5c0&gt;);</h4><h4>    }</h4><h4></h4><h4>    @Override public int hashCode()</h4><h4>    {</h4><h4>        return stringParam.hashCode()+stringDefault.hashCode()+stringParamRw.hashCode()+intParam+intDefault+floatParam.hashCode()+floatDefault.hashCode();</h4><h4>    }</h4><h4>    @Override public boolean equals(Object obj)</h4><h4>    {</h4><h4>        if (this == obj) return true;</h4><h4>        if (!(obj instanceof Simple)) return false;</h4><h4>        Simple #&lt;bhw::class:0x000001ed261cf6a0&gt; = (Simple)obj;</h4><h4>        return #&lt;bhw::member:0x000001ed261cf3a8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf3a8&gt; &amp;&amp;</h4><h4>            #&lt;bhw::member:0x000001ed261cf0d8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261cf0d8&gt; &amp;&amp;</h4><h4>            #&lt;bhw::member:0x000001ed261ceef8&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceef8&gt; &amp;&amp;</h4><h4>            #&lt;bhw::member:0x000001ed261ced90&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ced90&gt; &amp;&amp;</h4><h4>            #&lt;bhw::member:0x000001ed261ceb60&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ceb60&gt; &amp;&amp;</h4><h4>            #&lt;bhw::member:0x000001ed261ce908&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce908&gt; &amp;&amp;</h4><h4>            #&lt;bhw::member:0x000001ed261ce5c0&gt; == #&lt;bhw::class:0x000001ed261cf6a0&gt;.#&lt;bhw::member:0x000001ed261ce5c0&gt;;</h4><h4>    }</h4><h4></h4><h4>    @Override public int compareTo(Simple rhs)</h4><h4>    {</h4><h4>        int ret=0;</h4><h4>        ret = stringParam.compareTo(rhs.stringParam);</h4><h4>        if (ret !=0) return ret;</h4><h4>        ret = stringDefault.compareTo(rhs.stringDefault);</h4><h4>        if (ret !=0) return ret;</h4><h4>        ret = stringParamRw.compareTo(rhs.stringParamRw);</h4><h4>        if (ret !=0) return ret;</h4><h4></h4><h4>        if (intParam &lt; rhs.intParam) return -1;</h4><h4>        if (intParam &gt; rhs.intParam) return 1;</h4><h4></h4><h4></h4><h4>        if (intDefault &lt; rhs.intDefault) return -1;</h4><h4>        if (intDefault &gt; rhs.intDefault) return 1;</h4><h4></h4><h4></h4><h4>        if (floatParam &lt; rhs.floatParam) return -1;</h4><h4>        if (floatParam &gt; rhs.floatParam) return 1;</h4><h4></h4><h4></h4><h4>        if (floatDefault &lt; rhs.floatDefault) return -1;</h4><h4>        if (floatDefault &gt; rhs.floatDefault) return 1;</h4><h4></h4><h4>        return ret;</h4><h4>    }</h4><h4>    private String stringParam;</h4><h4>    private String stringDefault;</h4><h4>    private String stringParamRw;</h4><h4>    private Integer intParam;</h4><h4>    private Integer intDefault;</h4><h4>    private Double floatParam;</h4><h4>    private Double floatDefault;</h4><h4></h4><h4>}</h4></html>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>java</h1><hr></hr><h2>Array03.java</h2><pre>import java.util.*;
+import org.javatuples.*;
+    
+public class Array03
+{
+    static public void main(final String[] args)
+    {
+        Integer[][][] array3={
+        {
+            {0, 1, 2}, 
+            {10, 11, 12}, 
+            {20, 21, 22}}, 
+        {
+            {100, 101, 102}, 
+            {110, 111, 112}, 
+            {120, 121, 122}}, 
+        {
+            {200, 201, 202}, 
+            {210, 211, 212}, 
+            {220, 221, 222}}};
+
+        System.out.println(array3);
+        System.exit(0);
+    }
+}
+</pre><hr></hr><h2>Array10.java</h2><pre>import java.util.*;
+import org.javatuples.*;
+    
+public class Array10
+{
+    static public void main(final String[] args)
+    {
+        Integer[] array={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        System.out.println(array);
+        System.exit(0);
+    }
+}
+</pre><hr></hr><h2>Array20.java</h2><pre>import java.util.*;
+import org.javatuples.*;
+    
+public class Array20
+{
+    static public void main(final String[] args)
+    {
+        Integer[] array={1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+
+        System.out.println(array);
+        System.exit(0);
+    }
+}
+</pre><hr></hr><h2>Hash10.java</h2><pre>import java.util.*;
+import org.javatuples.*;
+    
+public class Hash10
+{
+    static public void main(final String[] args)
+    {
+        Map&lt;Integer,String&gt; hashf=new TreeMap&lt;Integer,String&gt;(){{
+ put(1,"string1");
+ put(2,"string2");
+ put(3,"string3");
+ put(4,"string4");
+ put(5,"string5");
+ put(6,"string6");
+ put(7,"string7");
+ put(8,"string8");
+ put(9,"string9");
+ put(10,"string10");
+
+    }};
+
+        System.out.println(hashf);
+        System.exit(0);
+    }
+}
+</pre><hr></hr><h2>Integers.java</h2><pre>import java.util.*;
+import org.javatuples.*;
+    
+public class Integers
+{
+    static public void main(final String[] args)
+    {
+        char int_16_unsigned=0;
+        byte int_8_signed=0;
+        short int_16_signed=0;
+        int int_32_signed=0;
+        long int_64_signed=0;
+        java.math.BigInteger int_ap=0;
+
+        System.out.println(int_8_unsigned);
+        System.out.println(int_16_unsigned);
+        System.out.println(int_32_unsigned);
+        System.out.println(int_64_unsigned);
+        System.out.println(int_word_unsigned);
+        System.out.println(int_8_signed);
+        System.out.println(int_16_signed);
+        System.out.println(int_32_signed);
+        System.out.println(int_64_signed);
+        System.out.println(int_word_signed);
+        System.out.println(int_ap);
+        System.exit(0);
+    }
+}
+</pre><hr></hr><h2>Nested.java</h2><pre>import java.util.*;
+import org.javatuples.*;
+    
+public class Nested
+{
+    static public void main(final String[] args)
+    {
+        List&lt;List&lt;String&gt;&gt; listOfListV=new ArrayList&lt; List&lt;String&gt; &gt;();
+        List&lt;Map&lt;String,String&gt;&gt; listOfHashV=new ArrayList&lt; Map&lt;String,String&gt; &gt;();
+        List&lt;List&lt;Map&lt;String,Map&lt;String,String&gt;&gt;&gt;&gt; mapListOfListOfHashOfHashV=new ArrayList&lt; List&lt;Map&lt;String,Map&lt;String,String&gt;&gt;&gt; &gt;();
+
+        System.out.println(listOfListV);
+        System.out.println(listOfHashV);
+        System.out.println(mapListOfListOfHashOfHashV);
+        System.exit(0);
+    }
+}
+</pre><hr></hr><h2>Simple.java</h2><pre>package src;
+import java.util.*;
+import org.javatuples.*;
+
+public class Simple
+ implements Comparable&lt;Simple&gt;
+{
+
+    public Simple(String stringParam,String stringParamRw,Integer intParam,Double floatParam)
+    {
+        this.stringParam = stringParam;
+        this.stringParamRw = stringParamRw;
+        this.intParam = intParam;
+        this.floatParam = floatParam;
+        this.stringDefault = "";
+        this.intDefault = 0;
+        this.floatDefault = 0.0;
+    }
+    String getStringParam(){ return this.stringParam;}
+
+    String getStringParamRw(){ return this.stringParamRw;}
+    String setStringParamRw(String _stringParamRw){        this.stringParamRw=_stringParamRw;        return this.stringParamRw;}
+
+
+    Integer getIntParam(){ return this.intParam;}
+
+    Double getFloatParam(){ return this.floatParam;}
+
+    @Override public String toString()
+    {
+        return String.format("%s-%s-%s-%4d-%4d-%s-%s",#&lt;bhw::member:0x000055d39baffea0&gt;,#&lt;bhw::member:0x000055d39baffc20&gt;,#&lt;bhw::member:0x000055d39baffa68&gt;,#&lt;bhw::member:0x000055d39baff900&gt;,#&lt;bhw::member:0x000055d39baff720&gt;,#&lt;bhw::member:0x000055d39baff590&gt;,#&lt;bhw::member:0x000055d39baff360&gt;);
+    }
+
+    @Override public int hashCode()
+    {
+        return stringParam.hashCode()+stringDefault.hashCode()+stringParamRw.hashCode()+intParam+intDefault+floatParam.hashCode()+floatDefault.hashCode();
+    }
+    @Override public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (!(obj instanceof Simple)) return false;
+        Simple simple = (Simple)obj;
+        return stringParam == simple.stringParam &amp;&amp;
+            stringDefault == simple.stringDefault &amp;&amp;
+            stringParamRw == simple.stringParamRw &amp;&amp;
+            intParam == simple.intParam &amp;&amp;
+            intDefault == simple.intDefault &amp;&amp;
+            floatParam == simple.floatParam &amp;&amp;
+            floatDefault == simple.floatDefault;
+    }
+
+    @Override public int compareTo(Simple rhs)
+    {
+        int ret=0;
+        ret = stringParam.compareTo(rhs.stringParam);
+        if (ret !=0) return ret;
+        ret = stringDefault.compareTo(rhs.stringDefault);
+        if (ret !=0) return ret;
+        ret = stringParamRw.compareTo(rhs.stringParamRw);
+        if (ret !=0) return ret;
+
+        if (intParam &lt; rhs.intParam) return -1;
+        if (intParam &gt; rhs.intParam) return 1;
+
+
+        if (intDefault &lt; rhs.intDefault) return -1;
+        if (intDefault &gt; rhs.intDefault) return 1;
+
+
+        if (floatParam &lt; rhs.floatParam) return -1;
+        if (floatParam &gt; rhs.floatParam) return 1;
+
+
+        if (floatDefault &lt; rhs.floatDefault) return -1;
+        if (floatDefault &gt; rhs.floatDefault) return 1;
+
+        return ret;
+    }
+    private String stringParam;
+    private String stringDefault;
+    private String stringParamRw;
+    private Integer intParam;
+    private Integer intDefault;
+    private Double floatParam;
+    private Double floatDefault;
+
+}
+</pre></html>
