@@ -35,6 +35,151 @@ int main(int argc, char * arg[])
     return 0;
     [pool drain];
 }
+</pre><hr></hr><h2>Democlass.h</h2><pre>#ifndef __DEMOCLASS_H__
+#define __DEMOCLASS_H__
+#include &lt;Foundation/Foundation.h&gt;
+
+#include &lt;Foundation/NSCharacterSet.h&gt;
+#include &lt;Foundation/NSValue.h&gt;
+@interface Democlass : NSObject {
+  NSString * stringParam;
+  NSString * stringDefault;
+  NSString * stringParamRw;
+  NSNumber * intParam;
+  NSNumber * intDefault;
+  NSNumber * floatParam;
+  NSNumber * floatDefault;
+
+}
+
+-(id) init    :(NSString *) _stringParam
+              :(NSString *) _stringParamRw
+              :(NSNumber *) _intParam
+              :(NSNumber *) _floatParam;
+
+-(NSString *) getStringParam;
+-(NSString *) getStringParamRw;
+-(id) setStringParamRw:(NSString *) _stringParamRw;
+-(NSNumber *) getIntParam;
+-(NSNumber *) getFloatParam;
+
+-(NSString *) description;
+
+-(NSInteger) hash;
+-(id) copyWithZone:(NSZone *) _zone;
+
+-(BOOL) isEqual:(Democlass * ) _other;
+-(NSComparisonResult) localizedCompare:(Democlass * ) _other;
+
+@end
+#endif /* __DEMOCLASS_H_ */
+</pre><hr></hr><h2>Democlass.m</h2><pre>#include "Democlass.h"
+@implementation Democlass
+
+-(id) init    :(NSString *) _stringParam
+              :(NSString *) _stringParamRw
+              :(NSNumber *) _intParam
+              :(NSNumber *) _floatParam
+{
+  stringParam = _stringParam;
+  stringParamRw = _stringParamRw;
+  intParam = _intParam;
+  floatParam = _floatParam;
+  stringDefault = @"string default";
+  intDefault = [NSNumber numberWithInt : 0];
+  floatDefault = [NSNumber numberWithFloat : 0.0];
+  return self;
+}
+
+-(NSString *) getStringParam
+{
+  return self-&gt;stringParam;
+}
+-(NSString *) getStringParamRw
+{
+  return self-&gt;stringParamRw;
+}
+-(id) setStringParamRw:(NSString *) _stringParamRw
+{
+  self-&gt;stringParamRw = _stringParamRw;
+  return self;
+}
+-(NSNumber *) getIntParam
+{
+  return self-&gt;intParam;
+}
+-(NSNumber *) getFloatParam
+{
+  return self-&gt;floatParam;
+}
+
+-(NSString *) description
+{
+return [[NSString alloc]initWithFormat: @"%s-%s-%s-%4d-%4d-%f-%f",[[stringParam description]UTF8String],
+[[stringDefault description]UTF8String],
+[[stringParamRw description]UTF8String],
+[intParam intValue],
+[intDefault intValue],
+[floatParam floatValue],
+[floatDefault floatValue]];
+}
+
+-(NSInteger) hash
+{
+ return [stringParam hash]
+          +
+        [stringDefault hash]
+          +
+        [stringParamRw hash]
+          +
+        [intParam hash]
+          +
+        [intDefault hash]
+          +
+        [floatParam hash]
+          +
+        [floatDefault hash];
+}
+-(id) copyWithZone:(NSZone *) _zone
+{
+Democlass*democlass = [[Democlass allocWithZone:_zone] init:stringParam:stringParamRw:intParam:floatParam];
+return democlass;
+}
+
+-(BOOL) isEqual:(Democlass * ) _other
+{
+  return ([stringParam isEqual: _other-&gt;stringParam]) &amp;&amp; 
+        ([stringDefault isEqual: _other-&gt;stringDefault]) &amp;&amp; 
+        ([stringParamRw isEqual: _other-&gt;stringParamRw]) &amp;&amp; 
+        (intParam == _other-&gt;intParam) &amp;&amp; 
+        (intDefault == _other-&gt;intDefault) &amp;&amp; 
+        (floatParam == _other-&gt;floatParam) &amp;&amp; 
+        (floatDefault == _other-&gt;floatDefault);
+}
+-(NSComparisonResult) localizedCompare:(Democlass * ) _other
+{
+    if ([stringParam localizedCompare : _other-&gt;stringParam]!=NSOrderedSame){
+        return [stringParam localizedCompare : _other-&gt;stringParam];
+    }
+    if ([stringDefault localizedCompare : _other-&gt;stringDefault]!=NSOrderedSame){
+        return [stringDefault localizedCompare : _other-&gt;stringDefault];
+    }
+    if ([stringParamRw localizedCompare : _other-&gt;stringParamRw]!=NSOrderedSame){
+        return [stringParamRw localizedCompare : _other-&gt;stringParamRw];
+    }
+    if (intParam &lt; _other-&gt;intParam) return NSOrderedAscending;
+    if (intParam &gt; _other-&gt;intParam) return NSOrderedDescending;
+    if (intDefault &lt; _other-&gt;intDefault) return NSOrderedAscending;
+    if (intDefault &gt; _other-&gt;intDefault) return NSOrderedDescending;
+    if (floatParam &lt; _other-&gt;floatParam) return NSOrderedAscending;
+    if (floatParam &gt; _other-&gt;floatParam) return NSOrderedDescending;
+    if (floatDefault &lt; _other-&gt;floatDefault) return NSOrderedAscending;
+    if (floatDefault &gt; _other-&gt;floatDefault) return NSOrderedDescending;
+    return NSOrderedSame;
+
+}
+
+@end
 </pre><hr></hr><h2>Hash10.m</h2><pre>#include &lt;Foundation/Foundation.h&gt;
     
 

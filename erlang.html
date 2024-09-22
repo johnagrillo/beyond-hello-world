@@ -29,7 +29,37 @@ main(_) -&gt;
     
     io:format("~s\n", [Array]).      
     
-</pre><hr></hr><h2>hash10.erl</h2><pre>%-*-erlang-*-
+</pre><hr></hr><h2>democlass.erl</h2><pre>%-*-erlang-*-
+-module(democlass).
+-include("democlass.hrl").
+
+-export([
+new/4,
+to_string/1
+]).
+
+  new(StringParam,
+      StringParamRw,
+      IntParam,
+      FloatParam) -&gt; 
+#democlass{    string_param = StringParam,
+    string_param_rw = StringParamRw,
+    int_param = IntParam,
+    float_param = FloatParam}.
+
+
+to_string (This) -&gt;
+    lists:flatten(
+        io_lib:format("~s,-~s,-~s,-~4B-~4B-~f-~f",[This#democlass.string_param,This#democlass.string_default,This#democlass.string_param_rw,This#democlass.int_param,This#democlass.int_default,This#democlass.float_param,This#democlass.float_default])).
+</pre><hr></hr><h2>democlass.hrl</h2><pre>%-*-erlang-*-
+-record(democlass,
+        {string_param="string param",
+         string_default="string default",
+         string_param_rw="string param rw",
+         int_param=0,
+         int_default=0,
+         float_param=0.0,
+         float_default=0.0}).</pre><hr></hr><h2>hash10.erl</h2><pre>%-*-erlang-*-
 -module hash10.
 -export([main/1]).
 main(_) -&gt; 

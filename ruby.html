@@ -8,6 +8,65 @@ print(array); puts
 </pre><hr></hr><h2>array20.rb</h2><pre>
 
 print(array); puts
+</pre><hr></hr><h2>democlass.rb</h2><pre>class Democlass
+  attr_accessor :string_param_rw
+  attr_reader :string_param, :int_param, :float_param
+
+  def initialize(string_param,
+                 string_param_rw,
+                 int_param,
+                 float_param)
+   @string_param = string_param
+   @string_param_rw = string_param_rw
+   @int_param = int_param
+   @float_param = float_param
+   @string_default = "string default"
+   @int_default = 0
+   @float_default = 0.0
+  end
+
+  def self.get_key(string_param,
+                   string_default,
+                   string_param_rw,
+                   int_param,
+                   int_default,
+                   float_param,
+                   float_default)
+    "%s-%s-%s-%4d-%4d-%f-%f"%[string_param,string_default,string_param_rw,int_param,int_default,float_param,float_default]
+  end
+
+  def to_s()
+        Democlass.get_key(@string_param,@string_default,@string_param_rw,@int_param,@int_default,@float_param,@float_default)
+  end
+
+  def &lt;=&gt;(rhs)
+    ret = string_param &lt;=&gt; rhs.string_param
+    return ret if ret != 0
+    ret = string_default &lt;=&gt; rhs.string_default
+    return ret if ret != 0
+    ret = string_param_rw &lt;=&gt; rhs.string_param_rw
+    return ret if ret != 0
+    ret = int_param &lt;=&gt; rhs.int_param
+    return ret if ret != 0
+    ret = int_default &lt;=&gt; rhs.int_default
+    return ret if ret != 0
+    ret = float_param &lt;=&gt; rhs.float_param
+    return ret if ret != 0
+    ret = float_default &lt;=&gt; rhs.float_default
+    return ret if ret != 0
+
+  end
+
+  def eql?(rhs)
+    string_param.eql?(rhs.string_param) and string_default.eql?(rhs.string_default) and string_param_rw.eql?(rhs.string_param_rw) and int_param.eql?(rhs.int_param) and int_default.eql?(rhs.int_default) and float_param.eql?(rhs.float_param) and float_default.eql?(rhs.float_default)
+  end
+
+  def hash()
+    string_param.hash + string_default.hash + string_param_rw.hash + int_param.hash + int_default.hash + float_param.hash + float_default.hash
+  end
+
+
+end
 </pre><hr></hr><h2>hash10.rb</h2><pre>
 
 print(hashf); puts

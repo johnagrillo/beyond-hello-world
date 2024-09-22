@@ -35,6 +35,51 @@
         System.out.println(array)
     }
 }
+</pre><hr></hr><h2>Democlass.scala</h2><pre>case class Democlass private (var stringParam:String,
+                              var stringDefault:String,
+                              var stringParamRw:String,
+                              var intParam:scala.Int,
+                              var intDefault:scala.Int,
+                              var floatParam:scala.Double,
+                              var floatDefault:scala.Double) 
+ extends Ordered[Democlass]{
+  def this (stringParam:String,
+           stringParamRw:String,
+           intParam:scala.Int,
+           floatParam:scala.Double)
+  {
+    this(stringParam,
+          "",
+          stringParamRw,
+          intParam,
+          0,
+          floatParam,
+          0.0  );
+  }
+
+  override def toString = "%s-%s-%s-%4d-%4d-%s-%s".format(stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault)
+
+    override def compare(rhs:Democlass) : Int = {
+        var ret:Int=0
+        ret = stringParam.compare(rhs.stringParam);
+        if (ret !=0) return ret;
+        ret = stringDefault.compare(rhs.stringDefault);
+        if (ret !=0) return ret;
+        ret = stringParamRw.compare(rhs.stringParamRw);
+        if (ret !=0) return ret;
+        ret = intParam.compare(rhs.intParam);
+        if (ret !=0) return ret;
+        ret = intDefault.compare(rhs.intDefault);
+        if (ret !=0) return ret;
+        ret = floatParam.compare(rhs.floatParam);
+        if (ret !=0) return ret;
+        ret = floatDefault.compare(rhs.floatDefault);
+        if (ret !=0) return ret;
+        return ret;
+    }
+
+
+}
 </pre><hr></hr><h2>Hash10.scala</h2><pre>object Hash10
 {
     def main (args : Array[String]) = {

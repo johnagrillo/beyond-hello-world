@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>fpc</h1><hr></hr><h2>.#Simple.pp</h2><pre>john@DESKTOP-SH8OU9R.23336:1724062197</pre><hr></hr><h2>Array03.pp</h2><pre>unit Array03;
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>fpc</h1><hr></hr><h2>Array03.pp</h2><pre>unit Array03;
 {$mode objfpc}
 interface
 uses sysutils;
@@ -146,6 +146,134 @@ end;
 function Array20C.toString: ansiString;
 begin
 Result := format('',[]);
+end;
+
+end.
+</pre><hr></hr><h2>Democlass.pp</h2><pre>unit Democlass;
+{$mode objfpc}
+interface
+uses sysutils;
+
+type
+   DemoclassC = class
+   private
+      _stringParam:String;
+      _stringDefault:String;
+      _stringParamRw:String;
+      _intParam:Integer;
+      _intDefault:Integer;
+      _floatParam:Real;
+      _floatDefault:Real;
+   public
+      Function getStringParam:String;
+
+      Function getStringParamRw:String;
+      Procedure setStringParamRw(value:String);
+
+      Function getIntParam:Integer;
+
+      Function getFloatParam:Real;
+
+
+      property stringParam:String read getStringParam;
+      property stringParamRw:String read getStringParamRw write setStringParamRw;
+      property intParam:Integer read getIntParam;
+      property floatParam:Real read getFloatParam;
+
+      constructor create(stringParam_:String;
+                         stringParamRw_:String;
+                         intParam_:Integer;
+                         floatParam_:Real);
+       function toString: ansiString;override;
+end;
+function Democlass_compare(item1 : Pointer; 
+                               item2 : Pointer) : Integer;
+operator &lt;(l : DemoclassC; r : DemoclassC) : Boolean;inline;
+operator &gt;(l : DemoclassC; r : DemoclassC) : Boolean;inline;
+implementation
+      constructor DemoclassC.create(stringParam_:String;
+                         stringParamRw_:String;
+                         intParam_:Integer;
+                         floatParam_:Real);
+begin
+   _stringParam:='string param';
+   _stringParamRw:='string param rw';
+   _intParam:=0;
+   _floatParam:=0.0;
+end;
+operator &lt;(l : DemoclassC; r : DemoclassC) : Boolean;
+begin
+   Result := False
+end;
+operator &gt;(l : DemoclassC; r : DemoclassC) : Boolean;
+begin
+   Result := False
+end;
+
+function Democlass_compare(item1 : Pointer; item2 : Pointer) : Integer;
+var
+   citem1 : DemoclassC;
+   citem2 : DemoclassC;
+begin
+   citem1 := DemoclassC(item1);
+   citem2 := DemoclassC(item2);
+   if citem1._stringParam &lt; citem2._stringParam then
+      Result := -1
+   else if citem1._stringParam &gt; citem2._stringParam then
+      Result := 1
+   else if citem1._stringDefault &lt; citem2._stringDefault then
+      Result := -1
+   else if citem1._stringDefault &gt; citem2._stringDefault then
+      Result := 1
+   else if citem1._stringParamRw &lt; citem2._stringParamRw then
+      Result := -1
+   else if citem1._stringParamRw &gt; citem2._stringParamRw then
+      Result := 1
+   else if citem1._intParam &lt; citem2._intParam then
+      Result := -1
+   else if citem1._intParam &gt; citem2._intParam then
+      Result := 1
+   else if citem1._intDefault &lt; citem2._intDefault then
+      Result := -1
+   else if citem1._intDefault &gt; citem2._intDefault then
+      Result := 1
+   else if citem1._floatParam &lt; citem2._floatParam then
+      Result := -1
+   else if citem1._floatParam &gt; citem2._floatParam then
+      Result := 1
+   else if citem1._floatDefault &lt; citem2._floatDefault then
+      Result := -1
+   else if citem1._floatDefault &gt; citem2._floatDefault then
+      Result := 1
+   else
+
+     Result := 0;
+
+end;
+function DemoclassC.toString: ansiString;
+begin
+Result := format('%s-%s-%s-%4d-%4d-%f-%f',[_stringParam,_stringDefault,_stringParamRw,_intParam,_intDefault,_floatParam,_floatDefault]);
+end;
+Function DemoclassC.getStringParam:String;
+begin
+   Result := _stringParam;
+end;
+
+Function DemoclassC.getStringParamRw:String;
+begin
+   Result := _stringParamRw;
+end;
+Procedure DemoclassC.setStringParamRw(value:String);
+begin
+end;
+Function DemoclassC.getIntParam:Integer;
+begin
+   Result := _intParam;
+end;
+
+Function DemoclassC.getFloatParam:Real;
+begin
+   Result := _floatParam;
 end;
 
 end.

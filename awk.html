@@ -71,6 +71,16 @@ BEGIN{
     array[18]=19;
     array[19]=20;
 
+}</pre><hr></hr><h2>democlass.awk</h2><pre>function democlass_new(self,string_param,string_param_rw,int_param,float_param){
+    self["string_param"] = string_param;
+    self["string_param_rw"] = string_param_rw;
+    self["int_param"] = int_param;
+    self["float_param"] = float_param;
+    string_default="string default";
+    int_default=0;
+    float_default=0.0;
+}
+function democlass_tostring(self){
 }</pre><hr></hr><h2>hash10.awk</h2><pre>
 BEGIN{
 

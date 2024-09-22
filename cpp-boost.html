@@ -55,6 +55,191 @@ int main(int argc, char * arg[])
     std::cout &lt;&lt; array &lt;&lt; std::endl;
     return 0;
 }
+</pre><hr></hr><h2>democlass.cpp</h2><pre>#include "democlass.h"
+
+Democlass::Democlass (std::string stringParam, std::string stringParamRw, int intParam, float floatParam):
+  string_param_ stringParam),
+  string_param_rw_ stringParamRw),
+  int_param_ intParam),
+  float_param_ floatParam)
+{
+  string_default_ = "string default";
+  int_default_ = 0;
+  float_default_ = 0.0;
+
+}
+
+Democlass::~Democlass ()
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+ostream &amp;
+operator &lt;&lt; (ostream &amp; o, Democlass * democlass)
+{
+  return o &lt;&lt; democlass-&gt;string_param_ &lt;&lt; "-"
+           &lt;&lt; democlass-&gt;string_default_ &lt;&lt; "-"
+           &lt;&lt; democlass-&gt;string_param_rw_ &lt;&lt; "-"
+           &lt;&lt; democlass-&gt;int_param_ &lt;&lt; "-"
+           &lt;&lt; democlass-&gt;int_default_ &lt;&lt; "-"
+           &lt;&lt; democlass-&gt;float_param_ &lt;&lt; "-"
+           &lt;&lt; democlass-&gt;float_default_ &lt;&lt; "-";
+}
+
+size_t 
+Democlass::getHash()
+{
+  return this-&gt;stringParam.length() +
+    this-&gt;stringDefault.length() +
+    this-&gt;stringParamRw.length() +
+    intParam +
+    intDefault +
+    floatParam +
+    floatDefault;
+}
+
+bool 
+Democlass::operator &lt;(Democlass &amp; democlass) const
+{
+  if (string_param_ &lt; democlass.string_param_) return true;
+  if (string_param_ &gt; democlass.string_param_) return false;
+  //  string_param_ == democlass.string_param_
+
+  if (string_default_ &lt; democlass.string_default_) return true;
+  if (string_default_ &gt; democlass.string_default_) return false;
+  //  string_default_ == democlass.string_default_
+
+  if (string_param_rw_ &lt; democlass.string_param_rw_) return true;
+  if (string_param_rw_ &gt; democlass.string_param_rw_) return false;
+  //  string_param_rw_ == democlass.string_param_rw_
+
+  if (int_param_ &lt; democlass.int_param_) return true;
+  if (int_param_ &gt; democlass.int_param_) return false;
+  //  int_param_ == democlass.int_param_
+
+  if (int_default_ &lt; democlass.int_default_) return true;
+  if (int_default_ &gt; democlass.int_default_) return false;
+  //  int_default_ == democlass.int_default_
+
+  if (float_param_ &lt; democlass.float_param_) return true;
+  if (float_param_ &gt; democlass.float_param_) return false;
+  //  float_param_ == democlass.float_param_
+
+  if (float_default_ &lt; democlass.float_default_) return true;
+  if (float_default_ &gt; democlass.float_default_) return false;
+  //  float_default_ == democlass.float_default_
+  return false;
+
+}
+
+bool 
+Democlass::operator &gt;(Democlass &amp; democlass) const
+{
+  if ({to_member_s(m.name)} &lt; democlass.string_param_) return false;
+  if ({to_member_s(m.name)} &gt; democlass.string_param_) return true;
+  //  {to_member_s(m.name)} == democlass.string_param_
+
+  if ({to_member_s(m.name)} &lt; democlass.string_default_) return false;
+  if ({to_member_s(m.name)} &gt; democlass.string_default_) return true;
+  //  {to_member_s(m.name)} == democlass.string_default_
+
+  if ({to_member_s(m.name)} &lt; democlass.string_param_rw_) return false;
+  if ({to_member_s(m.name)} &gt; democlass.string_param_rw_) return true;
+  //  {to_member_s(m.name)} == democlass.string_param_rw_
+
+  if ({to_member_s(m.name)} &lt; democlass.int_param_) return false;
+  if ({to_member_s(m.name)} &gt; democlass.int_param_) return true;
+  //  {to_member_s(m.name)} == democlass.int_param_
+
+  if ({to_member_s(m.name)} &lt; democlass.int_default_) return false;
+  if ({to_member_s(m.name)} &gt; democlass.int_default_) return true;
+  //  {to_member_s(m.name)} == democlass.int_default_
+
+  if ({to_member_s(m.name)} &lt; democlass.float_param_) return false;
+  if ({to_member_s(m.name)} &gt; democlass.float_param_) return true;
+  //  {to_member_s(m.name)} == democlass.float_param_
+
+  if ({to_member_s(m.name)} &lt; democlass.float_default_) return false;
+  if ({to_member_s(m.name)} &gt; democlass.float_default_) return true;
+  //  {to_member_s(m.name)} == democlass.float_default_
+  return false;
+
+}
+
+bool 
+Democlass::operator ==(Democlass &amp; democlass) const
+{
+  return (string_param_ == democlass.string_param_) &amp;&amp;
+    (string_default_ == democlass.string_default_) &amp;&amp;
+    (string_param_rw_ == democlass.string_param_rw_) &amp;&amp;
+    (int_param_ == democlass.int_param_) &amp;&amp;
+    (int_default_ == democlass.int_default_) &amp;&amp;
+    (float_param_ == democlass.float_param_) &amp;&amp;
+    (float_default_ == democlass.float_default_);
+}
+
+</pre><hr></hr><h2>democlass.h</h2><pre>#ifndef __DEMOCLASS_H__
+#define __DEMOCLASS_H__
+#include "pgutil.h"
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;vector&gt;
+#include &lt;assign.hpp&gt;
+using namespace std;
+using namespace boost;
+using namespace boost::assign;
+#include "factory.h"
+#include &lt;sstream&gt;
+#include &lt;map&gt;
+#include &lt;shared_ptr.hpp&gt;
+
+class Democlass {
+public:
+  Democlass (std::string stringParam, std::string stringParamRw, int intParam, float floatParam);
+
+  ~Democlass ();
+
+
+  std::string getStringParam(){return string_param_;}
+
+  std::string getStringParamRw(){return string_param_rw_;}  Democlass &amp; setStringParamRw(std::string val) { string_param_rw_=val; return *this;}
+
+  int getIntParam(){return int_param_;}
+
+  float getFloatParam(){return float_param_;}
+
+
+  friend ostream &amp; operator &lt;&lt; (ostream &amp; o, Democlass * democlass);
+
+
+  size_t getHash();
+  bool operator &lt;(Democlass &amp; democlass) const;
+  bool operator &gt;(Democlass &amp; democlass) const;
+  bool operator ==(Democlass &amp; democlass) const;
+
+private:
+  std::string stringParam;
+  std::string stringDefault;
+  std::string stringParamRw;
+  int intParam;
+  int intDefault;
+  float floatParam;
+  float floatDefault;
+
+};
+
+
+#endif /* __DEMOCLASS_H_ */
 </pre><hr></hr><h2>hash10.cpp</h2><pre>#include &lt;string&gt;
 #include &lt;iostream&gt;
 using namespace std;

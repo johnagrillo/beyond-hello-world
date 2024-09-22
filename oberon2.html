@@ -38,6 +38,40 @@ BEGIN
 
   Out.String("Array");Out.Ln();
 END Array20.
+</pre><hr></hr><h2>Democlass.m</h2><pre>(*-oberon-*-*)
+MODULE Democlass;
+TYPE
+   String = ARRAY 256 OF CHAR;
+
+   T = POINTER TO TDesc;
+   TDesc = RECORD
+      stringParam : String;
+      stringDefault : String;
+      stringParamRw : String;
+      intParam : INTEGER;
+      intDefault : INTEGER;
+      floatParam : REAL;
+      floatDefault : REAL;
+   END;
+   PROCEDURE New*(stringParam:String;
+                  stringParamRw:String;
+                  intParam:INTEGER;
+                  floatParam:REAL)  : T;
+      VAR t:T;
+   BEGIN
+      NEW(t);
+      t.stringParam := stringParam;
+      t.stringParamRw := stringParamRw;
+      t.intParam := intParam;
+      t.floatParam := floatParam;
+      t.stringDefault  := "string default";
+      t.intDefault  := 0;
+      t.floatDefault  := 0.0;
+      RETURN t;
+
+   END New;
+
+END Democlass.
 </pre><hr></hr><h2>Hash10.m</h2><pre>MODULE Hash10;
 IMPORT Out;
 TYPE

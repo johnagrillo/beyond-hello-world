@@ -23,7 +23,35 @@ Start =
 
 Start = 
     let #&lt;bhw::member:0x000055f3bbaeaf88&gt; = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20} in
-    (#&lt;bhw::member:0x000055f3bbaeaf88&gt;)</pre><hr></hr><h2>hash10.icl</h2><pre>module hash10
+    (#&lt;bhw::member:0x000055f3bbaeaf88&gt;)</pre><hr></hr><h2>democlass.dcl</h2><pre>definition module democlass
+
+::  Democlass
+newDemoclass :: String String Int Real-&gt;Democlass</pre><hr></hr><h2>democlass.icl</h2><pre>implementation module democlass
+
+import _SystemArray
+import GenFMap
+
+::  Democlass =  {
+  stringParam :: String,
+  stringDefault :: String,
+  stringParamRw :: String,
+  intParam :: Int,
+  intDefault :: Int,
+  floatParam :: Real,
+  floatDefault :: Real}
+
+newDemoclass :: String String Int Real-&gt;Democlass
+newDemoclass stringParam stringParamRw intParam floatParam = {Democlass|
+  stringParam = stringParam,
+  stringDefault = "string default",
+  stringParamRw = stringParamRw,
+  intParam = intParam,
+  intDefault = 0,
+  floatParam = floatParam,
+  floatDefault = 0.0}
+
+
+</pre><hr></hr><h2>hash10.icl</h2><pre>module hash10
 
 Start = 
     let #&lt;bhw::member:0x000055f3bbae32d8&gt; = emptyFMap &lt;&lt;= (1,"string1") &lt;&lt;= (2,"string2") &lt;&lt;= (3,"string3") &lt;&lt;= (4,"string4") &lt;&lt;= (5,"string5") &lt;&lt;= (6,"string6") &lt;&lt;= (7,"string7") &lt;&lt;= (8,"string8") &lt;&lt;= (9,"string9") &lt;&lt;= (10,"string10") in

@@ -20,7 +20,36 @@ var array= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 console.log(array.toString());</pre><hr></hr><h2>Array20.js</h2><pre>
 var array= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
-console.log(array.toString());</pre><hr></hr><h2>Hash10.js</h2><pre>
+console.log(array.toString());</pre><hr></hr><h2>Democlass.js</h2><pre>function Democlass(_stringParam,_stringParamRw,_intParam,_floatParam)
+{
+    this._stringParam = _stringParam
+    this._stringParamRw = _stringParamRw
+    this._intParam = _intParam
+    this._floatParam = _floatParam
+    this._stringDefault = "string default"
+    this._intDefault = 0
+    this._floatDefault = 0.0
+    return this;
+}
+
+Democlass.prototype = {
+  get #&lt;bhw::member:0x000056417c8db080&gt;(){ return this._stringParam;},
+  get #&lt;bhw::member:0x000056417c8dac20&gt;(){ return this._stringParamRw;},
+  set #&lt;bhw::member:0x000056417c8dac20&gt;(arg){ this._stringParamRw=arg;},
+  get #&lt;bhw::member:0x000056417c8daab8&gt;(){ return this._intParam;},
+  get #&lt;bhw::member:0x000056417c8da6f8&gt;(){ return this._floatParam;}
+}
+
+Democlass.prototype.toString = function() {
+    return "" + "-" + 
+        this._stringParam.toString() + "-" + 
+        this._stringDefault.toString() + "-" + 
+        this._stringParamRw.toString() + "-" + 
+        this._intParam.toString() + "-" + 
+        this._intDefault.toString() + "-" + 
+        this._floatParam.toString() + "-" + 
+        this._floatDefault.toString();
+}</pre><hr></hr><h2>Hash10.js</h2><pre>
 var hashf= {1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"};
 
 console.log(hashf.toString());</pre><hr></hr><h2>Integers.js</h2><pre>

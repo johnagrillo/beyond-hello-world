@@ -17,6 +17,56 @@ open Printf;;
 let array = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20] in
 
 ();;
+</pre><hr></hr><h2>Democlass.ml</h2><pre>open Printf;;
+open Util;;
+class democlass string_param string_param_rw int_param float_param = 
+  object(self)
+    val mutable string_param  : string = string_param
+    val mutable string_default  = "string default"
+    val mutable string_param_rw  : string = string_param_rw
+    val mutable int_param  : int = int_param
+    val mutable int_default  = 0
+    val mutable float_param  : float = float_param
+    val mutable float_default  = 0.0
+
+    method get_string_param = string_param
+
+    method get_string_param_rw = string_param_rw
+    method set_string_param_rw l_string_param_rw = string_param_rw &lt;- l_string_param_rw
+    method get_int_param = int_param
+
+    method get_float_param = float_param
+
+    method to_string =      String.concat "-" [string_param;
+                         string_default;
+                         string_param_rw;
+                         (sprintf "%d" int_param);
+                         (sprintf "%d" int_default);
+                         (sprintf "%f" float_param);
+                         (sprintf "%f" float_default)]
+
+end;;
+</pre><hr></hr><h2>Democlass.mli</h2><pre>open Printf;;
+open Util;;
+class democlass : string -&gt; string -&gt; int -&gt; float -&gt; object
+
+
+
+
+
+
+
+
+    method get_string_param : string
+
+    method get_string_param_rw : string
+    method set_string_param_rw : string -&gt; unit
+    method get_int_param : int
+
+    method get_float_param : float
+
+    method to_string : string
+end;;
 </pre><hr></hr><h2>Hash10.ml</h2><pre>open Hashtbl;;
 open Printf;;
 

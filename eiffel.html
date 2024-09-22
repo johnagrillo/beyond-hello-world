@@ -56,6 +56,130 @@ class ARRAY20
             array.print_on(std_output);std_output.put_line("")
         end
 end
+</pre><hr></hr><h2>democlass.e</h2><pre>---*-eiffel-*-
+class DEMOCLASS
+inherit
+  ANY
+    redefine out_in_tagged_out_memory, fill_tagged_out_memory,is_equal
+    end
+creation{ANY}
+  make
+
+feature{ANY}
+  make(string_param_:STRING;
+       string_param_rw_:STRING;
+       int_param_:INTEGER;
+       float_param_:REAL)  is
+    do
+      string_param := string_param_
+      string_param_rw := string_param_rw_
+      int_param := int_param_
+      float_param := float_param_
+      string_default := "string default"
+      int_default := 0.to_integer_32
+      float_default := 0.0
+
+    end
+
+  get_string_param:STRING is
+    do
+      Result := string_param;
+    end
+
+
+
+  get_string_param_rw:STRING is
+    do
+      Result := string_param_rw;
+    end
+  set_string_param_rw(string_param_rw_:STRING) is
+    do
+      string_param_rw:=string_param_rw_
+    end
+
+
+  get_int_param:INTEGER is
+    do
+      Result := int_param;
+    end
+
+
+
+  get_float_param:REAL is
+    do
+      Result := float_param;
+    end
+
+
+
+  out_in_tagged_out_memory, fill_tagged_out_memory is
+    do
+      tagged_out_memory.append(string_param + "-" 
+                   + string_default + "-" 
+                   + string_param_rw + "-" 
+                   + int_param.to_string + "-" 
+                   + int_default.to_string + "-" 
+                   + float_param.to_string + "-" 
+                   + float_default.to_string)
+
+    end
+
+    hash_code: INTEGER is
+      do
+         Result := string_param.hash_code+string_default.hash_code+string_param_rw.hash_code+int_param.hash_code+int_default.hash_code+float_param.hash_code+float_default.hash_code
+      end
+
+    is_equal(other: like Current):BOOLEAN is
+      do
+         Result := string_param = other.string_param and string_default = other.string_default and string_param_rw = other.string_param_rw and int_param = other.int_param and int_default = other.int_default and float_param = other.float_param and float_default = other.float_default
+      end
+
+    infix "&lt;" (other: like Current):BOOLEAN is
+    do
+
+       if string_param &lt; other.string_param then
+          Result := True
+       elseif string_param &gt; other.string_param then
+          Result := False
+       elseif string_default &lt; other.string_default then
+          Result := True
+       elseif string_default &gt; other.string_default then
+          Result := False
+       elseif string_param_rw &lt; other.string_param_rw then
+          Result := True
+       elseif string_param_rw &gt; other.string_param_rw then
+          Result := False
+       elseif int_param &lt; other.int_param then
+          Result := True
+       elseif int_param &gt; other.int_param then
+          Result := False
+       elseif int_default &lt; other.int_default then
+          Result := True
+       elseif int_default &gt; other.int_default then
+          Result := False
+       elseif float_param &lt; other.float_param then
+          Result := True
+       elseif float_param &gt; other.float_param then
+          Result := False
+       elseif float_default &lt; other.float_default then
+          Result := True
+       elseif float_default &gt; other.float_default then
+          Result := False
+        else
+          Result := False
+        end
+
+      end
+
+feature{DEMOCLASS}
+  string_param:STRING
+  string_default:STRING
+  string_param_rw:STRING
+  int_param:INTEGER
+  int_default:INTEGER
+  float_param:REAL
+  float_default:REAL
+end
 </pre><hr></hr><h2>hash10.e</h2><pre>--*-eiffel-*-
 class HASH10      
     --inherit

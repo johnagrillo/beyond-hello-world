@@ -32,7 +32,19 @@ let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 
 
 puts array;
  
-</pre><hr></hr><h2>Hash10.pure</h2><pre>using system;    
+</pre><hr></hr><h2>Democlass.pure</h2><pre>using system,dict,set;
+type democlass( Democlass stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault);
+
+democlass stringParam stringParamRw intParam floatParam = Democlass (stringParam) ("string default") (stringParamRw) (intParam) (0) (floatParam) (0.0);
+
+to_string (Democlass stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault) =
+        join "-" [sprintf "%s" stringParam,
+                  sprintf "%s" stringDefault,
+                  sprintf "%s" stringParamRw,
+                  sprintf "%4d" intParam,
+                  sprintf "%4d" intDefault,
+                  sprintf "%f" floatParam,
+                  sprintf "%f" floatDefault];</pre><hr></hr><h2>Hash10.pure</h2><pre>using system;    
 
 
 let hashf = dict [1=&gt;"string1",2=&gt;"string2",3=&gt;"string3",4=&gt;"string4",5=&gt;"string5",6=&gt;"string6",7=&gt;"string7",8=&gt;"string8",9=&gt;"string9",10=&gt;"string10"];

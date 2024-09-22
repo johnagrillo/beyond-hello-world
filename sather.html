@@ -17,7 +17,31 @@ end
         
     end;
 end
-</pre><hr></hr><h2>hash10.sa</h2><pre>class HASH10 is
+</pre><hr></hr><h2>democlass.sa</h2><pre>class DEMOCLASS is
+    attr string_param:STR;
+    attr string_default:STR;
+    attr string_param_rw:STR;
+    attr int_param:INT;
+    attr int_default:INT;
+    attr float_param:FLT;
+    attr float_default:FLT;
+create(string_param:STR,string_param_rw:STR,int_param:INT,float_param:FLT):DEMOCLASS  is 
+
+    res:DEMOCLASS :=new ;
+    res.string_param := string_param;
+    res.string_param_rw := string_param_rw;
+    res.int_param := int_param;
+    res.float_param := float_param;
+    res.string_default := "";
+    res.int_default := 0;
+    res.float_default := 0.0;
+    return res;
+end;
+
+str:STR is
+    return string_param.str + "-" + string_default.str + "-" + string_param_rw.str + "-" + int_param.str + "-" + int_default.str + "-" + float_param.str + "-" + float_default.str
+end;
+end;</pre><hr></hr><h2>hash10.sa</h2><pre>class HASH10 is
     main is
         hashf:MAP{INT,STR} := #MAP{INT,STR}.insert(1,"string1").insert(2,"string2").insert(3,"string3").insert(4,"string4").insert(5,"string5").insert(6,"string6").insert(7,"string7").insert(8,"string8").insert(9,"string9").insert(10,"string10");
         

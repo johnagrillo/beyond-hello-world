@@ -26,6 +26,63 @@ array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
 &gt; array
     
+</pre><hr></hr><h2>democlass.fal</h2><pre>export
+class Democlass(stringParam,stringParamRw,intParam,floatParam)
+   _stringParam = stringParam
+   _stringDefault = "string default"
+   _stringParamRw = stringParamRw
+   _intParam = intParam
+   _intDefault = 0
+   _floatParam = floatParam
+   _floatDefault = 0.0
+
+   function __get_stringParam(): return self._stringParam
+
+   function __get_stringParamRw(): return self._stringParamRw
+   function __set_stringParamRw(v): self._stringParamRw=v
+
+
+   function __get_intParam(): return self._intParam
+
+   function __get_floatParam(): return self._floatParam
+
+   function toString()
+      return @"$(self._stringParam:4r)-$(self._stringDefault:4r)-$(self._stringParamRw:4r)-$(self._intParam:4r)-$(self._intDefault:4r)-$(self._floatParam:4r)-$(self._floatDefault:4r)"
+   end
+
+   function compare(rhs)
+      ret = self.stringParam.compare(rhs.stringParam)
+      if ret != 0
+         return ret
+      end
+      ret = self.stringDefault.compare(rhs.stringDefault)
+      if ret != 0
+         return ret
+      end
+      ret = self.stringParamRw.compare(rhs.stringParamRw)
+      if ret != 0
+         return ret
+      end
+      ret = self.intParam.compare(rhs.intParam)
+      if ret != 0
+         return ret
+      end
+      ret = self.intDefault.compare(rhs.intDefault)
+      if ret != 0
+         return ret
+      end
+      ret = self.floatParam.compare(rhs.floatParam)
+      if ret != 0
+         return ret
+      end
+      ret = self.floatDefault.compare(rhs.floatDefault)
+      if ret != 0
+         return ret
+      end
+
+   return ret
+   end
+end
 </pre><hr></hr><h2>hash10.fal</h2><pre>
 hashf=[1=&gt;"string1",2=&gt;"string2",3=&gt;"string3",4=&gt;"string4",5=&gt;"string5",6=&gt;"string6",7=&gt;"string7",8=&gt;"string8",9=&gt;"string9",10=&gt;"string10"]
 

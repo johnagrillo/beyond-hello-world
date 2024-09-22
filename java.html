@@ -50,6 +50,93 @@ public class Array20
         System.exit(0);
     }
 }
+</pre><hr></hr><h2>Democlass.java</h2><pre>package src;
+import java.util.*;
+import org.javatuples.*;
+
+public class Democlass
+ implements Comparable&lt;Democlass&gt;
+{
+
+    public Democlass(String stringParam,String stringParamRw,Integer intParam,Double floatParam)
+    {
+        this.stringParam = stringParam;
+        this.stringParamRw = stringParamRw;
+        this.intParam = intParam;
+        this.floatParam = floatParam;
+        this.stringDefault = "";
+        this.intDefault = 0;
+        this.floatDefault = 0.0;
+    }
+    String getStringParam(){ return this.stringParam;}
+
+    String getStringParamRw(){ return this.stringParamRw;}
+    String setStringParamRw(String _stringParamRw){        this.stringParamRw=_stringParamRw;        return this.stringParamRw;}
+
+
+    Integer getIntParam(){ return this.intParam;}
+
+    Double getFloatParam(){ return this.floatParam;}
+
+    @Override public String toString()
+    {
+        return String.format("%s-%s-%s-%4d-%4d-%s-%s",#&lt;bhw::member:0x000056417c8db080&gt;,#&lt;bhw::member:0x000056417c8dae00&gt;,#&lt;bhw::member:0x000056417c8dac20&gt;,#&lt;bhw::member:0x000056417c8daab8&gt;,#&lt;bhw::member:0x000056417c8da8b0&gt;,#&lt;bhw::member:0x000056417c8da6f8&gt;,#&lt;bhw::member:0x000056417c8da4f0&gt;);
+    }
+
+    @Override public int hashCode()
+    {
+        return stringParam.hashCode()+stringDefault.hashCode()+stringParamRw.hashCode()+intParam+intDefault+floatParam.hashCode()+floatDefault.hashCode();
+    }
+    @Override public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (!(obj instanceof Democlass)) return false;
+        Democlass democlass = (Democlass)obj;
+        return stringParam == democlass.stringParam &amp;&amp;
+            stringDefault == democlass.stringDefault &amp;&amp;
+            stringParamRw == democlass.stringParamRw &amp;&amp;
+            intParam == democlass.intParam &amp;&amp;
+            intDefault == democlass.intDefault &amp;&amp;
+            floatParam == democlass.floatParam &amp;&amp;
+            floatDefault == democlass.floatDefault;
+    }
+
+    @Override public int compareTo(Democlass rhs)
+    {
+        int ret=0;
+        ret = stringParam.compareTo(rhs.stringParam);
+        if (ret !=0) return ret;
+        ret = stringDefault.compareTo(rhs.stringDefault);
+        if (ret !=0) return ret;
+        ret = stringParamRw.compareTo(rhs.stringParamRw);
+        if (ret !=0) return ret;
+
+        if (intParam &lt; rhs.intParam) return -1;
+        if (intParam &gt; rhs.intParam) return 1;
+
+
+        if (intDefault &lt; rhs.intDefault) return -1;
+        if (intDefault &gt; rhs.intDefault) return 1;
+
+
+        if (floatParam &lt; rhs.floatParam) return -1;
+        if (floatParam &gt; rhs.floatParam) return 1;
+
+
+        if (floatDefault &lt; rhs.floatDefault) return -1;
+        if (floatDefault &gt; rhs.floatDefault) return 1;
+
+        return ret;
+    }
+    private String stringParam;
+    private String stringDefault;
+    private String stringParamRw;
+    private Integer intParam;
+    private Integer intDefault;
+    private Double floatParam;
+    private Double floatDefault;
+
+}
 </pre><hr></hr><h2>Hash10.java</h2><pre>import java.util.*;
 import org.javatuples.*;
     

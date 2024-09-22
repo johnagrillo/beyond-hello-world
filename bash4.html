@@ -11,7 +11,26 @@ exit 0</pre><hr></hr><h2>array20.sh</h2><pre>array="(0 1 1 2 2 3 3 4 4 5 5 6 6 7
 
 echo ${array}
 
-exit 0</pre><hr></hr><h2>hash10.sh</h2><pre>hashf={1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"}
+exit 0</pre><hr></hr><h2>democlass.sh</h2><pre>#
+# Declare global variable to return new value
+#
+declare -A NEW_DEMOCLASS
+new_democlass (){
+    string_param=$1
+    string_param_rw=$2
+    int_param=$3
+    float_param=$4
+NEW_DEMOCLASS=(
+    ["string_param"]=$string_param
+    ["string_param_rw"]=$string_param_rw
+    ["int_param"]=$int_param
+    ["float_param"]=$float_param
+    ["string_default"]="string default"
+    ["int_default"]=0
+    ["float_default"]=0.0
+)
+}
+</pre><hr></hr><h2>hash10.sh</h2><pre>hashf={1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"}
 
 echo ${hashf}
 

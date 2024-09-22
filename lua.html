@@ -8,6 +8,49 @@ print(#&lt;bhw::member:0x000055f3bbaebcf8&gt;)
 </pre><hr></hr><h2>array20.lua</h2><pre>
 
 print(#&lt;bhw::member:0x000055f3bbaeaf88&gt;)
+</pre><hr></hr><h2>democlass.lua</h2><pre>Democlass= {}
+function Democlass:new(
+stringParam,
+                       stringParamRw,
+                       intParam,
+                       floatParam
+)
+
+    local object = {#&lt;bhw::member:0x000056417c8db080&gt; = stringParam,
+              #&lt;bhw::member:0x000056417c8dac20&gt; = stringParamRw,
+              #&lt;bhw::member:0x000056417c8daab8&gt; = intParam,
+              #&lt;bhw::member:0x000056417c8da6f8&gt; = floatParam,
+              #&lt;bhw::member:0x000056417c8dae00&gt; = "string default",
+              #&lt;bhw::member:0x000056417c8da8b0&gt; = 0,
+              #&lt;bhw::member:0x000056417c8da4f0&gt; = 0.0}
+    setmetatable(object,
+                        { __index = Class1,
+	                        __tostring = function() return string.format("%s-%s-%s-%4d-%4d-%f-%f",object.stringParam,object.stringDefault,object.stringParamRw,object.intParam,object.intDefault,object.floatParam,object.floatDefault)
+ end
+                        })
+    return object
+end
+
+function Democlass:getStringParam()
+    return self.stringParam
+end
+
+function Democlass:getStringParamRw()
+    return self.stringParamRw
+end
+function Democlass:setStringParamRw(val)
+    self.stringParamRw = val
+end
+
+function Democlass:getIntParam()
+    return self.intParam
+end
+
+function Democlass:getFloatParam()
+    return self.floatParam
+end
+
+
 </pre><hr></hr><h2>hash10.lua</h2><pre>
 
 print(#&lt;bhw::member:0x000055f3bbae32d8&gt;)

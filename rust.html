@@ -11,7 +11,36 @@ fn main() {
 fn main() {
     let _array : [i32; 20] =  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 
-}</pre><hr></hr><h2>hash10.rs</h2><pre>use std::collections::HashMap;
+}</pre><hr></hr><h2>democlass.rs</h2><pre>package src
+import "fmt"
+
+type democlass struct {
+    fmt.Stringer
+    string_param &amp;str
+    string_default &amp;str
+    string_param_rw &amp;str
+    int_param i32
+    int_default i32
+    float_param f64
+    float_default f64
+}
+fn Newdemoclass(let _string_param &amp;str,
+let _string_param_rw &amp;str,
+let _int_param i32,
+let _float_param f64,)*democlass{
+
+    return &amp;democlass{
+        string_param:string_param,
+        string_default:"string default",
+        string_param_rw:string_param_rw,
+        int_param:int_param,
+        int_default:0,
+        float_param:float_param,
+        float_default:0.0,
+    }
+}
+func (in * democlass ) String() string {
+     return fmt.Sprintf("%s-%s-%s-%4d-%4d-%f-%f",in.string_param,in.string_default,in.string_param_rw,in.int_param,in.int_default,in.float_param,in.float_default);}</pre><hr></hr><h2>hash10.rs</h2><pre>use std::collections::HashMap;
 fn main() {
     let _hashf : HashMap &lt; i32,&amp;str &gt;  = [ (1,"string1"),
      (2,"string2"),

@@ -5,7 +5,36 @@
 
     print(array)</pre><hr></hr><h2>array20.swift</h2><pre>    let array : [Int] =  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 
-    print(array)</pre><hr></hr><h2>hash10.swift</h2><pre>    let hashf :  [ Int:String ]  = [ 1:"string1",
+    print(array)</pre><hr></hr><h2>democlass.swift</h2><pre>package src
+import "fmt"
+
+type democlass struct {
+    fmt.Stringer
+    string_param String
+    string_default String
+    string_param_rw String
+    int_param Int
+    int_default Int
+    float_param float64
+    float_default float64
+}
+func Newdemoclass(let _string_param String,
+let _string_param_rw String,
+let _int_param Int,
+let _float_param float64,)*democlass{
+
+    return &amp;democlass{
+        string_param:string_param,
+        string_default:"string default",
+        string_param_rw:string_param_rw,
+        int_param:int_param,
+        int_default:0,
+        float_param:float_param,
+        float_default:0.0,
+    }
+}
+func (in * democlass ) String() string {
+     return fmt.Sprintf("%s-%s-%s-%4d-%4d-%f-%f",in.string_param,in.string_default,in.string_param_rw,in.int_param,in.int_default,in.float_param,in.float_default);}</pre><hr></hr><h2>hash10.swift</h2><pre>    let hashf :  [ Int:String ]  = [ 1:"string1",
      2:"string2",
      3:"string3",
      4:"string4",

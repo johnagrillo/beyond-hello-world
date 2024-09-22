@@ -11,6 +11,95 @@ print($array,"\n");
 
 
 print($array,"\n");
+</pre><hr></hr><h2>Democlass.pm</h2><pre>use strict;
+
+package Democlass;
+use overload('""', 'toString');
+
+
+
+
+
+my $STRINGPARAM = "string param";
+my $STRINGDEFAULT = "string default";
+my $STRINGPARAMRW = "string param rw";
+my $INTPARAM = "int param";
+my $INTDEFAULT = "int default";
+my $FLOATPARAM = "float param";
+my $FLOATDEFAULT = "float default";
+
+
+
+sub new {
+  my ($this,$_stringParam,$_stringParamRw,$_intParam,$_floatParam) = @_;
+  my $ref = ref($this)||$this;
+  my $self = {};
+  bless $self,$ref;
+  $self-&gt;{$STRINGPARAM} = $_stringParam;
+  $self-&gt;{$STRINGPARAMRW} = $_stringParamRw;
+  $self-&gt;{$INTPARAM} = $_intParam;
+  $self-&gt;{$FLOATPARAM} = $_floatParam;
+  $self-&gt;{$STRINGDEFAULT} = "string default";
+  $self-&gt;{$INTDEFAULT} = 0;
+  $self-&gt;{$FLOATDEFAULT} = 0.0;
+  return $self;
+}
+
+
+sub getStringParam {
+  my ($self) = @_;
+  $self-&gt;{$STRINGPARAM};
+}
+sub getStringDefault {
+  my ($self) = @_;
+  $self-&gt;{$STRINGDEFAULT};
+}
+sub getStringParamRw {
+  my ($self) = @_;
+  $self-&gt;{$STRINGPARAMRW};
+}
+sub getIntParam {
+  my ($self) = @_;
+  $self-&gt;{$INTPARAM};
+}
+sub getIntDefault {
+  my ($self) = @_;
+  $self-&gt;{$INTDEFAULT};
+}
+sub getFloatParam {
+  my ($self) = @_;
+  $self-&gt;{$FLOATPARAM};
+}
+sub getFloatDefault {
+  my ($self) = @_;
+  $self-&gt;{$FLOATDEFAULT};
+}
+sub setStringDefault {
+  my ($self,$param) = @_;
+  $self-&gt;{$STRINGDEFAULT} = $param;
+}
+sub setStringParamRw {
+  my ($self,$param) = @_;
+  $self-&gt;{$STRINGPARAMRW} = $param;
+}
+sub setIntDefault {
+  my ($self,$param) = @_;
+  $self-&gt;{$INTDEFAULT} = $param;
+}
+sub setFloatDefault {
+  my ($self,$param) = @_;
+  $self-&gt;{$FLOATDEFAULT} = $param;
+}
+
+sub toString {
+  my ($self) = @_;
+  sprintf("%s-%s-%s-%s-%s-%s-%s",
+          $self-&gt;{$STRINGPARAM},$self-&gt;{$STRINGDEFAULT},$self-&gt;{$STRINGPARAMRW},$self-&gt;{$INTPARAM},$self-&gt;{$INTDEFAULT},$self-&gt;{$FLOATPARAM},$self-&gt;{$FLOATDEFAULT});
+}
+
+
+
+1;
 </pre><hr></hr><h2>Hash10.pm</h2><pre>
 
 

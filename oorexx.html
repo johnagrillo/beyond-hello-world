@@ -59,7 +59,59 @@ return t
 
 
     
-</pre><hr></hr><h2>hash10.rex</h2><pre>    
+</pre><hr></hr><h2>democlass.rex</h2><pre>::class Democlass public inherit Comparable
+
+::attribute stringParam
+::attribute stringDefault
+::attribute stringParamRw
+::attribute intParam
+::attribute intDefault
+::attribute floatParam
+::attribute floatDefault
+
+::method init
+expose stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault
+use arg stringParam,stringParamRw,intParam,floatParam
+   self~stringParam = stringParam
+   self~stringParamRw = stringParamRw
+   self~intParam = intParam
+   self~floatParam = floatParam
+   self~stringDefault = "string default"
+   self~intDefault = 0
+   self~floatDefault = 0.0
+
+   
+
+
+::method defaultName
+   return self~stringParam|| "-" || self~stringDefault|| "-" || self~stringParamRw|| "-" || translate(format(self~#&lt;bhw::member:0x000056417c8daab8&gt;,4), #&lt;bhw::member:0x000056417c8daab8&gt;,,)|| "-" || translate(format(self~#&lt;bhw::member:0x000056417c8da8b0&gt;,4), #&lt;bhw::member:0x000056417c8da8b0&gt;,,)|| "-" || self~floatParam|| "-" || self~floatDefault
+
+::method hashCode
+   return self~stringParam~hashCode() || self~stringDefault~hashCode() || self~stringParamRw~hashCode() || self~intParam~hashCode() || self~intDefault~hashCode() || self~floatParam~hashCode() || self~floatDefault~hashCode()
+
+::method '=='
+   use arg other
+   return self~stringParam == other~stringParam &amp; self~stringDefault == other~stringDefault &amp; self~stringParamRw == other~stringParamRw &amp; self~intParam == other~intParam &amp; self~intDefault == other~intDefault &amp; self~floatParam == other~floatParam &amp; self~floatDefault == other~floatDefault
+
+
+::method compareTo
+   use arg other
+   ret = self~stringParam~compareTo(other~stringParam)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~stringDefault~compareTo(other~stringDefault)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~stringParamRw~compareTo(other~stringParamRw)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~intParam~compareTo(other~intParam)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~intDefault~compareTo(other~intDefault)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~floatParam~compareTo(other~floatParam)
+   if (ret &lt;&gt; 0) then return ret
+   ret = self~floatDefault~compareTo(other~floatDefault)
+   if (ret &lt;&gt; 0) then return ret
+
+   return ret</pre><hr></hr><h2>hash10.rex</h2><pre>    
 hashf=.fromlist .array~of(.list~of(1,"string1"), .list~of(2,"string2"), .list~of(3,"string3"), .list~of(4,"string4"), .list~of(5,"string5"), .list~of(6,"string6"), .list~of(7,"string7"), .list~of(8,"string8"), .list~of(9,"string9"), .list~of(10,"string10"))
 
 say hashf

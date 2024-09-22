@@ -8,6 +8,82 @@ print(#&lt;bhw::member:0x000055f3bbaebcf8&gt;)
 </pre><hr></hr><h2>array20.py</h2><pre>
 
 print(#&lt;bhw::member:0x000055f3bbaeaf88&gt;)
+</pre><hr></hr><h2>democlass.py</h2><pre>class Democlass(object):
+
+  def __init__(self,
+               _stringParam,
+               _stringParamRw,
+               _intParam,
+               _floatParam):
+    self._stringParam = _stringParam
+    self._stringParamRw = _stringParamRw
+    self._intParam = _intParam
+    self._floatParam = _floatParam
+    self._stringDefault = "string default"
+    self._intDefault = 0
+    self._floatDefault = 0.0
+    pass
+
+
+
+  @property
+  def stringParam(self):
+    return self._stringParam
+
+  @property
+  def stringParamRw(self):
+    return self._stringParamRw
+  @stringParamRw.setter
+  def stringParamRw(self, _stringParamRw):
+    self._stringParamRw = _stringParamRw
+
+  @property
+  def intParam(self):
+    return self._intParam
+
+  @property
+  def floatParam(self):
+    return self._floatParam
+
+
+  def __repr__(self):
+    return "%s-%s-%s-%4d-%4d-%f-%f"%(self._stringParam,self._stringDefault,self._stringParamRw,self._intParam,self._intDefault,self._floatParam,self._floatDefault)
+
+  def __cmp__(self,rhs):
+    ret = cmp(self._stringParam,rhs.stringParam)
+    if ret != 0:
+      return ret
+    ret = cmp(self._stringDefault,rhs.stringDefault)
+    if ret != 0:
+      return ret
+    ret = cmp(self._stringParamRw,rhs.stringParamRw)
+    if ret != 0:
+      return ret
+    ret = cmp(self._intParam,rhs.intParam)
+    if ret != 0:
+      return ret
+    ret = cmp(self._intDefault,rhs.intDefault)
+    if ret != 0:
+      return ret
+    ret = cmp(self._floatParam,rhs.floatParam)
+    if ret != 0:
+      return ret
+    ret = cmp(self._floatDefault,rhs.floatDefault)
+    if ret != 0:
+      return ret
+    return ret
+
+
+
+  def __eq__(self,rhs):
+    return self.stringParam == rhs.stringParam and self.stringDefault == rhs.stringDefault and self.stringParamRw == rhs.stringParamRw and self.intParam == rhs.intParam and self.intDefault == rhs.intDefault and self.floatParam == rhs.floatParam and self.floatDefault == rhs.floatDefault
+
+
+  def __hash__(self):
+    return hash(self._stringParam) + hash(self._stringDefault) + hash(self._stringParamRw) + hash(self._intParam) + hash(self._intDefault) + hash(self._floatParam) + hash(self._floatDefault)
+
+
+
 </pre><hr></hr><h2>hash10.py</h2><pre>
 
 print(#&lt;bhw::member:0x000055f3bbae32d8&gt;)

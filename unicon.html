@@ -56,7 +56,60 @@ procedure fromlist(args)
     return t
 end
     
-</pre><hr></hr><h2>hash10.icn</h2><pre>procedure main (arglist)
+</pre><hr></hr><h2>democlass.icn</h2><pre>link printf
+class Democlass (
+string_param,
+string_default,
+string_param_rw,
+int_param,
+int_default,
+float_param,
+float_default
+  )
+
+  method get_string_param()
+    return string_param
+  end
+
+
+
+  method get_string_param_rw()
+    return string_param_rw
+  end
+  method set_string_param_rw(_string_param_rw)
+    string_param_rw := _string_param_rw
+  end
+
+  method get_int_param()
+    return int_param
+  end
+
+
+
+  method get_float_param()
+    return float_param
+  end
+
+
+
+
+
+  method to_string()
+    return string_param || "-" || string_default || "-" || string_param_rw || "-" || sprintf("%4d",int_param) || "-" || sprintf("%4d",int_default) || "-" || %f || "-" || %f
+  end
+
+  initially(_string_param,_string_param_rw,_int_param,_float_param)
+   string_param := _string_param
+   string_param_rw := _string_param_rw
+   int_param := _int_param
+   float_param := _float_param
+   string_default := "string default"
+   int_default := 0
+   float_default := 0.0
+
+    
+
+end</pre><hr></hr><h2>hash10.icn</h2><pre>procedure main (arglist)
     
 
     write(hashf)

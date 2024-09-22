@@ -56,6 +56,58 @@
 )
     
     
+</pre><hr></hr><h2>democlass.lisp</h2><pre>(load "/usr/local/include/pg//commonlisp/pg-timer.lisp")
+
+(defclass democlass ()
+  ((string-param
+  :initarg :string-param
+  :initform (error "string-param is a required parameter")
+  :accessor string-param)
+
+(string-default
+  :initform "string default"
+  :accessor string-default)
+
+(string-param-rw
+  :initarg :string-param-rw
+  :initform (error "string-param-rw is a required parameter")
+  :accessor string-param-rw)
+
+(int-param
+  :initarg :int-param
+  :initform (error "int-param is a required parameter")
+  :accessor int-param)
+
+(int-default
+  :initform 0
+  :accessor int-default)
+
+(float-param
+  :initarg :float-param
+  :initform (error "float-param is a required parameter")
+  :accessor float-param)
+
+(float-default
+  :initform 0.0
+  :accessor float-default)
+
+)))
+
+(defun democlass-get-key (string-param string-default string-param-rw int-param int-default float-param float-default)
+  (format nil "~a-~a-~a-~4d-~4d-~f-~f" string-param string-default string-param-rw int-param int-default float-param float-default))
+
+
+(defun democlass-to-string (this)
+  (democlass-get-key
+    (string-param this)
+    (string-default this)
+    (string-param-rw this)
+    (int-param this)
+    (int-default this)
+    (float-param this)
+    (float-default this)
+))
+
 </pre><hr></hr><h2>hash10.lisp</h2><pre>;;
 ;; make hash from a list of key value pairs
 ;;

@@ -8,6 +8,33 @@ System.out.println(array)
 </pre><hr></hr><h2>Array20.groovy</h2><pre>
 
 System.out.println(array)
+</pre><hr></hr><h2>Democlass.groovy</h2><pre>class Democlass{
+    Democlass(_stringParam,_stringParamRw,_intParam,_floatParam){
+        stringParam = _stringParam
+        stringParamRw = _stringParamRw
+        intParam = _intParam
+        floatParam = _floatParam
+        stringDefault = "string default"
+        intDefault = 0
+        floatDefault = 0.0
+}
+
+
+
+    def String toString()
+    {
+        return String.format("%s-%s-%s-%4d-%4d-%f-%f",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
+    }
+
+    def stringParam
+    def stringDefault
+    def stringParamRw
+    def intParam
+    def intDefault
+    def floatParam
+    def floatDefault
+
+}
 </pre><hr></hr><h2>Hash10.groovy</h2><pre>
 
 System.out.println(hashf)

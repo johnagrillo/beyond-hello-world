@@ -5,6 +5,48 @@
 #&lt;bhw::member:0x000055f3bbaebcf8&gt; displayNl .
 </pre><hr></hr><h2>Array20.st</h2><pre>#&lt;bhw::member:0x000055f3bbaeaf88&gt;:=#(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20).
 #&lt;bhw::member:0x000055f3bbaeaf88&gt; displayNl .
+</pre><hr></hr><h2>Democlass.st</h2><pre>Object subclass: Democlass[
+    |
+        stringParam
+        stringDefault
+        stringParamRw
+        intParam
+        intDefault
+        floatParam
+        floatDefault
+    |
+    Democlass class [
+        new: stringParam_ stringParamRw:stringParamRw_ intParam:intParam_ floatParam:floatParam_ [
+            ^ ((super new) init: stringParam_ stringParamRw:stringParamRw_ intParam:intParam_ floatParam:floatParam_ )
+        ]
+    ]
+
+    init: #&lt;bhw::member:0x000056417c8db080&gt;_ stringParamRw:stringParamRw_  intParam:intParam_  floatParam:floatParam_ [
+        stringParam:= stringParam_.
+        stringParamRw:= stringParamRw_.
+        intParam:= intParam_.
+        floatParam:= floatParam_.
+        stringDefault:= 'string default'.
+        intDefault:= 0.
+        floatDefault:= 0.0.
+    ]
+    displayOn: stream [
+        &lt;category: 'printing'&gt;
+        stringParam displayOn:stream.
+        '-' displayOn:stream.
+        stringDefault displayOn:stream.
+        '-' displayOn:stream.
+        stringParamRw displayOn:stream.
+        '-' displayOn:stream.
+        intParam displayOn:stream.
+        '-' displayOn:stream.
+        intDefault displayOn:stream.
+        '-' displayOn:stream.
+        floatParam displayOn:stream.
+        '-' displayOn:stream.
+        floatDefault displayOn:stream
+    ]
+]
 </pre><hr></hr><h2>Hash10.st</h2><pre>#&lt;bhw::member:0x000055f3bbae32d8&gt;:=Dictionary from: {1-&gt;'string1'.2-&gt;'string2'.3-&gt;'string3'.4-&gt;'string4'.5-&gt;'string5'.6-&gt;'string6'.7-&gt;'string7'.8-&gt;'string8'.9-&gt;'string9'.10-&gt;'string10'}.
 #&lt;bhw::member:0x000055f3bbae32d8&gt; displayNl .
 </pre><hr></hr><h2>Integers.st</h2><pre>#&lt;bhw::member:0x000055f3bbb0de70&gt;:=0.
