@@ -6,12 +6,9 @@
 
     <h2>This project started in 2004 as a way to learn new programming languages. I added new generators as I learned new languages.  </h2>
 
-    <h2>As the statistician for our local swim team from 2005 tp 2015,
+    <h2>As the statistician for our local swim team,
       I wrote many scripts in Perl to process
       and analyze the data from their meets.
-    </h2>
-    
-    <a href="https://johnagrillo.github.io/rsst/"><h1>Mock Meet Simulator for FSSL 2024</h1></a>
     </h2>
 
     <h2>
@@ -31,7 +28,7 @@
       Each time I learned a new language, I had to recreate the
       classes and data structures from scratch in
       the new language.   Instead of repeating this process with every language,
-      I created a Ruby library to generate source code for each new language.
+      I created a Ruby library to generate souece code for each new languge.
     </h2>
 
 
