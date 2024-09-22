@@ -1,5 +1,92 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>java</h1><hr></hr><h2>Array03.java</h2><pre>import java.util.*;
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Java</h1><hr></hr><h2>ADemoClass.java</h2><pre>package src;
+import java.util.*;
+import org.javatuples.*;
+
+public class ADemoClass
+ implements Comparable&lt;ADemoClass&gt;
+{
+
+    public ADemoClass(String stringParam,String stringParamRw,Integer intParam,Double floatParam)
+    {
+        this.stringParam = stringParam;
+        this.stringParamRw = stringParamRw;
+        this.intParam = intParam;
+        this.floatParam = floatParam;
+        this.stringDefault = "";
+        this.intDefault = 0;
+        this.floatDefault = 0.0;
+    }
+    String getStringParam(){ return this.stringParam;}
+
+    String getStringParamRw(){ return this.stringParamRw;}
+    String setStringParamRw(String _stringParamRw){        this.stringParamRw=_stringParamRw;        return this.stringParamRw;}
+
+
+    Integer getIntParam(){ return this.intParam;}
+
+    Double getFloatParam(){ return this.floatParam;}
+
+    @Override public String toString()
+    {
+        return String.format("%s-%s-%s-%4d-%4d-%s-%s",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
+    }
+
+    @Override public int hashCode()
+    {
+        return stringParam.hashCode()+stringDefault.hashCode()+stringParamRw.hashCode()+intParam+intDefault+floatParam.hashCode()+floatDefault.hashCode();
+    }
+    @Override public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (!(obj instanceof ADemoClass)) return false;
+        ADemoClass aDemoClass = (ADemoClass)obj;
+        return stringParam == aDemoClass.stringParam &amp;&amp;
+            stringDefault == aDemoClass.stringDefault &amp;&amp;
+            stringParamRw == aDemoClass.stringParamRw &amp;&amp;
+            intParam == aDemoClass.intParam &amp;&amp;
+            intDefault == aDemoClass.intDefault &amp;&amp;
+            floatParam == aDemoClass.floatParam &amp;&amp;
+            floatDefault == aDemoClass.floatDefault;
+    }
+
+    @Override public int compareTo(ADemoClass rhs)
+    {
+        int ret=0;
+        ret = stringParam.compareTo(rhs.stringParam);
+        if (ret !=0) return ret;
+        ret = stringDefault.compareTo(rhs.stringDefault);
+        if (ret !=0) return ret;
+        ret = stringParamRw.compareTo(rhs.stringParamRw);
+        if (ret !=0) return ret;
+
+        if (intParam &lt; rhs.intParam) return -1;
+        if (intParam &gt; rhs.intParam) return 1;
+
+
+        if (intDefault &lt; rhs.intDefault) return -1;
+        if (intDefault &gt; rhs.intDefault) return 1;
+
+
+        if (floatParam &lt; rhs.floatParam) return -1;
+        if (floatParam &gt; rhs.floatParam) return 1;
+
+
+        if (floatDefault &lt; rhs.floatDefault) return -1;
+        if (floatDefault &gt; rhs.floatDefault) return 1;
+
+        return ret;
+    }
+    private String stringParam;
+    private String stringDefault;
+    private String stringParamRw;
+    private Integer intParam;
+    private Integer intDefault;
+    private Double floatParam;
+    private Double floatDefault;
+
+}
+</pre><hr></hr><h2>Array03.java</h2><pre>import java.util.*;
 import org.javatuples.*;
     
 public class Array03
@@ -49,93 +136,6 @@ public class Array20
         System.out.println(array);
         System.exit(0);
     }
-}
-</pre><hr></hr><h2>Democlass.java</h2><pre>package src;
-import java.util.*;
-import org.javatuples.*;
-
-public class Democlass
- implements Comparable&lt;Democlass&gt;
-{
-
-    public Democlass(String stringParam,String stringParamRw,Integer intParam,Double floatParam)
-    {
-        this.stringParam = stringParam;
-        this.stringParamRw = stringParamRw;
-        this.intParam = intParam;
-        this.floatParam = floatParam;
-        this.stringDefault = "";
-        this.intDefault = 0;
-        this.floatDefault = 0.0;
-    }
-    String getStringParam(){ return this.stringParam;}
-
-    String getStringParamRw(){ return this.stringParamRw;}
-    String setStringParamRw(String _stringParamRw){        this.stringParamRw=_stringParamRw;        return this.stringParamRw;}
-
-
-    Integer getIntParam(){ return this.intParam;}
-
-    Double getFloatParam(){ return this.floatParam;}
-
-    @Override public String toString()
-    {
-        return String.format("%s-%s-%s-%4d-%4d-%s-%s",#&lt;bhw::member:0x000056417c8db080&gt;,#&lt;bhw::member:0x000056417c8dae00&gt;,#&lt;bhw::member:0x000056417c8dac20&gt;,#&lt;bhw::member:0x000056417c8daab8&gt;,#&lt;bhw::member:0x000056417c8da8b0&gt;,#&lt;bhw::member:0x000056417c8da6f8&gt;,#&lt;bhw::member:0x000056417c8da4f0&gt;);
-    }
-
-    @Override public int hashCode()
-    {
-        return stringParam.hashCode()+stringDefault.hashCode()+stringParamRw.hashCode()+intParam+intDefault+floatParam.hashCode()+floatDefault.hashCode();
-    }
-    @Override public boolean equals(Object obj)
-    {
-        if (this == obj) return true;
-        if (!(obj instanceof Democlass)) return false;
-        Democlass democlass = (Democlass)obj;
-        return stringParam == democlass.stringParam &amp;&amp;
-            stringDefault == democlass.stringDefault &amp;&amp;
-            stringParamRw == democlass.stringParamRw &amp;&amp;
-            intParam == democlass.intParam &amp;&amp;
-            intDefault == democlass.intDefault &amp;&amp;
-            floatParam == democlass.floatParam &amp;&amp;
-            floatDefault == democlass.floatDefault;
-    }
-
-    @Override public int compareTo(Democlass rhs)
-    {
-        int ret=0;
-        ret = stringParam.compareTo(rhs.stringParam);
-        if (ret !=0) return ret;
-        ret = stringDefault.compareTo(rhs.stringDefault);
-        if (ret !=0) return ret;
-        ret = stringParamRw.compareTo(rhs.stringParamRw);
-        if (ret !=0) return ret;
-
-        if (intParam &lt; rhs.intParam) return -1;
-        if (intParam &gt; rhs.intParam) return 1;
-
-
-        if (intDefault &lt; rhs.intDefault) return -1;
-        if (intDefault &gt; rhs.intDefault) return 1;
-
-
-        if (floatParam &lt; rhs.floatParam) return -1;
-        if (floatParam &gt; rhs.floatParam) return 1;
-
-
-        if (floatDefault &lt; rhs.floatDefault) return -1;
-        if (floatDefault &gt; rhs.floatDefault) return 1;
-
-        return ret;
-    }
-    private String stringParam;
-    private String stringDefault;
-    private String stringParamRw;
-    private Integer intParam;
-    private Integer intDefault;
-    private Double floatParam;
-    private Double floatDefault;
-
 }
 </pre><hr></hr><h2>Hash10.java</h2><pre>import java.util.*;
 import org.javatuples.*;
@@ -207,91 +207,4 @@ public class Nested
         System.exit(0);
     }
 }
-</pre><hr></hr><h2>Simple.java</h2><pre>package src;
-import java.util.*;
-import org.javatuples.*;
-
-public class Simple
- implements Comparable&lt;Simple&gt;
-{
-
-    public Simple(String stringParam,String stringParamRw,Integer intParam,Double floatParam)
-    {
-        this.stringParam = stringParam;
-        this.stringParamRw = stringParamRw;
-        this.intParam = intParam;
-        this.floatParam = floatParam;
-        this.stringDefault = "";
-        this.intDefault = 0;
-        this.floatDefault = 0.0;
-    }
-    String getStringParam(){ return this.stringParam;}
-
-    String getStringParamRw(){ return this.stringParamRw;}
-    String setStringParamRw(String _stringParamRw){        this.stringParamRw=_stringParamRw;        return this.stringParamRw;}
-
-
-    Integer getIntParam(){ return this.intParam;}
-
-    Double getFloatParam(){ return this.floatParam;}
-
-    @Override public String toString()
-    {
-        return String.format("%s-%s-%s-%4d-%4d-%s-%s",#&lt;bhw::member:0x000055d39baffea0&gt;,#&lt;bhw::member:0x000055d39baffc20&gt;,#&lt;bhw::member:0x000055d39baffa68&gt;,#&lt;bhw::member:0x000055d39baff900&gt;,#&lt;bhw::member:0x000055d39baff720&gt;,#&lt;bhw::member:0x000055d39baff590&gt;,#&lt;bhw::member:0x000055d39baff360&gt;);
-    }
-
-    @Override public int hashCode()
-    {
-        return stringParam.hashCode()+stringDefault.hashCode()+stringParamRw.hashCode()+intParam+intDefault+floatParam.hashCode()+floatDefault.hashCode();
-    }
-    @Override public boolean equals(Object obj)
-    {
-        if (this == obj) return true;
-        if (!(obj instanceof Simple)) return false;
-        Simple simple = (Simple)obj;
-        return stringParam == simple.stringParam &amp;&amp;
-            stringDefault == simple.stringDefault &amp;&amp;
-            stringParamRw == simple.stringParamRw &amp;&amp;
-            intParam == simple.intParam &amp;&amp;
-            intDefault == simple.intDefault &amp;&amp;
-            floatParam == simple.floatParam &amp;&amp;
-            floatDefault == simple.floatDefault;
-    }
-
-    @Override public int compareTo(Simple rhs)
-    {
-        int ret=0;
-        ret = stringParam.compareTo(rhs.stringParam);
-        if (ret !=0) return ret;
-        ret = stringDefault.compareTo(rhs.stringDefault);
-        if (ret !=0) return ret;
-        ret = stringParamRw.compareTo(rhs.stringParamRw);
-        if (ret !=0) return ret;
-
-        if (intParam &lt; rhs.intParam) return -1;
-        if (intParam &gt; rhs.intParam) return 1;
-
-
-        if (intDefault &lt; rhs.intDefault) return -1;
-        if (intDefault &gt; rhs.intDefault) return 1;
-
-
-        if (floatParam &lt; rhs.floatParam) return -1;
-        if (floatParam &gt; rhs.floatParam) return 1;
-
-
-        if (floatDefault &lt; rhs.floatDefault) return -1;
-        if (floatDefault &gt; rhs.floatDefault) return 1;
-
-        return ret;
-    }
-    private String stringParam;
-    private String stringDefault;
-    private String stringParamRw;
-    private Integer intParam;
-    private Integer intDefault;
-    private Double floatParam;
-    private Double floatDefault;
-
-}
-</pre></html>
+</pre><hr></hr><h2>TestADemoClass.java</h2><pre></pre></html>

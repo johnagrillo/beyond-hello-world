@@ -1,5 +1,45 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>haskell</h1><hr></hr><h2>Array03.hs</h2><pre>    
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Haskell</h1><hr></hr><h2>ADemoClass.hs</h2><pre>module ADemoClass where
+
+import Text.Printf
+import Data.Map
+import Data.Set
+
+data ADemoClass = ADemoClass {
+  stringParam :: String,
+  stringDefault :: String,
+  stringParamRw :: String,
+  intParam :: Int,
+  intDefault :: Int,
+  floatParam :: Float,
+  floatDefault :: Float
+} deriving(Eq,Ord)
+
+new :: String -&gt; String -&gt; Int -&gt; Float -&gt; ADemoClass
+new _stringParam _stringParamRw _intParam _floatParam = ADemoClass
+  _stringParam
+  "string default"
+  _stringParamRw
+  _intParam
+  0
+  _floatParam
+  0.0
+
+
+
+getKey :: String -&gt; String -&gt; String -&gt; Int -&gt; Int -&gt; Float -&gt; Float -&gt; String
+getKey stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault=
+        printf "%s-%s-%s-%4d-%4d-%f-%f" stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault
+
+instance Show ADemoClass where
+  show aDemoClass =
+    ADemoClass.getKey (stringParam aDemoClass)
+           (stringDefault aDemoClass)
+           (stringParamRw aDemoClass)
+           (intParam aDemoClass)
+           (intDefault aDemoClass)
+           (floatParam aDemoClass)
+           (floatDefault aDemoClass)</pre><hr></hr><h2>Array03.hs</h2><pre>    
 import Data.Map
 import Data.Set
     
@@ -38,47 +78,7 @@ main = do
     putStrLn (show array)
 
     return ()
-</pre><hr></hr><h2>Democlass.hs</h2><pre>module Democlass where
-
-import Text.Printf
-import Data.Map
-import Data.Set
-
-data Democlass = Democlass {
-  stringParam :: String,
-  stringDefault :: String,
-  stringParamRw :: String,
-  intParam :: Int,
-  intDefault :: Int,
-  floatParam :: Float,
-  floatDefault :: Float
-} deriving(Eq,Ord)
-
-new :: String -&gt; String -&gt; Int -&gt; Float -&gt; Democlass
-new _stringParam _stringParamRw _intParam _floatParam = Democlass
-  _stringParam
-  "string default"
-  _stringParamRw
-  _intParam
-  0
-  _floatParam
-  0.0
-
-
-
-getKey :: String -&gt; String -&gt; String -&gt; Int -&gt; Int -&gt; Float -&gt; Float -&gt; String
-getKey stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault=
-        printf "%s-%s-%s-%4d-%4d-%f-%f" stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault
-
-instance Show Democlass where
-  show democlass =
-    Democlass.getKey (stringParam democlass)
-           (stringDefault democlass)
-           (stringParamRw democlass)
-           (intParam democlass)
-           (intDefault democlass)
-           (floatParam democlass)
-           (floatDefault democlass)</pre><hr></hr><h2>Hash10.hs</h2><pre>    
+</pre><hr></hr><h2>Hash10.hs</h2><pre>    
 import Data.Map
 import Data.Set
     
@@ -141,44 +141,4 @@ main = do
     putStrLn (show mapListOfListOfHashOfHashV)
 
     return ()
-</pre><hr></hr><h2>Simple.hs</h2><pre>module Simple where
-
-import Text.Printf
-import Data.Map
-import Data.Set
-
-data Simple = Simple {
-  stringParam :: String,
-  stringDefault :: String,
-  stringParamRw :: String,
-  intParam :: Int,
-  intDefault :: Int,
-  floatParam :: Float,
-  floatDefault :: Float
-} deriving(Eq,Ord)
-
-new :: String -&gt; String -&gt; Int -&gt; Float -&gt; Simple
-new _stringParam _stringParamRw _intParam _floatParam = Simple
-  _stringParam
-  "string default"
-  _stringParamRw
-  _intParam
-  0
-  _floatParam
-  0.0
-
-
-
-getKey :: String -&gt; String -&gt; String -&gt; Int -&gt; Int -&gt; Float -&gt; Float -&gt; String
-getKey stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault=
-        printf "%s-%s-%s-%4d-%4d-%f-%f" stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault
-
-instance Show Simple where
-  show simple =
-    Simple.getKey (stringParam simple)
-           (stringDefault simple)
-           (stringParamRw simple)
-           (intParam simple)
-           (intDefault simple)
-           (floatParam simple)
-           (floatDefault simple)</pre></html>
+</pre><hr></hr><h2>TestADemoClass.hs</h2><pre></pre><hr></hr><h2>TestADemoClass.hs.new</h2><pre></pre></html>

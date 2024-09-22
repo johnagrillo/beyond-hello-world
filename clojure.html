@@ -1,5 +1,31 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>clojure</h1><hr></hr><h2>array03.clj</h2><pre>    
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Clojure</h1><hr></hr><h2>ademoclass.clj</h2><pre>(ns src.ademoclass)
+(defrecord ADemoClass[string-param string-default string-param-rw int-param int-default float-param float-default]
+  java.lang.Comparable
+
+  (toString  [this]
+             (format "%s-%s-%4d-%f"
+                      (:string-param this)
+                      (:string-param-rw this)
+                      (:int-param this)
+                      (:float-param this)))
+
+  (compareTo [this other]
+     (let [func ( fn [obj] (reduce #(conj %1 (%2 obj)) [] (keys obj)))]
+        (.compareTo  (func this) (func other))))
+)
+(defn make-ADemoClass
+[string-param string-param-rw int-param float-param]
+(src.ademoclass.ADemoClass. 
+  string-param
+  "string default"
+  string-param-rw
+  int-param
+  0
+  float-param
+  0.0
+)
+)</pre><hr></hr><h2>array03.clj</h2><pre>    
 (ns test.test
    )
 (let [array3 [
@@ -29,33 +55,7 @@
 (let [array [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]]
     (println (str array))
 )
-</pre><hr></hr><h2>democlass.clj</h2><pre>(ns src.democlass)
-(defrecord Democlass[string-param string-default string-param-rw int-param int-default float-param float-default]
-  java.lang.Comparable
-
-  (toString  [this]
-             (format "%s-%s-%4d-%f"
-                      (:string-param this)
-                      (:string-param-rw this)
-                      (:int-param this)
-                      (:float-param this)))
-
-  (compareTo [this other]
-     (let [func ( fn [obj] (reduce #(conj %1 (%2 obj)) [] (keys obj)))]
-        (.compareTo  (func this) (func other))))
-)
-(defn make-Democlass
-[string-param string-param-rw int-param float-param]
-(src.democlass.Democlass. 
-  string-param
-  "string default"
-  string-param-rw
-  int-param
-  0
-  float-param
-  0.0
-)
-)</pre><hr></hr><h2>hash10.clj</h2><pre>    
+</pre><hr></hr><h2>hash10.clj</h2><pre>    
 (ns test.test
    )
 (let [hashf { 1 "string1"  2 "string2"  3 "string3"  4 "string4"  5 "string5"  6 "string6"  7 "string7"  8 "string8"  9 "string9"  10 "string10"}]
@@ -97,30 +97,4 @@
     (println (str list-of-hash-v))
     (println (str map-list-of-list-of-hash-of-hash-v))
 )
-</pre><hr></hr><h2>simple.clj</h2><pre>(ns src.simple)
-(defrecord Simple[string-param string-default string-param-rw int-param int-default float-param float-default]
-  java.lang.Comparable
-
-  (toString  [this]
-             (format "%s-%s-%4d-%f"
-                      (:string-param this)
-                      (:string-param-rw this)
-                      (:int-param this)
-                      (:float-param this)))
-
-  (compareTo [this other]
-     (let [func ( fn [obj] (reduce #(conj %1 (%2 obj)) [] (keys obj)))]
-        (.compareTo  (func this) (func other))))
-)
-(defn make-Simple
-[string-param string-param-rw int-param float-param]
-(src.simple.Simple. 
-  string-param
-  "string default"
-  string-param-rw
-  int-param
-  0
-  float-param
-  0.0
-)
-)</pre></html>
+</pre><hr></hr><h2>testademoclass.clj</h2><pre></pre><hr></hr><h2>testademoclass.clj.new</h2><pre></pre></html>

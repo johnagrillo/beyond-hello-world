@@ -1,5 +1,58 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>unicon</h1><hr></hr><h2>array03.icn</h2><pre>procedure main (arglist)
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Unicon</h1><hr></hr><h2>a_demo_class.icn</h2><pre>link printf
+class ADemoClass (
+string_param,
+string_default,
+string_param_rw,
+int_param,
+int_default,
+float_param,
+float_default
+  )
+
+  method get_string_param()
+    return string_param
+  end
+
+
+
+  method get_string_param_rw()
+    return string_param_rw
+  end
+  method set_string_param_rw(_string_param_rw)
+    string_param_rw := _string_param_rw
+  end
+
+  method get_int_param()
+    return int_param
+  end
+
+
+
+  method get_float_param()
+    return float_param
+  end
+
+
+
+
+
+  method to_string()
+    return string_param || "-" || string_default || "-" || string_param_rw || "-" || sprintf("%4d",int_param) || "-" || sprintf("%4d",int_default) || "-" || %f || "-" || %f
+  end
+
+  initially(_string_param,_string_param_rw,_int_param,_float_param)
+   string_param := _string_param
+   string_param_rw := _string_param_rw
+   int_param := _int_param
+   float_param := _float_param
+   string_default := "string default"
+   int_default := 0
+   float_default := 0.0
+
+    
+
+end</pre><hr></hr><h2>array03.icn</h2><pre>procedure main (arglist)
     
 
     write(array3)
@@ -56,60 +109,7 @@ procedure fromlist(args)
     return t
 end
     
-</pre><hr></hr><h2>democlass.icn</h2><pre>link printf
-class Democlass (
-string_param,
-string_default,
-string_param_rw,
-int_param,
-int_default,
-float_param,
-float_default
-  )
-
-  method get_string_param()
-    return string_param
-  end
-
-
-
-  method get_string_param_rw()
-    return string_param_rw
-  end
-  method set_string_param_rw(_string_param_rw)
-    string_param_rw := _string_param_rw
-  end
-
-  method get_int_param()
-    return int_param
-  end
-
-
-
-  method get_float_param()
-    return float_param
-  end
-
-
-
-
-
-  method to_string()
-    return string_param || "-" || string_default || "-" || string_param_rw || "-" || sprintf("%4d",int_param) || "-" || sprintf("%4d",int_default) || "-" || %f || "-" || %f
-  end
-
-  initially(_string_param,_string_param_rw,_int_param,_float_param)
-   string_param := _string_param
-   string_param_rw := _string_param_rw
-   int_param := _int_param
-   float_param := _float_param
-   string_default := "string default"
-   int_default := 0
-   float_default := 0.0
-
-    
-
-end</pre><hr></hr><h2>hash10.icn</h2><pre>procedure main (arglist)
+</pre><hr></hr><h2>hash10.icn</h2><pre>procedure main (arglist)
     
 
     write(hashf)
@@ -178,57 +178,4 @@ procedure fromlist(args)
     return t
 end
     
-</pre><hr></hr><h2>simple.icn</h2><pre>link printf
-class Simple (
-string_param,
-string_default,
-string_param_rw,
-int_param,
-int_default,
-float_param,
-float_default
-  )
-
-  method get_string_param()
-    return string_param
-  end
-
-
-
-  method get_string_param_rw()
-    return string_param_rw
-  end
-  method set_string_param_rw(_string_param_rw)
-    string_param_rw := _string_param_rw
-  end
-
-  method get_int_param()
-    return int_param
-  end
-
-
-
-  method get_float_param()
-    return float_param
-  end
-
-
-
-
-
-  method to_string()
-    return string_param || "-" || string_default || "-" || string_param_rw || "-" || sprintf("%4d",int_param) || "-" || sprintf("%4d",int_default) || "-" || %f || "-" || %f
-  end
-
-  initially(_string_param,_string_param_rw,_int_param,_float_param)
-   string_param := _string_param
-   string_param_rw := _string_param_rw
-   int_param := _int_param
-   float_param := _float_param
-   string_default := "string default"
-   int_default := 0
-   float_default := 0.0
-
-    
-
-end</pre></html>
+</pre><hr></hr><h2>test_a_demo_class.icn</h2><pre></pre><hr></hr><h2>test_a_demo_class.icn.new</h2><pre></pre></html>

@@ -1,19 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>perl</h1><hr></hr><h2>Array03.pm</h2><pre>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Perl</h1><hr></hr><h2>ADemoClass.pm</h2><pre>use strict;
 
-
-print($array3,"\n");
-</pre><hr></hr><h2>Array10.pm</h2><pre>
-
-
-print($array,"\n");
-</pre><hr></hr><h2>Array20.pm</h2><pre>
-
-
-print($array,"\n");
-</pre><hr></hr><h2>Democlass.pm</h2><pre>use strict;
-
-package Democlass;
+package ADemoClass;
 use overload('""', 'toString');
 
 
@@ -100,6 +88,18 @@ sub toString {
 
 
 1;
+</pre><hr></hr><h2>Array03.pm</h2><pre>
+
+
+print($array3,"\n");
+</pre><hr></hr><h2>Array10.pm</h2><pre>
+
+
+print($array,"\n");
+</pre><hr></hr><h2>Array20.pm</h2><pre>
+
+
+print($array,"\n");
 </pre><hr></hr><h2>Hash10.pm</h2><pre>
 
 
@@ -124,93 +124,4 @@ print($int_ap,"\n");
 print($listOfListV,"\n");
 print($listOfHashV,"\n");
 print($mapListOfListOfHashOfHashV,"\n");
-</pre><hr></hr><h2>Simple.pm</h2><pre>use strict;
-
-package Simple;
-use overload('""', 'toString');
-
-
-
-
-
-my $STRINGPARAM = "string param";
-my $STRINGDEFAULT = "string default";
-my $STRINGPARAMRW = "string param rw";
-my $INTPARAM = "int param";
-my $INTDEFAULT = "int default";
-my $FLOATPARAM = "float param";
-my $FLOATDEFAULT = "float default";
-
-
-
-sub new {
-  my ($this,$_stringParam,$_stringParamRw,$_intParam,$_floatParam) = @_;
-  my $ref = ref($this)||$this;
-  my $self = {};
-  bless $self,$ref;
-  $self-&gt;{$STRINGPARAM} = $_stringParam;
-  $self-&gt;{$STRINGPARAMRW} = $_stringParamRw;
-  $self-&gt;{$INTPARAM} = $_intParam;
-  $self-&gt;{$FLOATPARAM} = $_floatParam;
-  $self-&gt;{$STRINGDEFAULT} = "string default";
-  $self-&gt;{$INTDEFAULT} = 0;
-  $self-&gt;{$FLOATDEFAULT} = 0.0;
-  return $self;
-}
-
-
-sub getStringParam {
-  my ($self) = @_;
-  $self-&gt;{$STRINGPARAM};
-}
-sub getStringDefault {
-  my ($self) = @_;
-  $self-&gt;{$STRINGDEFAULT};
-}
-sub getStringParamRw {
-  my ($self) = @_;
-  $self-&gt;{$STRINGPARAMRW};
-}
-sub getIntParam {
-  my ($self) = @_;
-  $self-&gt;{$INTPARAM};
-}
-sub getIntDefault {
-  my ($self) = @_;
-  $self-&gt;{$INTDEFAULT};
-}
-sub getFloatParam {
-  my ($self) = @_;
-  $self-&gt;{$FLOATPARAM};
-}
-sub getFloatDefault {
-  my ($self) = @_;
-  $self-&gt;{$FLOATDEFAULT};
-}
-sub setStringDefault {
-  my ($self,$param) = @_;
-  $self-&gt;{$STRINGDEFAULT} = $param;
-}
-sub setStringParamRw {
-  my ($self,$param) = @_;
-  $self-&gt;{$STRINGPARAMRW} = $param;
-}
-sub setIntDefault {
-  my ($self,$param) = @_;
-  $self-&gt;{$INTDEFAULT} = $param;
-}
-sub setFloatDefault {
-  my ($self,$param) = @_;
-  $self-&gt;{$FLOATDEFAULT} = $param;
-}
-
-sub toString {
-  my ($self) = @_;
-  sprintf("%s-%s-%s-%s-%s-%s-%s",
-          $self-&gt;{$STRINGPARAM},$self-&gt;{$STRINGDEFAULT},$self-&gt;{$STRINGPARAMRW},$self-&gt;{$INTPARAM},$self-&gt;{$INTDEFAULT},$self-&gt;{$FLOATPARAM},$self-&gt;{$FLOATDEFAULT});
-}
-
-
-
-1;
-</pre></html>
+</pre><hr></hr><h2>TestADemoClass.pl</h2><pre></pre><hr></hr><h2>TestADemoClass.pl.new</h2><pre></pre></html>

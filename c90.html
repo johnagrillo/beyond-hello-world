@@ -1,5 +1,293 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>c90</h1><hr></hr><h2>array03.c</h2><pre>#include &lt;stdio.h&gt;
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>C90(ISO C)</h1><hr></hr><h2>ademoclass.c</h2><pre>#include "ademoclass.h"
+#include &lt;malloc.h&gt;
+#include &lt;string.h&gt;
+
+struct ADemoClass{
+  char * stringParam;
+  char * stringDefault;
+  char * stringParamRw;
+  int intParam;
+  int intDefault;
+  float floatParam;
+  float floatDefault;
+};
+struct ADemoClass* 
+aDemoClass_new(char * stringParam,
+               char * stringParamRw,
+               int intParam,
+               float floatParam)
+{
+  struct ADemoClass * this = (struct ADemoClass*)malloc(sizeof(struct ADemoClass));
+  this-&gt;stringParam =  stringParam;
+  this-&gt;stringDefault = "string default";
+  this-&gt;stringParamRw =  stringParamRw;
+  this-&gt;intParam =  intParam;
+  this-&gt;intDefault = 0;
+  this-&gt;floatParam =  floatParam;
+  this-&gt;floatDefault = 0.0;
+  return this;
+}
+
+// free as a void; used in collections
+
+void aDemoClass_free_v(void * v)
+{
+    aDemoClass_free((struct ADemoClass *) v);
+
+}
+
+void aDemoClass_free(struct ADemoClass * this)
+{
+  free(this);
+}
+
+
+char*
+aDemoClass_getStringParam(struct ADemoClass * this)
+{
+  return this-&gt;stringParam;
+}
+
+
+char*
+aDemoClass_getStringParamRw(struct ADemoClass * this)
+{
+  return this-&gt;stringParamRw;
+}
+struct ADemoClass *  
+aDemoClass_setStringParamRw(struct ADemoClass * this,
+                            char * stringParamRw)
+{
+  if (this-&gt;stringParamRw != NULL) free(this-&gt;stringParamRw);
+  this-&gt;stringParamRw=stringParamRw;
+  return this;
+}
+
+
+int
+aDemoClass_getIntParam(struct ADemoClass * this)
+{
+  return this-&gt;intParam;
+}
+
+
+float
+aDemoClass_getFloatParam(struct ADemoClass * this)
+{
+  return this-&gt;floatParam;
+}
+
+
+char * 
+aDemoClass_getKey(char * stringParam,
+                  char * stringDefault,
+                  char * stringParamRw,
+                  int intParam,
+                  int intDefault,
+                  float floatParam,
+                  float floatDefault,
+                  char * buffer,
+                  int maxlen)
+{
+
+  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",stringParam, stringDefault, stringParamRw, intParam, intDefault, floatParam, floatDefault);
+  return buffer;
+
+}
+char *
+aDemoClass_toStr(struct ADemoClass * this,
+                 char * buffer,
+                 int maxlen)
+{
+
+  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",this-&gt;stringParam,this-&gt;stringDefault,this-&gt;stringParamRw,this-&gt;intParam,this-&gt;intDefault,this-&gt;floatParam,this-&gt;floatDefault);
+  return buffer;
+
+}
+char *
+aDemoClass_toStr_v(void * this,
+                   char * buffer,
+                   int length)
+{
+  return aDemoClass_toStr((struct ADemoClass*) this,buffer,length);
+}
+
+unsigned long
+aDemoClass_getHash(struct ADemoClass * this)
+{
+  return pgutil_hash(this-&gt;stringParam) +
+    pgutil_hash(this-&gt;stringDefault) +
+    pgutil_hash(this-&gt;stringParamRw) +
+    this-&gt;intParam +
+    this-&gt;intDefault +
+    this-&gt;floatParam +
+    this-&gt;floatDefault;;
+}
+
+unsigned long
+aDemoClass_getHash_v(void * this)
+{
+  return aDemoClass_getHash((struct ADemoClass*) this);
+}
+
+
+int
+aDemoClass_isLessThan(struct ADemoClass * lhs,
+                      struct ADemoClass * rhs)
+{
+  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&lt;0) return 1;
+  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&gt;0) return 0;
+  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&lt;0) return 1;
+  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&gt;0) return 0;
+  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&lt;0) return 1;
+  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&gt;0) return 0;
+  if(lhs-&gt;intParam &lt; rhs-&gt;intParam) return 1;
+  if(rhs-&gt;intParam &gt; lhs-&gt;intParam) return 0;
+  if(lhs-&gt;intDefault &lt; rhs-&gt;intDefault) return 1;
+  if(rhs-&gt;intDefault &gt; lhs-&gt;intDefault) return 0;
+  if(lhs-&gt;floatParam &lt; rhs-&gt;floatParam) return 1;
+  if(rhs-&gt;floatParam &gt; lhs-&gt;floatParam) return 0;
+  if(lhs-&gt;floatDefault &lt; rhs-&gt;floatDefault) return 1;
+  if(rhs-&gt;floatDefault &gt; lhs-&gt;floatDefault) return 0;
+  return 0;
+
+}
+int
+aDemoClass_isLessThan_v(void * lhs,
+                        void * rhs)
+{
+  return aDemoClass_isLessThan((struct ADemoClass*) lhs, (struct ADemoClass* ) rhs);
+}
+int
+aDemoClass_isEqualTo(struct ADemoClass * lhs,
+                     struct ADemoClass * rhs)
+{
+  return (strcmp(lhs-&gt;stringParam,rhs-&gt;stringParam)==0) &amp;&amp;
+    (strcmp(lhs-&gt;stringDefault,rhs-&gt;stringDefault)==0) &amp;&amp;
+    (strcmp(lhs-&gt;stringParamRw,rhs-&gt;stringParamRw)==0) &amp;&amp;
+    (lhs-&gt;intParam == rhs-&gt;intParam) &amp;&amp;
+    (lhs-&gt;intDefault == rhs-&gt;intDefault) &amp;&amp;
+    (lhs-&gt;floatParam == rhs-&gt;floatParam) &amp;&amp;
+    (lhs-&gt;floatDefault == rhs-&gt;floatDefault);
+}
+int
+aDemoClass_isEqualTo_v(void * lhs,
+                       void * rhs)
+{
+  return aDemoClass_isEqualTo((struct ADemoClass* ) lhs, (struct ADemoClass*) rhs);
+}
+int
+aDemoClass_isGreaterThan(struct ADemoClass * lhs,
+                         struct ADemoClass * rhs)
+{
+  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&gt;0) return 1;
+  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&lt;0) return 0;
+  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&gt;0) return 1;
+  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&lt;0) return 0;
+  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&gt;0) return 1;
+  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&lt;0) return 0;
+  if(lhs-&gt;intParam &gt; rhs-&gt;intParam) return 1;
+  if(rhs-&gt;intParam &lt; lhs-&gt;intParam) return 0;
+  if(lhs-&gt;intDefault &gt; rhs-&gt;intDefault) return 1;
+  if(rhs-&gt;intDefault &lt; lhs-&gt;intDefault) return 0;
+  if(lhs-&gt;floatParam &gt; rhs-&gt;floatParam) return 1;
+  if(rhs-&gt;floatParam &lt; lhs-&gt;floatParam) return 0;
+  if(lhs-&gt;floatDefault &gt; rhs-&gt;floatDefault) return 1;
+  if(rhs-&gt;floatDefault &lt; lhs-&gt;floatDefault) return 0;
+  return 0;
+
+}
+int
+aDemoClass_isGreaterThan_v(void * lhs,
+                           void * rhs)
+{
+  return aDemoClass_isGreaterThan((struct ADemoClass*)lhs,(struct ADemoClass*)rhs);
+}
+</pre><hr></hr><h2>ademoclass.h</h2><pre>#ifndef __ADEMOCLASS__H__
+#define __ADEMOCLASS__H__
+#include "pgutil.h"
+#include &lt;stdio.h&gt;
+
+struct ADemoClass* 
+aDemoClass_new(char * stringParam,
+               char * stringParamRw,
+               int intParam,
+               float floatParam);
+
+// free as a void; used in collections
+
+void aDemoClass_free_v(void * v);
+
+void aDemoClass_free(struct ADemoClass * this);
+
+
+char*
+aDemoClass_getStringParam(struct ADemoClass * this);
+
+
+char*
+aDemoClass_getStringParamRw(struct ADemoClass * this);
+struct ADemoClass *  
+aDemoClass_setStringParamRw(struct ADemoClass * this,
+                            char * stringParamRw);
+
+
+int
+aDemoClass_getIntParam(struct ADemoClass * this);
+
+
+float
+aDemoClass_getFloatParam(struct ADemoClass * this);
+
+
+char * 
+aDemoClass_getKey(char * stringParam,
+                  char * stringDefault,
+                  char * stringParamRw,
+                  int intParam,
+                  int intDefault,
+                  float floatParam,
+                  float floatDefault,
+                  char * buffer,
+                  int maxlen);
+char *
+aDemoClass_toStr(struct ADemoClass * this,
+                 char * buffer,
+                 int maxlen);
+char *
+aDemoClass_toStr_v(void * this,
+                   char * buffer,
+                   int length);
+
+unsigned long
+aDemoClass_getHash(struct ADemoClass * this);
+
+unsigned long
+aDemoClass_getHash_v(void * this);
+
+
+int
+aDemoClass_isLessThan(struct ADemoClass * lhs,
+                      struct ADemoClass * rhs);
+int
+aDemoClass_isLessThan_v(void * lhs,
+                        void * rhs);
+int
+aDemoClass_isEqualTo(struct ADemoClass * lhs,
+                     struct ADemoClass * rhs);
+int
+aDemoClass_isEqualTo_v(void * lhs,
+                       void * rhs);
+int
+aDemoClass_isGreaterThan(struct ADemoClass * lhs,
+                         struct ADemoClass * rhs);
+int
+aDemoClass_isGreaterThan_v(void * lhs,
+                           void * rhs);
+
+#endif /* __ADEMOCLASS__H_ */
+</pre><hr></hr><h2>array03.c</h2><pre>#include &lt;stdio.h&gt;
 
 
 
@@ -70,294 +358,6 @@ int main(int argc, char * argv[])
     
   return 0;
 }
-</pre><hr></hr><h2>democlass.c</h2><pre>#include "democlass.h"
-#include &lt;malloc.h&gt;
-#include &lt;string.h&gt;
-
-struct Democlass{
-  char * stringParam;
-  char * stringDefault;
-  char * stringParamRw;
-  int intParam;
-  int intDefault;
-  float floatParam;
-  float floatDefault;
-};
-struct Democlass* 
-democlass_new(char * stringParam,
-              char * stringParamRw,
-              int intParam,
-              float floatParam)
-{
-  struct Democlass * this = (struct Democlass*)malloc(sizeof(struct Democlass));
-  this-&gt;stringParam =  stringParam;
-  this-&gt;stringDefault = "string default";
-  this-&gt;stringParamRw =  stringParamRw;
-  this-&gt;intParam =  intParam;
-  this-&gt;intDefault = 0;
-  this-&gt;floatParam =  floatParam;
-  this-&gt;floatDefault = 0.0;
-  return this;
-}
-
-// free as a void; used in collections
-
-void democlass_free_v(void * v)
-{
-    democlass_free((struct Democlass *) v);
-
-}
-
-void democlass_free(struct Democlass * this)
-{
-  free(this);
-}
-
-
-char*
-democlass_getStringParam(struct Democlass * this)
-{
-  return this-&gt;stringParam;
-}
-
-
-char*
-democlass_getStringParamRw(struct Democlass * this)
-{
-  return this-&gt;stringParamRw;
-}
-struct Democlass *  
-democlass_setStringParamRw(struct Democlass * this,
-                           char * stringParamRw)
-{
-  if (this-&gt;stringParamRw != NULL) free(this-&gt;stringParamRw);
-  this-&gt;stringParamRw=stringParamRw;
-  return this;
-}
-
-
-int
-democlass_getIntParam(struct Democlass * this)
-{
-  return this-&gt;intParam;
-}
-
-
-float
-democlass_getFloatParam(struct Democlass * this)
-{
-  return this-&gt;floatParam;
-}
-
-
-char * 
-democlass_getKey(char * stringParam,
-                 char * stringDefault,
-                 char * stringParamRw,
-                 int intParam,
-                 int intDefault,
-                 float floatParam,
-                 float floatDefault,
-                 char * buffer,
-                 int maxlen)
-{
-
-  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",stringParam, stringDefault, stringParamRw, intParam, intDefault, floatParam, floatDefault);
-  return buffer;
-
-}
-char *
-democlass_toStr(struct Democlass * this,
-                char * buffer,
-                int maxlen)
-{
-
-  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",this-&gt;stringParam,this-&gt;stringDefault,this-&gt;stringParamRw,this-&gt;intParam,this-&gt;intDefault,this-&gt;floatParam,this-&gt;floatDefault);
-  return buffer;
-
-}
-char *
-democlass_toStr_v(void * this,
-                  char * buffer,
-                  int length)
-{
-  return democlass_toStr((struct Democlass*) this,buffer,length);
-}
-
-unsigned long
-democlass_getHash(struct Democlass * this)
-{
-  return pgutil_hash(this-&gt;stringParam) +
-    pgutil_hash(this-&gt;stringDefault) +
-    pgutil_hash(this-&gt;stringParamRw) +
-    this-&gt;intParam +
-    this-&gt;intDefault +
-    this-&gt;floatParam +
-    this-&gt;floatDefault;;
-}
-
-unsigned long
-democlass_getHash_v(void * this)
-{
-  return democlass_getHash((struct Democlass*) this);
-}
-
-
-int
-democlass_isLessThan(struct Democlass * lhs,
-                     struct Democlass * rhs)
-{
-  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&lt;0) return 1;
-  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&gt;0) return 0;
-  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&lt;0) return 1;
-  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&gt;0) return 0;
-  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&lt;0) return 1;
-  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&gt;0) return 0;
-  if(lhs-&gt;intParam &lt; rhs-&gt;intParam) return 1;
-  if(rhs-&gt;intParam &gt; lhs-&gt;intParam) return 0;
-  if(lhs-&gt;intDefault &lt; rhs-&gt;intDefault) return 1;
-  if(rhs-&gt;intDefault &gt; lhs-&gt;intDefault) return 0;
-  if(lhs-&gt;floatParam &lt; rhs-&gt;floatParam) return 1;
-  if(rhs-&gt;floatParam &gt; lhs-&gt;floatParam) return 0;
-  if(lhs-&gt;floatDefault &lt; rhs-&gt;floatDefault) return 1;
-  if(rhs-&gt;floatDefault &gt; lhs-&gt;floatDefault) return 0;
-  return 0;
-
-}
-int
-democlass_isLessThan_v(void * lhs,
-                       void * rhs)
-{
-  return democlass_isLessThan((struct Democlass*) lhs, (struct Democlass* ) rhs);
-}
-int
-democlass_isEqualTo(struct Democlass * lhs,
-                    struct Democlass * rhs)
-{
-  return (strcmp(lhs-&gt;stringParam,rhs-&gt;stringParam)==0) &amp;&amp;
-    (strcmp(lhs-&gt;stringDefault,rhs-&gt;stringDefault)==0) &amp;&amp;
-    (strcmp(lhs-&gt;stringParamRw,rhs-&gt;stringParamRw)==0) &amp;&amp;
-    (lhs-&gt;intParam == rhs-&gt;intParam) &amp;&amp;
-    (lhs-&gt;intDefault == rhs-&gt;intDefault) &amp;&amp;
-    (lhs-&gt;floatParam == rhs-&gt;floatParam) &amp;&amp;
-    (lhs-&gt;floatDefault == rhs-&gt;floatDefault);
-}
-int
-democlass_isEqualTo_v(void * lhs,
-                      void * rhs)
-{
-  return democlass_isEqualTo((struct Democlass* ) lhs, (struct Democlass*) rhs);
-}
-int
-democlass_isGreaterThan(struct Democlass * lhs,
-                        struct Democlass * rhs)
-{
-  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&gt;0) return 1;
-  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&lt;0) return 0;
-  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&gt;0) return 1;
-  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&lt;0) return 0;
-  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&gt;0) return 1;
-  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&lt;0) return 0;
-  if(lhs-&gt;intParam &gt; rhs-&gt;intParam) return 1;
-  if(rhs-&gt;intParam &lt; lhs-&gt;intParam) return 0;
-  if(lhs-&gt;intDefault &gt; rhs-&gt;intDefault) return 1;
-  if(rhs-&gt;intDefault &lt; lhs-&gt;intDefault) return 0;
-  if(lhs-&gt;floatParam &gt; rhs-&gt;floatParam) return 1;
-  if(rhs-&gt;floatParam &lt; lhs-&gt;floatParam) return 0;
-  if(lhs-&gt;floatDefault &gt; rhs-&gt;floatDefault) return 1;
-  if(rhs-&gt;floatDefault &lt; lhs-&gt;floatDefault) return 0;
-  return 0;
-
-}
-int
-democlass_isGreaterThan_v(void * lhs,
-                          void * rhs)
-{
-  return democlass_isGreaterThan((struct Democlass*)lhs,(struct Democlass*)rhs);
-}
-</pre><hr></hr><h2>democlass.h</h2><pre>#ifndef __DEMOCLASS__H__
-#define __DEMOCLASS__H__
-#include "pgutil.h"
-#include &lt;stdio.h&gt;
-
-struct Democlass* 
-democlass_new(char * stringParam,
-              char * stringParamRw,
-              int intParam,
-              float floatParam);
-
-// free as a void; used in collections
-
-void democlass_free_v(void * v);
-
-void democlass_free(struct Democlass * this);
-
-
-char*
-democlass_getStringParam(struct Democlass * this);
-
-
-char*
-democlass_getStringParamRw(struct Democlass * this);
-struct Democlass *  
-democlass_setStringParamRw(struct Democlass * this,
-                           char * stringParamRw);
-
-
-int
-democlass_getIntParam(struct Democlass * this);
-
-
-float
-democlass_getFloatParam(struct Democlass * this);
-
-
-char * 
-democlass_getKey(char * stringParam,
-                 char * stringDefault,
-                 char * stringParamRw,
-                 int intParam,
-                 int intDefault,
-                 float floatParam,
-                 float floatDefault,
-                 char * buffer,
-                 int maxlen);
-char *
-democlass_toStr(struct Democlass * this,
-                char * buffer,
-                int maxlen);
-char *
-democlass_toStr_v(void * this,
-                  char * buffer,
-                  int length);
-
-unsigned long
-democlass_getHash(struct Democlass * this);
-
-unsigned long
-democlass_getHash_v(void * this);
-
-
-int
-democlass_isLessThan(struct Democlass * lhs,
-                     struct Democlass * rhs);
-int
-democlass_isLessThan_v(void * lhs,
-                       void * rhs);
-int
-democlass_isEqualTo(struct Democlass * lhs,
-                    struct Democlass * rhs);
-int
-democlass_isEqualTo_v(void * lhs,
-                      void * rhs);
-int
-democlass_isGreaterThan(struct Democlass * lhs,
-                        struct Democlass * rhs);
-int
-democlass_isGreaterThan_v(void * lhs,
-                          void * rhs);
-
-#endif /* __DEMOCLASS__H_ */
 </pre><hr></hr><h2>hash10.c</h2><pre>#include &lt;stdio.h&gt;
 
 
@@ -418,292 +418,4 @@ int main(int argc, char * argv[])
     
   return 0;
 }
-</pre><hr></hr><h2>simple.c</h2><pre>#include "simple.h"
-#include &lt;malloc.h&gt;
-#include &lt;string.h&gt;
-
-struct Simple{
-  char * stringParam;
-  char * stringDefault;
-  char * stringParamRw;
-  int intParam;
-  int intDefault;
-  float floatParam;
-  float floatDefault;
-};
-struct Simple* 
-simple_new(char * stringParam,
-           char * stringParamRw,
-           int intParam,
-           float floatParam)
-{
-  struct Simple * this = (struct Simple*)malloc(sizeof(struct Simple));
-  this-&gt;stringParam =  stringParam;
-  this-&gt;stringDefault = "string default";
-  this-&gt;stringParamRw =  stringParamRw;
-  this-&gt;intParam =  intParam;
-  this-&gt;intDefault = 0;
-  this-&gt;floatParam =  floatParam;
-  this-&gt;floatDefault = 0.0;
-  return this;
-}
-
-// free as a void; used in collections
-
-void simple_free_v(void * v)
-{
-    simple_free((struct Simple *) v);
-
-}
-
-void simple_free(struct Simple * this)
-{
-  free(this);
-}
-
-
-char*
-simple_getStringParam(struct Simple * this)
-{
-  return this-&gt;stringParam;
-}
-
-
-char*
-simple_getStringParamRw(struct Simple * this)
-{
-  return this-&gt;stringParamRw;
-}
-struct Simple *  
-simple_setStringParamRw(struct Simple * this,
-                        char * stringParamRw)
-{
-  if (this-&gt;stringParamRw != NULL) free(this-&gt;stringParamRw);
-  this-&gt;stringParamRw=stringParamRw;
-  return this;
-}
-
-
-int
-simple_getIntParam(struct Simple * this)
-{
-  return this-&gt;intParam;
-}
-
-
-float
-simple_getFloatParam(struct Simple * this)
-{
-  return this-&gt;floatParam;
-}
-
-
-char * 
-simple_getKey(char * stringParam,
-              char * stringDefault,
-              char * stringParamRw,
-              int intParam,
-              int intDefault,
-              float floatParam,
-              float floatDefault,
-              char * buffer,
-              int maxlen)
-{
-
-  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",stringParam, stringDefault, stringParamRw, intParam, intDefault, floatParam, floatDefault);
-  return buffer;
-
-}
-char *
-simple_toStr(struct Simple * this,
-             char * buffer,
-             int maxlen)
-{
-
-  snprintf(buffer,maxlen,"%s-%s-%s-%4d-%4d-%5.2f-%5.2f",this-&gt;stringParam,this-&gt;stringDefault,this-&gt;stringParamRw,this-&gt;intParam,this-&gt;intDefault,this-&gt;floatParam,this-&gt;floatDefault);
-  return buffer;
-
-}
-char *
-simple_toStr_v(void * this,
-               char * buffer,
-               int length)
-{
-  return simple_toStr((struct Simple*) this,buffer,length);
-}
-
-unsigned long
-simple_getHash(struct Simple * this)
-{
-  return pgutil_hash(this-&gt;stringParam) +
-    pgutil_hash(this-&gt;stringDefault) +
-    pgutil_hash(this-&gt;stringParamRw) +
-    this-&gt;intParam +
-    this-&gt;intDefault +
-    this-&gt;floatParam +
-    this-&gt;floatDefault;;
-}
-
-unsigned long
-simple_getHash_v(void * this)
-{
-  return simple_getHash((struct Simple*) this);
-}
-
-
-int
-simple_isLessThan(struct Simple * lhs,
-                  struct Simple * rhs)
-{
-  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&lt;0) return 1;
-  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&gt;0) return 0;
-  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&lt;0) return 1;
-  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&gt;0) return 0;
-  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&lt;0) return 1;
-  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&gt;0) return 0;
-  if(lhs-&gt;intParam &lt; rhs-&gt;intParam) return 1;
-  if(rhs-&gt;intParam &gt; lhs-&gt;intParam) return 0;
-  if(lhs-&gt;intDefault &lt; rhs-&gt;intDefault) return 1;
-  if(rhs-&gt;intDefault &gt; lhs-&gt;intDefault) return 0;
-  if(lhs-&gt;floatParam &lt; rhs-&gt;floatParam) return 1;
-  if(rhs-&gt;floatParam &gt; lhs-&gt;floatParam) return 0;
-  if(lhs-&gt;floatDefault &lt; rhs-&gt;floatDefault) return 1;
-  if(rhs-&gt;floatDefault &gt; lhs-&gt;floatDefault) return 0;
-  return 0;
-
-}
-int
-simple_isLessThan_v(void * lhs,
-                    void * rhs)
-{
-  return simple_isLessThan((struct Simple*) lhs, (struct Simple* ) rhs);
-}
-int
-simple_isEqualTo(struct Simple * lhs,
-                 struct Simple * rhs)
-{
-  return (strcmp(lhs-&gt;stringParam,rhs-&gt;stringParam)==0) &amp;&amp;
-    (strcmp(lhs-&gt;stringDefault,rhs-&gt;stringDefault)==0) &amp;&amp;
-    (strcmp(lhs-&gt;stringParamRw,rhs-&gt;stringParamRw)==0) &amp;&amp;
-    (lhs-&gt;intParam == rhs-&gt;intParam) &amp;&amp;
-    (lhs-&gt;intDefault == rhs-&gt;intDefault) &amp;&amp;
-    (lhs-&gt;floatParam == rhs-&gt;floatParam) &amp;&amp;
-    (lhs-&gt;floatDefault == rhs-&gt;floatDefault);
-}
-int
-simple_isEqualTo_v(void * lhs,
-                   void * rhs)
-{
-  return simple_isEqualTo((struct Simple* ) lhs, (struct Simple*) rhs);
-}
-int
-simple_isGreaterThan(struct Simple * lhs,
-                     struct Simple * rhs)
-{
-  if(strcmp(lhs-&gt;stringParam , rhs-&gt;stringParam)&gt;0) return 1;
-  if(strcmp(rhs-&gt;stringParam , lhs-&gt;stringParam)&lt;0) return 0;
-  if(strcmp(lhs-&gt;stringDefault , rhs-&gt;stringDefault)&gt;0) return 1;
-  if(strcmp(rhs-&gt;stringDefault , lhs-&gt;stringDefault)&lt;0) return 0;
-  if(strcmp(lhs-&gt;stringParamRw , rhs-&gt;stringParamRw)&gt;0) return 1;
-  if(strcmp(rhs-&gt;stringParamRw , lhs-&gt;stringParamRw)&lt;0) return 0;
-  if(lhs-&gt;intParam &gt; rhs-&gt;intParam) return 1;
-  if(rhs-&gt;intParam &lt; lhs-&gt;intParam) return 0;
-  if(lhs-&gt;intDefault &gt; rhs-&gt;intDefault) return 1;
-  if(rhs-&gt;intDefault &lt; lhs-&gt;intDefault) return 0;
-  if(lhs-&gt;floatParam &gt; rhs-&gt;floatParam) return 1;
-  if(rhs-&gt;floatParam &lt; lhs-&gt;floatParam) return 0;
-  if(lhs-&gt;floatDefault &gt; rhs-&gt;floatDefault) return 1;
-  if(rhs-&gt;floatDefault &lt; lhs-&gt;floatDefault) return 0;
-  return 0;
-
-}
-int
-simple_isGreaterThan_v(void * lhs,
-                       void * rhs)
-{
-  return simple_isGreaterThan((struct Simple*)lhs,(struct Simple*)rhs);
-}
-</pre><hr></hr><h2>simple.h</h2><pre>#ifndef __SIMPLE__H__
-#define __SIMPLE__H__
-#include "pgutil.h"
-#include &lt;stdio.h&gt;
-
-struct Simple* 
-simple_new(char * stringParam,
-           char * stringParamRw,
-           int intParam,
-           float floatParam);
-
-// free as a void; used in collections
-
-void simple_free_v(void * v);
-
-void simple_free(struct Simple * this);
-
-
-char*
-simple_getStringParam(struct Simple * this);
-
-
-char*
-simple_getStringParamRw(struct Simple * this);
-struct Simple *  
-simple_setStringParamRw(struct Simple * this,
-                        char * stringParamRw);
-
-
-int
-simple_getIntParam(struct Simple * this);
-
-
-float
-simple_getFloatParam(struct Simple * this);
-
-
-char * 
-simple_getKey(char * stringParam,
-              char * stringDefault,
-              char * stringParamRw,
-              int intParam,
-              int intDefault,
-              float floatParam,
-              float floatDefault,
-              char * buffer,
-              int maxlen);
-char *
-simple_toStr(struct Simple * this,
-             char * buffer,
-             int maxlen);
-char *
-simple_toStr_v(void * this,
-               char * buffer,
-               int length);
-
-unsigned long
-simple_getHash(struct Simple * this);
-
-unsigned long
-simple_getHash_v(void * this);
-
-
-int
-simple_isLessThan(struct Simple * lhs,
-                  struct Simple * rhs);
-int
-simple_isLessThan_v(void * lhs,
-                    void * rhs);
-int
-simple_isEqualTo(struct Simple * lhs,
-                 struct Simple * rhs);
-int
-simple_isEqualTo_v(void * lhs,
-                   void * rhs);
-int
-simple_isGreaterThan(struct Simple * lhs,
-                     struct Simple * rhs);
-int
-simple_isGreaterThan_v(void * lhs,
-                       void * rhs);
-
-#endif /* __SIMPLE__H_ */
-</pre></html>
+</pre><hr></hr><h2>testademoclass.c</h2><pre></pre><hr></hr><h2>testademoclass.c.new</h2><pre></pre></html>

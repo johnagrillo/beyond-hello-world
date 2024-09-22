@@ -1,5 +1,127 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>d</h1><hr></hr><h2>array03.d</h2><pre>    
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>DMD</h1><hr></hr><h2>ademoclass.d</h2><pre>module src.ademoclass;
+import std.string;
+import std.string;
+import std.typecons;
+class ADemoClass {
+public:
+
+  this (string stringParam,string stringParamRw,int intParam,float floatParam)
+  {
+    this.m_stringParam = stringParam;
+    this.m_stringParamRw = stringParamRw;
+    this.m_intParam = intParam;
+    this.m_floatParam = floatParam;
+    this.m_stringDefault = "string default";
+    this.m_intDefault = 0;
+    this.m_floatDefault = 0.0;
+  }
+
+  @property stringParam() pure {return m_stringParam;}
+  @property stringParamRw() pure {return m_stringParamRw;}
+  @property stringParamRw(string stringParamRw) { m_stringParamRw=stringParamRw;}
+
+  @property intParam() pure {return m_intParam;}
+  @property floatParam() pure {return m_floatParam;}
+
+
+    static string getKey(string stringParam,
+                         string stringDefault,
+                         string stringParamRw,
+                         int intParam,
+                         int intDefault,
+                         float floatParam,
+                         float floatDefault)
+    {
+        return std.string.format("%s-%s-%s-%4s-%4s-%s-%s",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
+    }
+
+    override string toString()
+    {
+        return(ADemoClass.getKey(m_stringParam,m_stringDefault,m_stringParamRw,m_intParam,m_intDefault,m_floatParam,m_floatDefault));
+    }
+
+    override hash_t toHash()
+    {
+    return typeid(m_stringParam).getHash(&amp;m_stringParam) +
+        typeid(m_stringDefault).getHash(&amp;m_stringDefault) +
+        typeid(m_stringParamRw).getHash(&amp;m_stringParamRw) +
+        this.m_intParam +
+        this.m_intDefault +
+        cast(int)m_floatParam +
+        cast(int)m_floatDefault;
+    }
+
+    override int opCmp(Object rhs_object)
+    {
+ADemoClass rhs = cast(ADemoClass) rhs_object;
+  if (this.m_stringParam &lt; rhs.m_stringParam){
+    return -1;
+  }
+  else if (this.m_stringParam &gt; rhs.m_stringParam){
+    return 1;
+  }
+  else if (this.m_stringDefault &lt; rhs.m_stringDefault){
+    return -1;
+  }
+  else if (this.m_stringDefault &gt; rhs.m_stringDefault){
+    return 1;
+  }
+  else if (this.m_stringParamRw &lt; rhs.m_stringParamRw){
+    return -1;
+  }
+  else if (this.m_stringParamRw &gt; rhs.m_stringParamRw){
+    return 1;
+  }
+  else if (this.m_intParam &lt; rhs.m_intParam){
+    return -1;
+  }
+  else if (this.m_intParam &gt; rhs.m_intParam){
+    return 1;
+  }
+  else if (this.m_intDefault &lt; rhs.m_intDefault){
+    return -1;
+  }
+  else if (this.m_intDefault &gt; rhs.m_intDefault){
+    return 1;
+  }
+  else if (this.m_floatParam &lt; rhs.m_floatParam){
+    return -1;
+  }
+  else if (this.m_floatParam &gt; rhs.m_floatParam){
+    return 1;
+  }
+  else if (this.m_floatDefault &lt; rhs.m_floatDefault){
+    return -1;
+  }
+  else if (this.m_floatDefault &gt; rhs.m_floatDefault){
+    return 1;
+  }
+return 0;
+
+    }
+    override bool opEquals(Object rhs_object)
+    {
+        ADemoClass rhs = cast(ADemoClass) rhs_object;
+  return (this.m_stringParam == rhs.m_stringParam) &amp;&amp; 
+         (this.m_stringDefault == rhs.m_stringDefault) &amp;&amp; 
+         (this.m_stringParamRw == rhs.m_stringParamRw) &amp;&amp; 
+         (this.m_intParam == rhs.m_intParam) &amp;&amp; 
+         (this.m_intDefault == rhs.m_intDefault) &amp;&amp; 
+         (this.m_floatParam == rhs.m_floatParam) &amp;&amp; 
+         (this.m_floatDefault == rhs.m_floatDefault);
+    }
+
+private:
+    string m_stringParam;
+    string m_stringDefault;
+    string m_stringParamRw;
+    int m_intParam;
+    int m_intDefault;
+    float m_floatParam;
+    float m_floatDefault;
+}
+</pre><hr></hr><h2>array03.d</h2><pre>    
 
     
 import std.stdio;
@@ -52,128 +174,6 @@ int main(string [] argv)
     
     std.stdio.writefln("%s",array);
     return 0;
-}
-</pre><hr></hr><h2>democlass.d</h2><pre>module src.democlass;
-import std.string;
-import std.string;
-import std.typecons;
-class Democlass {
-public:
-
-  this (string stringParam,string stringParamRw,int intParam,float floatParam)
-  {
-    this.m_stringParam = stringParam;
-    this.m_stringParamRw = stringParamRw;
-    this.m_intParam = intParam;
-    this.m_floatParam = floatParam;
-    this.m_stringDefault = "string default";
-    this.m_intDefault = 0;
-    this.m_floatDefault = 0.0;
-  }
-
-  @property stringParam() pure {return m_stringParam;}
-  @property stringParamRw() pure {return m_stringParamRw;}
-  @property stringParamRw(string stringParamRw) { m_stringParamRw=stringParamRw;}
-
-  @property intParam() pure {return m_intParam;}
-  @property floatParam() pure {return m_floatParam;}
-
-
-    static string getKey(string stringParam,
-                         string stringDefault,
-                         string stringParamRw,
-                         int intParam,
-                         int intDefault,
-                         float floatParam,
-                         float floatDefault)
-    {
-        return std.string.format("%s-%s-%s-%4s-%4s-%s-%s",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
-    }
-
-    override string toString()
-    {
-        return(Democlass.getKey(m_stringParam,m_stringDefault,m_stringParamRw,m_intParam,m_intDefault,m_floatParam,m_floatDefault));
-    }
-
-    override hash_t toHash()
-    {
-    return typeid(m_stringParam).getHash(&amp;m_stringParam) +
-        typeid(m_stringDefault).getHash(&amp;m_stringDefault) +
-        typeid(m_stringParamRw).getHash(&amp;m_stringParamRw) +
-        this.m_intParam +
-        this.m_intDefault +
-        cast(int)m_floatParam +
-        cast(int)m_floatDefault;
-    }
-
-    override int opCmp(Object rhs_object)
-    {
-Democlass rhs = cast(Democlass) rhs_object;
-  if (this.m_stringParam &lt; rhs.m_stringParam){
-    return -1;
-  }
-  else if (this.m_stringParam &gt; rhs.m_stringParam){
-    return 1;
-  }
-  else if (this.m_stringDefault &lt; rhs.m_stringDefault){
-    return -1;
-  }
-  else if (this.m_stringDefault &gt; rhs.m_stringDefault){
-    return 1;
-  }
-  else if (this.m_stringParamRw &lt; rhs.m_stringParamRw){
-    return -1;
-  }
-  else if (this.m_stringParamRw &gt; rhs.m_stringParamRw){
-    return 1;
-  }
-  else if (this.m_intParam &lt; rhs.m_intParam){
-    return -1;
-  }
-  else if (this.m_intParam &gt; rhs.m_intParam){
-    return 1;
-  }
-  else if (this.m_intDefault &lt; rhs.m_intDefault){
-    return -1;
-  }
-  else if (this.m_intDefault &gt; rhs.m_intDefault){
-    return 1;
-  }
-  else if (this.m_floatParam &lt; rhs.m_floatParam){
-    return -1;
-  }
-  else if (this.m_floatParam &gt; rhs.m_floatParam){
-    return 1;
-  }
-  else if (this.m_floatDefault &lt; rhs.m_floatDefault){
-    return -1;
-  }
-  else if (this.m_floatDefault &gt; rhs.m_floatDefault){
-    return 1;
-  }
-return 0;
-
-    }
-    override bool opEquals(Object rhs_object)
-    {
-        Democlass rhs = cast(Democlass) rhs_object;
-  return (this.m_stringParam == rhs.m_stringParam) &amp;&amp; 
-         (this.m_stringDefault == rhs.m_stringDefault) &amp;&amp; 
-         (this.m_stringParamRw == rhs.m_stringParamRw) &amp;&amp; 
-         (this.m_intParam == rhs.m_intParam) &amp;&amp; 
-         (this.m_intDefault == rhs.m_intDefault) &amp;&amp; 
-         (this.m_floatParam == rhs.m_floatParam) &amp;&amp; 
-         (this.m_floatDefault == rhs.m_floatDefault);
-    }
-
-private:
-    string m_stringParam;
-    string m_stringDefault;
-    string m_stringParamRw;
-    int m_intParam;
-    int m_intDefault;
-    float m_floatParam;
-    float m_floatDefault;
 }
 </pre><hr></hr><h2>hash10.d</h2><pre>    
 
@@ -245,126 +245,4 @@ int main(string [] argv)
     std.stdio.writefln("%s",mapListOfListOfHashOfHashV);
     return 0;
 }
-</pre><hr></hr><h2>simple.d</h2><pre>module src.simple;
-import std.string;
-import std.string;
-import std.typecons;
-class Simple {
-public:
-
-  this (string stringParam,string stringParamRw,int intParam,float floatParam)
-  {
-    this.m_stringParam = stringParam;
-    this.m_stringParamRw = stringParamRw;
-    this.m_intParam = intParam;
-    this.m_floatParam = floatParam;
-    this.m_stringDefault = "string default";
-    this.m_intDefault = 0;
-    this.m_floatDefault = 0.0;
-  }
-
-  @property stringParam() pure {return m_stringParam;}
-  @property stringParamRw() pure {return m_stringParamRw;}
-  @property stringParamRw(string stringParamRw) { m_stringParamRw=stringParamRw;}
-
-  @property intParam() pure {return m_intParam;}
-  @property floatParam() pure {return m_floatParam;}
-
-
-    static string getKey(string stringParam,
-                         string stringDefault,
-                         string stringParamRw,
-                         int intParam,
-                         int intDefault,
-                         float floatParam,
-                         float floatDefault)
-    {
-        return std.string.format("%s-%s-%s-%4s-%4s-%s-%s",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
-    }
-
-    override string toString()
-    {
-        return(Simple.getKey(m_stringParam,m_stringDefault,m_stringParamRw,m_intParam,m_intDefault,m_floatParam,m_floatDefault));
-    }
-
-    override hash_t toHash()
-    {
-    return typeid(m_stringParam).getHash(&amp;m_stringParam) +
-        typeid(m_stringDefault).getHash(&amp;m_stringDefault) +
-        typeid(m_stringParamRw).getHash(&amp;m_stringParamRw) +
-        this.m_intParam +
-        this.m_intDefault +
-        cast(int)m_floatParam +
-        cast(int)m_floatDefault;
-    }
-
-    override int opCmp(Object rhs_object)
-    {
-Simple rhs = cast(Simple) rhs_object;
-  if (this.m_stringParam &lt; rhs.m_stringParam){
-    return -1;
-  }
-  else if (this.m_stringParam &gt; rhs.m_stringParam){
-    return 1;
-  }
-  else if (this.m_stringDefault &lt; rhs.m_stringDefault){
-    return -1;
-  }
-  else if (this.m_stringDefault &gt; rhs.m_stringDefault){
-    return 1;
-  }
-  else if (this.m_stringParamRw &lt; rhs.m_stringParamRw){
-    return -1;
-  }
-  else if (this.m_stringParamRw &gt; rhs.m_stringParamRw){
-    return 1;
-  }
-  else if (this.m_intParam &lt; rhs.m_intParam){
-    return -1;
-  }
-  else if (this.m_intParam &gt; rhs.m_intParam){
-    return 1;
-  }
-  else if (this.m_intDefault &lt; rhs.m_intDefault){
-    return -1;
-  }
-  else if (this.m_intDefault &gt; rhs.m_intDefault){
-    return 1;
-  }
-  else if (this.m_floatParam &lt; rhs.m_floatParam){
-    return -1;
-  }
-  else if (this.m_floatParam &gt; rhs.m_floatParam){
-    return 1;
-  }
-  else if (this.m_floatDefault &lt; rhs.m_floatDefault){
-    return -1;
-  }
-  else if (this.m_floatDefault &gt; rhs.m_floatDefault){
-    return 1;
-  }
-return 0;
-
-    }
-    override bool opEquals(Object rhs_object)
-    {
-        Simple rhs = cast(Simple) rhs_object;
-  return (this.m_stringParam == rhs.m_stringParam) &amp;&amp; 
-         (this.m_stringDefault == rhs.m_stringDefault) &amp;&amp; 
-         (this.m_stringParamRw == rhs.m_stringParamRw) &amp;&amp; 
-         (this.m_intParam == rhs.m_intParam) &amp;&amp; 
-         (this.m_intDefault == rhs.m_intDefault) &amp;&amp; 
-         (this.m_floatParam == rhs.m_floatParam) &amp;&amp; 
-         (this.m_floatDefault == rhs.m_floatDefault);
-    }
-
-private:
-    string m_stringParam;
-    string m_stringDefault;
-    string m_stringParamRw;
-    int m_intParam;
-    int m_intDefault;
-    float m_floatParam;
-    float m_floatDefault;
-}
-</pre></html>
+</pre><hr></hr><h2>testademoclass.d</h2><pre></pre><hr></hr><h2>testademoclass.d.new</h2><pre></pre></html>

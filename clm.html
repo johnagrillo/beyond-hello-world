@@ -1,8 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>clm</h1><hr></hr><h2>array03.icl</h2><pre>module array03
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Clean</h1><hr></hr><h2>ademoclass.dcl</h2><pre>definition module ademoclass
+
+::  ADemoClass
+newADemoClass :: String String Int Real-&gt;ADemoClass</pre><hr></hr><h2>ademoclass.icl</h2><pre>implementation module ademoclass
+
+import _SystemArray
+import GenFMap
+
+::  ADemoClass =  {
+  stringParam :: String,
+  stringDefault :: String,
+  stringParamRw :: String,
+  intParam :: Int,
+  intDefault :: Int,
+  floatParam :: Real,
+  floatDefault :: Real}
+
+newADemoClass :: String String Int Real-&gt;ADemoClass
+newADemoClass stringParam stringParamRw intParam floatParam = {ADemoClass|
+  stringParam = stringParam,
+  stringDefault = "string default",
+  stringParamRw = stringParamRw,
+  intParam = intParam,
+  intDefault = 0,
+  floatParam = floatParam,
+  floatDefault = 0.0}
+
+
+</pre><hr></hr><h2>array03.icl</h2><pre>module array03
 
 Start = 
-    let #&lt;bhw::member:0x000055f3bbb031c8&gt; = {
+    let array3 = {
         {
             {0, 1, 2}, 
             {10, 11, 12}, 
@@ -15,96 +43,40 @@ Start =
             {200, 201, 202}, 
             {210, 211, 212}, 
             {220, 221, 222}}} in
-    (#&lt;bhw::member:0x000055f3bbb031c8&gt;)</pre><hr></hr><h2>array10.icl</h2><pre>module array10
+    (array3)</pre><hr></hr><h2>array10.icl</h2><pre>module array10
 
 Start = 
-    let #&lt;bhw::member:0x000055f3bbaebcf8&gt; = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} in
-    (#&lt;bhw::member:0x000055f3bbaebcf8&gt;)</pre><hr></hr><h2>array20.icl</h2><pre>module array20
+    let array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} in
+    (array)</pre><hr></hr><h2>array20.icl</h2><pre>module array20
 
 Start = 
-    let #&lt;bhw::member:0x000055f3bbaeaf88&gt; = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20} in
-    (#&lt;bhw::member:0x000055f3bbaeaf88&gt;)</pre><hr></hr><h2>democlass.dcl</h2><pre>definition module democlass
-
-::  Democlass
-newDemoclass :: String String Int Real-&gt;Democlass</pre><hr></hr><h2>democlass.icl</h2><pre>implementation module democlass
-
-import _SystemArray
-import GenFMap
-
-::  Democlass =  {
-  stringParam :: String,
-  stringDefault :: String,
-  stringParamRw :: String,
-  intParam :: Int,
-  intDefault :: Int,
-  floatParam :: Real,
-  floatDefault :: Real}
-
-newDemoclass :: String String Int Real-&gt;Democlass
-newDemoclass stringParam stringParamRw intParam floatParam = {Democlass|
-  stringParam = stringParam,
-  stringDefault = "string default",
-  stringParamRw = stringParamRw,
-  intParam = intParam,
-  intDefault = 0,
-  floatParam = floatParam,
-  floatDefault = 0.0}
-
-
-</pre><hr></hr><h2>hash10.icl</h2><pre>module hash10
+    let array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20} in
+    (array)</pre><hr></hr><h2>hash10.icl</h2><pre>module hash10
 
 Start = 
-    let #&lt;bhw::member:0x000055f3bbae32d8&gt; = emptyFMap &lt;&lt;= (1,"string1") &lt;&lt;= (2,"string2") &lt;&lt;= (3,"string3") &lt;&lt;= (4,"string4") &lt;&lt;= (5,"string5") &lt;&lt;= (6,"string6") &lt;&lt;= (7,"string7") &lt;&lt;= (8,"string8") &lt;&lt;= (9,"string9") &lt;&lt;= (10,"string10") in
-    (#&lt;bhw::member:0x000055f3bbae32d8&gt;)</pre><hr></hr><h2>integers.icl</h2><pre>module integers
+    let hashf = emptyFMap &lt;&lt;= (1,"string1") &lt;&lt;= (2,"string2") &lt;&lt;= (3,"string3") &lt;&lt;= (4,"string4") &lt;&lt;= (5,"string5") &lt;&lt;= (6,"string6") &lt;&lt;= (7,"string7") &lt;&lt;= (8,"string8") &lt;&lt;= (9,"string9") &lt;&lt;= (10,"string10") in
+    (hashf)</pre><hr></hr><h2>integers.icl</h2><pre>module integers
 
 Start = 
-    let #&lt;bhw::member:0x000055f3bbb0de70&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbb0da38&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbb0d6f0&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbb0d380&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbb0d038&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbb0ccf0&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbb0c9a8&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbb0c660&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbb0c318&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbaf3bd8&gt; = 0 in
-    let #&lt;bhw::member:0x000055f3bbaf3930&gt; = 0 in
-    (#&lt;bhw::member:0x000055f3bbb0de70&gt;,#&lt;bhw::member:0x000055f3bbb0da38&gt;,#&lt;bhw::member:0x000055f3bbb0d6f0&gt;,#&lt;bhw::member:0x000055f3bbb0d380&gt;,#&lt;bhw::member:0x000055f3bbb0d038&gt;,#&lt;bhw::member:0x000055f3bbb0ccf0&gt;,#&lt;bhw::member:0x000055f3bbb0c9a8&gt;,#&lt;bhw::member:0x000055f3bbb0c660&gt;,#&lt;bhw::member:0x000055f3bbb0c318&gt;,#&lt;bhw::member:0x000055f3bbaf3bd8&gt;,#&lt;bhw::member:0x000055f3bbaf3930&gt;)</pre><hr></hr><h2>nested.icl</h2><pre>module nested
+    let int_8_unsigned = 0 in
+    let int_16_unsigned = 0 in
+    let int_32_unsigned = 0 in
+    let int_64_unsigned = 0 in
+    let int_word_unsigned = 0 in
+    let int_8_signed = 0 in
+    let int_16_signed = 0 in
+    let int_32_signed = 0 in
+    let int_64_signed = 0 in
+    let int_word_signed = 0 in
+    let int_ap = 0 in
+    (int_8_unsigned,int_16_unsigned,int_32_unsigned,int_64_unsigned,int_word_unsigned,int_8_signed,int_16_signed,int_32_signed,int_64_signed,int_word_signed,int_ap)</pre><hr></hr><h2>nested.icl</h2><pre>module nested
 
 Start = 
-    let #&lt;bhw::member:0x000055f3bbae0fb0&gt; = [
+    let listOfListV = [
         ["1", "2"], 
         ["3", "4"], 
         ["5", "6"]] in
-    let #&lt;bhw::member:0x000055f3bbae05d8&gt; = [emptyFMap &lt;&lt;= ("1","1") &lt;&lt;= ("2","2"), emptyFMap &lt;&lt;= ("3","3") &lt;&lt;= ("4","4"), emptyFMap &lt;&lt;= ("5","5") &lt;&lt;= ("6","6")] in
-    let #&lt;bhw::member:0x000055f3bbadbd58&gt; = [
+    let listOfHashV = [emptyFMap &lt;&lt;= ("1","1") &lt;&lt;= ("2","2"), emptyFMap &lt;&lt;= ("3","3") &lt;&lt;= ("4","4"), emptyFMap &lt;&lt;= ("5","5") &lt;&lt;= ("6","6")] in
+    let mapListOfListOfHashOfHashV = [
         [emptyFMap &lt;&lt;= ("hello1",emptyFMap &lt;&lt;= ("hello2","hello4"))]] in
-    (#&lt;bhw::member:0x000055f3bbae0fb0&gt;,#&lt;bhw::member:0x000055f3bbae05d8&gt;,#&lt;bhw::member:0x000055f3bbadbd58&gt;)</pre><hr></hr><h2>simple.dcl</h2><pre>definition module simple
-
-::  Simple
-newSimple :: String String Int Real-&gt;Simple</pre><hr></hr><h2>simple.icl</h2><pre>implementation module simple
-
-import _SystemArray
-import GenFMap
-
-::  Simple =  {
-  stringParam :: String,
-  stringDefault :: String,
-  stringParamRw :: String,
-  intParam :: Int,
-  intDefault :: Int,
-  floatParam :: Real,
-  floatDefault :: Real}
-
-newSimple :: String String Int Real-&gt;Simple
-newSimple stringParam stringParamRw intParam floatParam = {Simple|
-  stringParam = stringParam,
-  stringDefault = "string default",
-  stringParamRw = stringParamRw,
-  intParam = intParam,
-  intDefault = 0,
-  floatParam = floatParam,
-  floatDefault = 0.0}
-
-
-</pre></html>
+    (listOfListV,listOfHashV,mapListOfListOfHashOfHashV)</pre><hr></hr><h2>testademoclass.icl</h2><pre></pre><hr></hr><h2>testademoclass.icl.new</h2><pre></pre></html>

@@ -1,5 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>coffee</h1><hr></hr><h2>Array03.coffee</h2><pre>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>CoffeeScript</h1><hr></hr><h2>ADemoClass.coffee</h2><pre>class ADemoClass
+  constructor: (@stringParam,@stringParamRw,@intParam,@floatParam) -&gt;
+
+  stringDefault : "string default"
+  intDefault : 0
+  floatDefault : 0.0
+
+
+  toString: -&gt; 
+    "" + "," + @stringParam + "," + @stringDefault + "," + @stringParamRw + "," + @intParam + "," + @intDefault + "," + @floatParam + "," + @floatDefault
+</pre><hr></hr><h2>Array03.coffee</h2><pre>
 array3=[
 [
 [0, 1, 2], 
@@ -17,17 +27,7 @@ console.log array3.toString() </pre><hr></hr><h2>Array10.coffee</h2><pre>
 array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 console.log array.toString() </pre><hr></hr><h2>Array20.coffee</h2><pre>
 array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-console.log array.toString() </pre><hr></hr><h2>Democlass.coffee</h2><pre>class Democlass
-  constructor: (@stringParam,@stringParamRw,@intParam,@floatParam) -&gt;
-
-  stringDefault : "string default"
-  intDefault : 0
-  floatDefault : 0.0
-
-
-  toString: -&gt; 
-    "" + "," + @stringParam + "," + @stringDefault + "," + @stringParamRw + "," + @intParam + "," + @intDefault + "," + @floatParam + "," + @floatDefault
-</pre><hr></hr><h2>Hash10.coffee</h2><pre>
+console.log array.toString() </pre><hr></hr><h2>Hash10.coffee</h2><pre>
 hashf={ 1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"}
 console.log hashf.toString() </pre><hr></hr><h2>Integers.coffee</h2><pre>
 int_8_unsigned=0
@@ -61,14 +61,4 @@ mapListOfListOfHashOfHashV=[
 [{ "hello1":{ "hello2":"hello4"}}]]
 console.log listOfListV.toString() 
 console.log listOfHashV.toString() 
-console.log mapListOfListOfHashOfHashV.toString() </pre><hr></hr><h2>Simple.coffee</h2><pre>class Simple
-  constructor: (@stringParam,@stringParamRw,@intParam,@floatParam) -&gt;
-
-  stringDefault : "string default"
-  intDefault : 0
-  floatDefault : 0.0
-
-
-  toString: -&gt; 
-    "" + "," + @stringParam + "," + @stringDefault + "," + @stringParamRw + "," + @intParam + "," + @intDefault + "," + @floatParam + "," + @floatDefault
-</pre></html>
+console.log mapListOfListOfHashOfHashV.toString() </pre><hr></hr><h2>TestADemoClass.coffee</h2><pre></pre><hr></hr><h2>TestADemoClass.coffee.new</h2><pre></pre></html>

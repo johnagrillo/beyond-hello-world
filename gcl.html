@@ -1,5 +1,57 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>gcl</h1><hr></hr><h2>array03.lisp</h2><pre>;;
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Lisp(Gnu Common Lisp)</h1><hr></hr><h2>a-demo-class.lisp</h2><pre>(load "/usr/local/include/pg//commonlisp/pg-timer.lisp")
+
+(defclass a-demo-class ()
+  ((string-param
+  :initarg :string-param
+  :initform (error "string-param is a required parameter")
+  :accessor string-param)
+
+(string-default
+  :initform "string default"
+  :accessor string-default)
+
+(string-param-rw
+  :initarg :string-param-rw
+  :initform (error "string-param-rw is a required parameter")
+  :accessor string-param-rw)
+
+(int-param
+  :initarg :int-param
+  :initform (error "int-param is a required parameter")
+  :accessor int-param)
+
+(int-default
+  :initform 0
+  :accessor int-default)
+
+(float-param
+  :initarg :float-param
+  :initform (error "float-param is a required parameter")
+  :accessor float-param)
+
+(float-default
+  :initform 0.0
+  :accessor float-default)
+
+)))
+
+(defun a-demo-class-get-key (string-param string-default string-param-rw int-param int-default float-param float-default)
+  (format nil "~a-~a-~a-~4d-~4d-~f-~f" string-param string-default string-param-rw int-param int-default float-param float-default))
+
+
+(defun a-demo-class-to-string (this)
+  (a-demo-class-get-key
+    (string-param this)
+    (string-default this)
+    (string-param-rw this)
+    (int-param this)
+    (int-default this)
+    (float-param this)
+    (float-default this)
+))
+
+</pre><hr></hr><h2>array03.lisp</h2><pre>;;
 ;; make hash from a list of key value pairs
 ;;
     
@@ -56,58 +108,6 @@
 )
     
     
-</pre><hr></hr><h2>democlass.lisp</h2><pre>(load "/usr/local/include/pg//commonlisp/pg-timer.lisp")
-
-(defclass democlass ()
-  ((string-param
-  :initarg :string-param
-  :initform (error "string-param is a required parameter")
-  :accessor string-param)
-
-(string-default
-  :initform "string default"
-  :accessor string-default)
-
-(string-param-rw
-  :initarg :string-param-rw
-  :initform (error "string-param-rw is a required parameter")
-  :accessor string-param-rw)
-
-(int-param
-  :initarg :int-param
-  :initform (error "int-param is a required parameter")
-  :accessor int-param)
-
-(int-default
-  :initform 0
-  :accessor int-default)
-
-(float-param
-  :initarg :float-param
-  :initform (error "float-param is a required parameter")
-  :accessor float-param)
-
-(float-default
-  :initform 0.0
-  :accessor float-default)
-
-)))
-
-(defun democlass-get-key (string-param string-default string-param-rw int-param int-default float-param float-default)
-  (format nil "~a-~a-~a-~4d-~4d-~f-~f" string-param string-default string-param-rw int-param int-default float-param float-default))
-
-
-(defun democlass-to-string (this)
-  (democlass-get-key
-    (string-param this)
-    (string-default this)
-    (string-param-rw this)
-    (int-param this)
-    (int-default this)
-    (float-param this)
-    (float-default this)
-))
-
 </pre><hr></hr><h2>hash10.lisp</h2><pre>;;
 ;; make hash from a list of key value pairs
 ;;
@@ -177,56 +177,4 @@
 )
     
     
-</pre><hr></hr><h2>simple.lisp</h2><pre>(load "/usr/local/include/pg//commonlisp/pg-timer.lisp")
-
-(defclass simple ()
-  ((string-param
-  :initarg :string-param
-  :initform (error "string-param is a required parameter")
-  :accessor string-param)
-
-(string-default
-  :initform "string default"
-  :accessor string-default)
-
-(string-param-rw
-  :initarg :string-param-rw
-  :initform (error "string-param-rw is a required parameter")
-  :accessor string-param-rw)
-
-(int-param
-  :initarg :int-param
-  :initform (error "int-param is a required parameter")
-  :accessor int-param)
-
-(int-default
-  :initform 0
-  :accessor int-default)
-
-(float-param
-  :initarg :float-param
-  :initform (error "float-param is a required parameter")
-  :accessor float-param)
-
-(float-default
-  :initform 0.0
-  :accessor float-default)
-
-)))
-
-(defun simple-get-key (string-param string-default string-param-rw int-param int-default float-param float-default)
-  (format nil "~a-~a-~a-~4d-~4d-~f-~f" string-param string-default string-param-rw int-param int-default float-param float-default))
-
-
-(defun simple-to-string (this)
-  (simple-get-key
-    (string-param this)
-    (string-default this)
-    (string-param-rw this)
-    (int-param this)
-    (int-default this)
-    (float-param this)
-    (float-default this)
-))
-
-</pre></html>
+</pre><hr></hr><h2>test-a-demo-class.lisp</h2><pre></pre><hr></hr><h2>test-a-demo-class.lisp.new</h2><pre></pre></html>

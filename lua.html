@@ -1,118 +1,75 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>lua</h1><hr></hr><h2>array03.lua</h2><pre>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Lua</h1><hr></hr><h2>a_demo_class.lua</h2><pre>ADemoClass= {}
+function ADemoClass:new(
+stringParam,
+                        stringParamRw,
+                        intParam,
+                        floatParam
+)
 
-print(#&lt;bhw::member:0x000055f3bbb031c8&gt;)
+    local object = {stringParam = stringParam,
+              stringParamRw = stringParamRw,
+              intParam = intParam,
+              floatParam = floatParam,
+              stringDefault = "string default",
+              intDefault = 0,
+              floatDefault = 0.0}
+    setmetatable(object,
+                        { __index = Class1,
+	                        __tostring = function() return string.format("%s-%s-%s-%4d-%4d-%f-%f",object.stringParam,object.stringDefault,object.stringParamRw,object.intParam,object.intDefault,object.floatParam,object.floatDefault)
+ end
+                        })
+    return object
+end
+
+function ADemoClass:getStringParam()
+    return self.stringParam
+end
+
+function ADemoClass:getStringParamRw()
+    return self.stringParamRw
+end
+function ADemoClass:setStringParamRw(val)
+    self.stringParamRw = val
+end
+
+function ADemoClass:getIntParam()
+    return self.intParam
+end
+
+function ADemoClass:getFloatParam()
+    return self.floatParam
+end
+
+
+</pre><hr></hr><h2>array03.lua</h2><pre>
+
+print(array3)
 </pre><hr></hr><h2>array10.lua</h2><pre>
 
-print(#&lt;bhw::member:0x000055f3bbaebcf8&gt;)
+print(array)
 </pre><hr></hr><h2>array20.lua</h2><pre>
 
-print(#&lt;bhw::member:0x000055f3bbaeaf88&gt;)
-</pre><hr></hr><h2>democlass.lua</h2><pre>Democlass= {}
-function Democlass:new(
-stringParam,
-                       stringParamRw,
-                       intParam,
-                       floatParam
-)
-
-    local object = {#&lt;bhw::member:0x000056417c8db080&gt; = stringParam,
-              #&lt;bhw::member:0x000056417c8dac20&gt; = stringParamRw,
-              #&lt;bhw::member:0x000056417c8daab8&gt; = intParam,
-              #&lt;bhw::member:0x000056417c8da6f8&gt; = floatParam,
-              #&lt;bhw::member:0x000056417c8dae00&gt; = "string default",
-              #&lt;bhw::member:0x000056417c8da8b0&gt; = 0,
-              #&lt;bhw::member:0x000056417c8da4f0&gt; = 0.0}
-    setmetatable(object,
-                        { __index = Class1,
-	                        __tostring = function() return string.format("%s-%s-%s-%4d-%4d-%f-%f",object.stringParam,object.stringDefault,object.stringParamRw,object.intParam,object.intDefault,object.floatParam,object.floatDefault)
- end
-                        })
-    return object
-end
-
-function Democlass:getStringParam()
-    return self.stringParam
-end
-
-function Democlass:getStringParamRw()
-    return self.stringParamRw
-end
-function Democlass:setStringParamRw(val)
-    self.stringParamRw = val
-end
-
-function Democlass:getIntParam()
-    return self.intParam
-end
-
-function Democlass:getFloatParam()
-    return self.floatParam
-end
-
-
+print(array)
 </pre><hr></hr><h2>hash10.lua</h2><pre>
 
-print(#&lt;bhw::member:0x000055f3bbae32d8&gt;)
+print(hashf)
 </pre><hr></hr><h2>integers.lua</h2><pre>
 
-print(#&lt;bhw::member:0x000055f3bbb0de70&gt;)
-print(#&lt;bhw::member:0x000055f3bbb0da38&gt;)
-print(#&lt;bhw::member:0x000055f3bbb0d6f0&gt;)
-print(#&lt;bhw::member:0x000055f3bbb0d380&gt;)
-print(#&lt;bhw::member:0x000055f3bbb0d038&gt;)
-print(#&lt;bhw::member:0x000055f3bbb0ccf0&gt;)
-print(#&lt;bhw::member:0x000055f3bbb0c9a8&gt;)
-print(#&lt;bhw::member:0x000055f3bbb0c660&gt;)
-print(#&lt;bhw::member:0x000055f3bbb0c318&gt;)
-print(#&lt;bhw::member:0x000055f3bbaf3bd8&gt;)
-print(#&lt;bhw::member:0x000055f3bbaf3930&gt;)
+print(int_8_unsigned)
+print(int_16_unsigned)
+print(int_32_unsigned)
+print(int_64_unsigned)
+print(int_word_unsigned)
+print(int_8_signed)
+print(int_16_signed)
+print(int_32_signed)
+print(int_64_signed)
+print(int_word_signed)
+print(int_ap)
 </pre><hr></hr><h2>nested.lua</h2><pre>
 
-print(#&lt;bhw::member:0x000055f3bbae0fb0&gt;)
-print(#&lt;bhw::member:0x000055f3bbae05d8&gt;)
-print(#&lt;bhw::member:0x000055f3bbadbd58&gt;)
-</pre><hr></hr><h2>simple.lua</h2><pre>Simple= {}
-function Simple:new(
-stringParam,
-                    stringParamRw,
-                    intParam,
-                    floatParam
-)
-
-    local object = {#&lt;bhw::member:0x000055d39baffea0&gt; = stringParam,
-              #&lt;bhw::member:0x000055d39baffa68&gt; = stringParamRw,
-              #&lt;bhw::member:0x000055d39baff900&gt; = intParam,
-              #&lt;bhw::member:0x000055d39baff590&gt; = floatParam,
-              #&lt;bhw::member:0x000055d39baffc20&gt; = "string default",
-              #&lt;bhw::member:0x000055d39baff720&gt; = 0,
-              #&lt;bhw::member:0x000055d39baff360&gt; = 0.0}
-    setmetatable(object,
-                        { __index = Class1,
-	                        __tostring = function() return string.format("%s-%s-%s-%4d-%4d-%f-%f",object.stringParam,object.stringDefault,object.stringParamRw,object.intParam,object.intDefault,object.floatParam,object.floatDefault)
- end
-                        })
-    return object
-end
-
-function Simple:getStringParam()
-    return self.stringParam
-end
-
-function Simple:getStringParamRw()
-    return self.stringParamRw
-end
-function Simple:setStringParamRw(val)
-    self.stringParamRw = val
-end
-
-function Simple:getIntParam()
-    return self.intParam
-end
-
-function Simple:getFloatParam()
-    return self.floatParam
-end
-
-
-</pre></html>
+print(listOfListV)
+print(listOfHashV)
+print(mapListOfListOfHashOfHashV)
+</pre><hr></hr><h2>test_a_demo_class.lua</h2><pre></pre><hr></hr><h2>test_a_demo_class.lua.new</h2><pre></pre></html>

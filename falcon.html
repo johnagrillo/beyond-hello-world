@@ -1,33 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>falcon</h1><hr></hr><h2>array03.fal</h2><pre>
-array3=[
-      [
-         [0, 1, 2], 
-         [10, 11, 12], 
-         [20, 21, 22]], 
-      [
-         [100, 101, 102], 
-         [110, 111, 112], 
-         [120, 121, 122]], 
-      [
-         [200, 201, 202], 
-         [210, 211, 212], 
-         [220, 221, 222]]]
-
-&gt; array3
-    
-</pre><hr></hr><h2>array10.fal</h2><pre>
-array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-&gt; array
-    
-</pre><hr></hr><h2>array20.fal</h2><pre>
-array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-
-&gt; array
-    
-</pre><hr></hr><h2>democlass.fal</h2><pre>export
-class Democlass(stringParam,stringParamRw,intParam,floatParam)
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Falcon</h1><hr></hr><h2>a_demo_class.fal</h2><pre>export
+class ADemoClass(stringParam,stringParamRw,intParam,floatParam)
    _stringParam = stringParam
    _stringDefault = "string default"
    _stringParamRw = stringParamRw
@@ -83,6 +56,33 @@ class Democlass(stringParam,stringParamRw,intParam,floatParam)
    return ret
    end
 end
+</pre><hr></hr><h2>array03.fal</h2><pre>
+array3=[
+      [
+         [0, 1, 2], 
+         [10, 11, 12], 
+         [20, 21, 22]], 
+      [
+         [100, 101, 102], 
+         [110, 111, 112], 
+         [120, 121, 122]], 
+      [
+         [200, 201, 202], 
+         [210, 211, 212], 
+         [220, 221, 222]]]
+
+&gt; array3
+    
+</pre><hr></hr><h2>array10.fal</h2><pre>
+array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+&gt; array
+    
+</pre><hr></hr><h2>array20.fal</h2><pre>
+array=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+&gt; array
+    
 </pre><hr></hr><h2>hash10.fal</h2><pre>
 hashf=[1=&gt;"string1",2=&gt;"string2",3=&gt;"string3",4=&gt;"string4",5=&gt;"string5",6=&gt;"string6",7=&gt;"string7",8=&gt;"string8",9=&gt;"string9",10=&gt;"string10"]
 
@@ -126,61 +126,4 @@ mapListOfListOfHashOfHashV=[
 &gt; listOfHashV
 &gt; mapListOfListOfHashOfHashV
     
-</pre><hr></hr><h2>simple.fal</h2><pre>export
-class Simple(stringParam,stringParamRw,intParam,floatParam)
-   _stringParam = stringParam
-   _stringDefault = "string default"
-   _stringParamRw = stringParamRw
-   _intParam = intParam
-   _intDefault = 0
-   _floatParam = floatParam
-   _floatDefault = 0.0
-
-   function __get_stringParam(): return self._stringParam
-
-   function __get_stringParamRw(): return self._stringParamRw
-   function __set_stringParamRw(v): self._stringParamRw=v
-
-
-   function __get_intParam(): return self._intParam
-
-   function __get_floatParam(): return self._floatParam
-
-   function toString()
-      return @"$(self._stringParam:4r)-$(self._stringDefault:4r)-$(self._stringParamRw:4r)-$(self._intParam:4r)-$(self._intDefault:4r)-$(self._floatParam:4r)-$(self._floatDefault:4r)"
-   end
-
-   function compare(rhs)
-      ret = self.stringParam.compare(rhs.stringParam)
-      if ret != 0
-         return ret
-      end
-      ret = self.stringDefault.compare(rhs.stringDefault)
-      if ret != 0
-         return ret
-      end
-      ret = self.stringParamRw.compare(rhs.stringParamRw)
-      if ret != 0
-         return ret
-      end
-      ret = self.intParam.compare(rhs.intParam)
-      if ret != 0
-         return ret
-      end
-      ret = self.intDefault.compare(rhs.intDefault)
-      if ret != 0
-         return ret
-      end
-      ret = self.floatParam.compare(rhs.floatParam)
-      if ret != 0
-         return ret
-      end
-      ret = self.floatDefault.compare(rhs.floatDefault)
-      if ret != 0
-         return ret
-      end
-
-   return ret
-   end
-end
-</pre></html>
+</pre><hr></hr><h2>test_a_demo_class.fal</h2><pre></pre><hr></hr><h2>test_a_demo_class.fal.new</h2><pre></pre></html>

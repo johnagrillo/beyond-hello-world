@@ -1,5 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>erlang</h1><hr></hr><h2>array03.erl</h2><pre>%-*-erlang-*-
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Erlang</h1><hr></hr><h2>a_demo_class.erl</h2><pre>%-*-erlang-*-
+-module(a_demo_class).
+-include("a_demo_class.hrl").
+
+-export([
+new/4,
+to_string/1
+]).
+
+  new(StringParam,
+      StringParamRw,
+      IntParam,
+      FloatParam) -&gt; 
+#a_demo_class{    string_param = StringParam,
+    string_param_rw = StringParamRw,
+    int_param = IntParam,
+    float_param = FloatParam}.
+
+
+to_string (This) -&gt;
+    lists:flatten(
+        io_lib:format("~s,-~s,-~s,-~4B-~4B-~f-~f",[This#a_demo_class.string_param,This#a_demo_class.string_default,This#a_demo_class.string_param_rw,This#a_demo_class.int_param,This#a_demo_class.int_default,This#a_demo_class.float_param,This#a_demo_class.float_default])).
+</pre><hr></hr><h2>a_demo_class.hrl</h2><pre>%-*-erlang-*-
+-record(a_demo_class,
+        {string_param="string param",
+         string_default="string default",
+         string_param_rw="string param rw",
+         int_param=0,
+         int_default=0,
+         float_param=0.0,
+         float_default=0.0}).</pre><hr></hr><h2>array03.erl</h2><pre>%-*-erlang-*-
 -module array03.
 -export([main/1]).
 main(_) -&gt; 
@@ -29,37 +59,7 @@ main(_) -&gt;
     
     io:format("~s\n", [Array]).      
     
-</pre><hr></hr><h2>democlass.erl</h2><pre>%-*-erlang-*-
--module(democlass).
--include("democlass.hrl").
-
--export([
-new/4,
-to_string/1
-]).
-
-  new(StringParam,
-      StringParamRw,
-      IntParam,
-      FloatParam) -&gt; 
-#democlass{    string_param = StringParam,
-    string_param_rw = StringParamRw,
-    int_param = IntParam,
-    float_param = FloatParam}.
-
-
-to_string (This) -&gt;
-    lists:flatten(
-        io_lib:format("~s,-~s,-~s,-~4B-~4B-~f-~f",[This#democlass.string_param,This#democlass.string_default,This#democlass.string_param_rw,This#democlass.int_param,This#democlass.int_default,This#democlass.float_param,This#democlass.float_default])).
-</pre><hr></hr><h2>democlass.hrl</h2><pre>%-*-erlang-*-
--record(democlass,
-        {string_param="string param",
-         string_default="string default",
-         string_param_rw="string param rw",
-         int_param=0,
-         int_default=0,
-         float_param=0.0,
-         float_default=0.0}).</pre><hr></hr><h2>hash10.erl</h2><pre>%-*-erlang-*-
+</pre><hr></hr><h2>hash10.erl</h2><pre>%-*-erlang-*-
 -module hash10.
 -export([main/1]).
 main(_) -&gt; 
@@ -101,34 +101,4 @@ main(_) -&gt;
     io:format("~s\n", [ListOfHashV]),
     io:format("~s\n", [MapListOfListOfHashOfHashV]).      
     
-</pre><hr></hr><h2>simple.erl</h2><pre>%-*-erlang-*-
--module(simple).
--include("simple.hrl").
-
--export([
-new/4,
-to_string/1
-]).
-
-  new(StringParam,
-      StringParamRw,
-      IntParam,
-      FloatParam) -&gt; 
-#simple{    string_param = StringParam,
-    string_param_rw = StringParamRw,
-    int_param = IntParam,
-    float_param = FloatParam}.
-
-
-to_string (This) -&gt;
-    lists:flatten(
-        io_lib:format("~s,-~s,-~s,-~4B-~4B-~f-~f",[This#simple.string_param,This#simple.string_default,This#simple.string_param_rw,This#simple.int_param,This#simple.int_default,This#simple.float_param,This#simple.float_default])).
-</pre><hr></hr><h2>simple.hrl</h2><pre>%-*-erlang-*-
--record(simple,
-        {string_param="string param",
-         string_default="string default",
-         string_param_rw="string param rw",
-         int_param=0,
-         int_default=0,
-         float_param=0.0,
-         float_default=0.0}).</pre></html>
+</pre><hr></hr><h2>test_a_demo_class.erl</h2><pre></pre><hr></hr><h2>test_a_demo_class.erl.new</h2><pre></pre></html>

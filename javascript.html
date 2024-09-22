@@ -1,5 +1,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>javascript</h1><hr></hr><h2>Array03.js</h2><pre>
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>JavaScript</h1><hr></hr><h2>ADemoClass.js</h2><pre>function ADemoClass(_stringParam,_stringParamRw,_intParam,_floatParam)
+{
+    this._stringParam = _stringParam
+    this._stringParamRw = _stringParamRw
+    this._intParam = _intParam
+    this._floatParam = _floatParam
+    this._stringDefault = "string default"
+    this._intDefault = 0
+    this._floatDefault = 0.0
+    return this;
+}
+
+ADemoClass.prototype = {
+  get stringParam(){ return this._stringParam;},
+  get stringParamRw(){ return this._stringParamRw;},
+  set stringParamRw(arg){ this._stringParamRw=arg;},
+  get intParam(){ return this._intParam;},
+  get floatParam(){ return this._floatParam;}
+}
+
+ADemoClass.prototype.toString = function() {
+    return "" + "-" + 
+        this._stringParam.toString() + "-" + 
+        this._stringDefault.toString() + "-" + 
+        this._stringParamRw.toString() + "-" + 
+        this._intParam.toString() + "-" + 
+        this._intDefault.toString() + "-" + 
+        this._floatParam.toString() + "-" + 
+        this._floatDefault.toString();
+}</pre><hr></hr><h2>Array03.js</h2><pre>
 var array3= [
 [
 [0, 1, 2], 
@@ -20,36 +49,7 @@ var array= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 console.log(array.toString());</pre><hr></hr><h2>Array20.js</h2><pre>
 var array= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
-console.log(array.toString());</pre><hr></hr><h2>Democlass.js</h2><pre>function Democlass(_stringParam,_stringParamRw,_intParam,_floatParam)
-{
-    this._stringParam = _stringParam
-    this._stringParamRw = _stringParamRw
-    this._intParam = _intParam
-    this._floatParam = _floatParam
-    this._stringDefault = "string default"
-    this._intDefault = 0
-    this._floatDefault = 0.0
-    return this;
-}
-
-Democlass.prototype = {
-  get #&lt;bhw::member:0x000056417c8db080&gt;(){ return this._stringParam;},
-  get #&lt;bhw::member:0x000056417c8dac20&gt;(){ return this._stringParamRw;},
-  set #&lt;bhw::member:0x000056417c8dac20&gt;(arg){ this._stringParamRw=arg;},
-  get #&lt;bhw::member:0x000056417c8daab8&gt;(){ return this._intParam;},
-  get #&lt;bhw::member:0x000056417c8da6f8&gt;(){ return this._floatParam;}
-}
-
-Democlass.prototype.toString = function() {
-    return "" + "-" + 
-        this._stringParam.toString() + "-" + 
-        this._stringDefault.toString() + "-" + 
-        this._stringParamRw.toString() + "-" + 
-        this._intParam.toString() + "-" + 
-        this._intDefault.toString() + "-" + 
-        this._floatParam.toString() + "-" + 
-        this._floatDefault.toString();
-}</pre><hr></hr><h2>Hash10.js</h2><pre>
+console.log(array.toString());</pre><hr></hr><h2>Hash10.js</h2><pre>
 var hashf= {1:"string1",2:"string2",3:"string3",4:"string4",5:"string5",6:"string6",7:"string7",8:"string8",9:"string9",10:"string10"};
 
 console.log(hashf.toString());</pre><hr></hr><h2>Integers.js</h2><pre>
@@ -86,33 +86,4 @@ var mapListOfListOfHashOfHashV= [
 
 console.log(listOfListV.toString());
 console.log(listOfHashV.toString());
-console.log(mapListOfListOfHashOfHashV.toString());</pre><hr></hr><h2>Simple.js</h2><pre>function Simple(_stringParam,_stringParamRw,_intParam,_floatParam)
-{
-    this._stringParam = _stringParam
-    this._stringParamRw = _stringParamRw
-    this._intParam = _intParam
-    this._floatParam = _floatParam
-    this._stringDefault = "string default"
-    this._intDefault = 0
-    this._floatDefault = 0.0
-    return this;
-}
-
-Simple.prototype = {
-  get #&lt;bhw::member:0x000055d39baffea0&gt;(){ return this._stringParam;},
-  get #&lt;bhw::member:0x000055d39baffa68&gt;(){ return this._stringParamRw;},
-  set #&lt;bhw::member:0x000055d39baffa68&gt;(arg){ this._stringParamRw=arg;},
-  get #&lt;bhw::member:0x000055d39baff900&gt;(){ return this._intParam;},
-  get #&lt;bhw::member:0x000055d39baff590&gt;(){ return this._floatParam;}
-}
-
-Simple.prototype.toString = function() {
-    return "" + "-" + 
-        this._stringParam.toString() + "-" + 
-        this._stringDefault.toString() + "-" + 
-        this._stringParamRw.toString() + "-" + 
-        this._intParam.toString() + "-" + 
-        this._intDefault.toString() + "-" + 
-        this._floatParam.toString() + "-" + 
-        this._floatDefault.toString();
-}</pre></html>
+console.log(mapListOfListOfHashOfHashV.toString());</pre><hr></hr><h2>TestADemoClass.js</h2><pre></pre><hr></hr><h2>TestADemoClass.js.new</h2><pre></pre></html>

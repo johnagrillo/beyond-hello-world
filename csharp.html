@@ -1,5 +1,178 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>csharp</h1><hr></hr><h2>Array03.cs</h2><pre>using System;
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>C#</h1><hr></hr><h2>ADemoClass.cs</h2><pre>using System;
+using System.Collections;
+using System.Collections.Generic;
+public class ADemoClass : IComparable{
+  public ADemoClass (string stringParam,string stringParamRw,int intParam,float floatParam)
+  {
+    this.stringParam = stringParam;
+    this.stringParamRw = stringParamRw;
+    this.intParam = intParam;
+    this.floatParam = floatParam;
+    this.stringDefault = "";
+    this.intDefault = 0;
+    this.floatDefault = 0.0f;
+  }
+
+    override public string ToString()
+  {
+        return System.String.Format("{0}-{1}-{2}-{3,4}-{4,4}-{5}-{6}",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
+    }
+
+  override public int GetHashCode()
+  {
+    return this.stringParam.GetHashCode() +
+        this.stringDefault.GetHashCode() +
+        this.stringParamRw.GetHashCode() +
+        this.intParam.GetHashCode() +
+        this.intDefault.GetHashCode() +
+        this.floatParam.GetHashCode() +
+        this.floatDefault.GetHashCode();
+  }
+
+
+  override public bool Equals(System.Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+    ADemoClass aDemoClass = obj as ADemoClass;
+    if ((System.Object)aDemoClass == null)
+    {
+      return false;
+    }
+    return (this == aDemoClass);
+  }
+
+
+
+  public bool Equals(ADemoClass obj){
+    if ((object)obj == null){
+      return false;
+    }
+    return (this  == obj);
+  }
+  public static bool operator &lt; (ADemoClass lhs, ADemoClass rhs)
+  {
+    int ret;
+        ret = lhs.stringParam.CompareTo(rhs.stringParam);
+        if (ret &lt; 0) return true;
+        if (ret &gt; 0) return false;
+
+
+        ret = lhs.stringDefault.CompareTo(rhs.stringDefault);
+        if (ret &lt; 0) return true;
+        if (ret &gt; 0) return false;
+
+
+        ret = lhs.stringParamRw.CompareTo(rhs.stringParamRw);
+        if (ret &lt; 0) return true;
+        if (ret &gt; 0) return false;
+
+
+        if (lhs.intParam &lt; rhs.intParam) return true;
+        if (lhs.intParam &gt; rhs.intParam) return false;
+
+
+        if (lhs.intDefault &lt; rhs.intDefault) return true;
+        if (lhs.intDefault &gt; rhs.intDefault) return false;
+
+
+        if (lhs.floatParam &lt; rhs.floatParam) return true;
+        if (lhs.floatParam &gt; rhs.floatParam) return false;
+
+
+        if (lhs.floatDefault &lt; rhs.floatDefault) return true;
+        if (lhs.floatDefault &gt; rhs.floatDefault) return false;
+
+
+    return false;
+
+}
+
+  public static bool operator &gt; (ADemoClass lhs, ADemoClass rhs)
+  {
+    int ret;
+        ret = lhs.stringParam.CompareTo(rhs.stringParam);
+        if (ret &lt; 0) return false;
+        if (ret &gt; 0) return true;
+
+
+        ret = lhs.stringDefault.CompareTo(rhs.stringDefault);
+        if (ret &lt; 0) return false;
+        if (ret &gt; 0) return true;
+
+
+        ret = lhs.stringParamRw.CompareTo(rhs.stringParamRw);
+        if (ret &lt; 0) return false;
+        if (ret &gt; 0) return true;
+
+
+        if (lhs.intParam &lt; rhs.intParam) return false;
+        if (lhs.intParam &gt; rhs.intParam) return true;
+
+
+        if (lhs.intDefault &lt; rhs.intDefault) return false;
+        if (lhs.intDefault &gt; rhs.intDefault) return true;
+
+
+        if (lhs.floatParam &lt; rhs.floatParam) return false;
+        if (lhs.floatParam &gt; rhs.floatParam) return true;
+
+
+        if (lhs.floatDefault &lt; rhs.floatDefault) return false;
+        if (lhs.floatDefault &gt; rhs.floatDefault) return true;
+
+
+    return false;
+
+}
+
+  public static bool operator == (ADemoClass lhs, ADemoClass rhs)
+  {
+    return (lhs.stringParam == rhs.stringParam) &amp;&amp;
+        (lhs.stringDefault == rhs.stringDefault) &amp;&amp;
+        (lhs.stringParamRw == rhs.stringParamRw) &amp;&amp;
+        (lhs.intParam == rhs.intParam) &amp;&amp;
+        (lhs.intDefault == rhs.intDefault) &amp;&amp;
+        (lhs.floatParam == rhs.floatParam) &amp;&amp;
+        (lhs.floatDefault == rhs.floatDefault);
+}
+
+  public static bool operator != (ADemoClass lhs, ADemoClass rhs)
+  {
+        return !(lhs == rhs);
+}
+public int CompareTo (object obj)
+{
+  if (obj == null) return 1;
+    ADemoClass other = obj as ADemoClass;
+      if (this.stringParam.CompareTo(other.stringParam) != 0)
+        return (this.stringParam.CompareTo(other.stringParam));
+      if (this.stringDefault.CompareTo(other.stringDefault) != 0)
+        return (this.stringDefault.CompareTo(other.stringDefault));
+      if (this.stringParamRw.CompareTo(other.stringParamRw) != 0)
+        return (this.stringParamRw.CompareTo(other.stringParamRw));
+      if (this.intParam &lt; other.intParam) return -1;
+      if (this.intParam &gt; other.intParam) return 1;
+      if (this.intDefault &lt; other.intDefault) return -1;
+      if (this.intDefault &gt; other.intDefault) return 1;
+      if (this.floatParam &lt; other.floatParam) return -1;
+      if (this.floatParam &gt; other.floatParam) return 1;
+      if (this.floatDefault &lt; other.floatDefault) return -1;
+      if (this.floatDefault &gt; other.floatDefault) return 1;
+    return 0;
+}
+  public string stringParam { get; private set; }
+  public string stringDefault;
+  public string stringParamRw;
+  public int intParam { get; private set; }
+  public int intDefault;
+  public float floatParam { get; private set; }
+  public float floatDefault;
+
+}</pre><hr></hr><h2>Array03.cs</h2><pre>using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,180 +214,7 @@ public class test_Array20
         Console.WriteLine(array);
     }
 }
-</pre><hr></hr><h2>Democlass.cs</h2><pre>using System;
-using System.Collections;
-using System.Collections.Generic;
-public class Democlass : IComparable{
-  public Democlass (string stringParam,string stringParamRw,int intParam,float floatParam)
-  {
-    this.stringParam = stringParam;
-    this.stringParamRw = stringParamRw;
-    this.intParam = intParam;
-    this.floatParam = floatParam;
-    this.stringDefault = "";
-    this.intDefault = 0;
-    this.floatDefault = 0.0f;
-  }
-
-    override public string ToString()
-  {
-        return System.String.Format("{0}-{1}-{2}-{3,4}-{4,4}-{5}-{6}",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
-    }
-
-  override public int GetHashCode()
-  {
-    return this.stringParam.GetHashCode() +
-        this.stringDefault.GetHashCode() +
-        this.stringParamRw.GetHashCode() +
-        this.intParam.GetHashCode() +
-        this.intDefault.GetHashCode() +
-        this.floatParam.GetHashCode() +
-        this.floatDefault.GetHashCode();
-  }
-
-
-  override public bool Equals(System.Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-    Democlass democlass = obj as Democlass;
-    if ((System.Object)democlass == null)
-    {
-      return false;
-    }
-    return (this == democlass);
-  }
-
-
-
-  public bool Equals(Democlass obj){
-    if ((object)obj == null){
-      return false;
-    }
-    return (this  == obj);
-  }
-  public static bool operator &lt; (Democlass lhs, Democlass rhs)
-  {
-    int ret;
-        ret = lhs.stringParam.CompareTo(rhs.stringParam);
-        if (ret &lt; 0) return true;
-        if (ret &gt; 0) return false;
-
-
-        ret = lhs.stringDefault.CompareTo(rhs.stringDefault);
-        if (ret &lt; 0) return true;
-        if (ret &gt; 0) return false;
-
-
-        ret = lhs.stringParamRw.CompareTo(rhs.stringParamRw);
-        if (ret &lt; 0) return true;
-        if (ret &gt; 0) return false;
-
-
-        if (lhs.intParam &lt; rhs.intParam) return true;
-        if (lhs.intParam &gt; rhs.intParam) return false;
-
-
-        if (lhs.intDefault &lt; rhs.intDefault) return true;
-        if (lhs.intDefault &gt; rhs.intDefault) return false;
-
-
-        if (lhs.floatParam &lt; rhs.floatParam) return true;
-        if (lhs.floatParam &gt; rhs.floatParam) return false;
-
-
-        if (lhs.floatDefault &lt; rhs.floatDefault) return true;
-        if (lhs.floatDefault &gt; rhs.floatDefault) return false;
-
-
-    return false;
-
-}
-
-  public static bool operator &gt; (Democlass lhs, Democlass rhs)
-  {
-    int ret;
-        ret = lhs.stringParam.CompareTo(rhs.stringParam);
-        if (ret &lt; 0) return false;
-        if (ret &gt; 0) return true;
-
-
-        ret = lhs.stringDefault.CompareTo(rhs.stringDefault);
-        if (ret &lt; 0) return false;
-        if (ret &gt; 0) return true;
-
-
-        ret = lhs.stringParamRw.CompareTo(rhs.stringParamRw);
-        if (ret &lt; 0) return false;
-        if (ret &gt; 0) return true;
-
-
-        if (lhs.intParam &lt; rhs.intParam) return false;
-        if (lhs.intParam &gt; rhs.intParam) return true;
-
-
-        if (lhs.intDefault &lt; rhs.intDefault) return false;
-        if (lhs.intDefault &gt; rhs.intDefault) return true;
-
-
-        if (lhs.floatParam &lt; rhs.floatParam) return false;
-        if (lhs.floatParam &gt; rhs.floatParam) return true;
-
-
-        if (lhs.floatDefault &lt; rhs.floatDefault) return false;
-        if (lhs.floatDefault &gt; rhs.floatDefault) return true;
-
-
-    return false;
-
-}
-
-  public static bool operator == (Democlass lhs, Democlass rhs)
-  {
-    return (lhs.stringParam == rhs.stringParam) &amp;&amp;
-        (lhs.stringDefault == rhs.stringDefault) &amp;&amp;
-        (lhs.stringParamRw == rhs.stringParamRw) &amp;&amp;
-        (lhs.intParam == rhs.intParam) &amp;&amp;
-        (lhs.intDefault == rhs.intDefault) &amp;&amp;
-        (lhs.floatParam == rhs.floatParam) &amp;&amp;
-        (lhs.floatDefault == rhs.floatDefault);
-}
-
-  public static bool operator != (Democlass lhs, Democlass rhs)
-  {
-        return !(lhs == rhs);
-}
-public int CompareTo (object obj)
-{
-  if (obj == null) return 1;
-    Democlass other = obj as Democlass;
-      if (this.stringParam.CompareTo(other.stringParam) != 0)
-        return (this.stringParam.CompareTo(other.stringParam));
-      if (this.stringDefault.CompareTo(other.stringDefault) != 0)
-        return (this.stringDefault.CompareTo(other.stringDefault));
-      if (this.stringParamRw.CompareTo(other.stringParamRw) != 0)
-        return (this.stringParamRw.CompareTo(other.stringParamRw));
-      if (this.intParam &lt; other.intParam) return -1;
-      if (this.intParam &gt; other.intParam) return 1;
-      if (this.intDefault &lt; other.intDefault) return -1;
-      if (this.intDefault &gt; other.intDefault) return 1;
-      if (this.floatParam &lt; other.floatParam) return -1;
-      if (this.floatParam &gt; other.floatParam) return 1;
-      if (this.floatDefault &lt; other.floatDefault) return -1;
-      if (this.floatDefault &gt; other.floatDefault) return 1;
-    return 0;
-}
-  public string stringParam { get; private set; }
-  public string stringDefault;
-  public string stringParamRw;
-  public int intParam { get; private set; }
-  public int intDefault;
-  public float floatParam { get; private set; }
-  public float floatDefault;
-
-}</pre><hr></hr><h2>Hash10.cs</h2><pre>using System;
+</pre><hr></hr><h2>Hash10.cs</h2><pre>using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -284,177 +284,4 @@ public class test_Nested
         Console.WriteLine(mapListOfListOfHashOfHashV);
     }
 }
-</pre><hr></hr><h2>Simple.cs</h2><pre>using System;
-using System.Collections;
-using System.Collections.Generic;
-public class Simple : IComparable{
-  public Simple (string stringParam,string stringParamRw,int intParam,float floatParam)
-  {
-    this.stringParam = stringParam;
-    this.stringParamRw = stringParamRw;
-    this.intParam = intParam;
-    this.floatParam = floatParam;
-    this.stringDefault = "";
-    this.intDefault = 0;
-    this.floatDefault = 0.0f;
-  }
-
-    override public string ToString()
-  {
-        return System.String.Format("{0}-{1}-{2}-{3,4}-{4,4}-{5}-{6}",stringParam,stringDefault,stringParamRw,intParam,intDefault,floatParam,floatDefault);
-    }
-
-  override public int GetHashCode()
-  {
-    return this.stringParam.GetHashCode() +
-        this.stringDefault.GetHashCode() +
-        this.stringParamRw.GetHashCode() +
-        this.intParam.GetHashCode() +
-        this.intDefault.GetHashCode() +
-        this.floatParam.GetHashCode() +
-        this.floatDefault.GetHashCode();
-  }
-
-
-  override public bool Equals(System.Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-    Simple simple = obj as Simple;
-    if ((System.Object)simple == null)
-    {
-      return false;
-    }
-    return (this == simple);
-  }
-
-
-
-  public bool Equals(Simple obj){
-    if ((object)obj == null){
-      return false;
-    }
-    return (this  == obj);
-  }
-  public static bool operator &lt; (Simple lhs, Simple rhs)
-  {
-    int ret;
-        ret = lhs.stringParam.CompareTo(rhs.stringParam);
-        if (ret &lt; 0) return true;
-        if (ret &gt; 0) return false;
-
-
-        ret = lhs.stringDefault.CompareTo(rhs.stringDefault);
-        if (ret &lt; 0) return true;
-        if (ret &gt; 0) return false;
-
-
-        ret = lhs.stringParamRw.CompareTo(rhs.stringParamRw);
-        if (ret &lt; 0) return true;
-        if (ret &gt; 0) return false;
-
-
-        if (lhs.intParam &lt; rhs.intParam) return true;
-        if (lhs.intParam &gt; rhs.intParam) return false;
-
-
-        if (lhs.intDefault &lt; rhs.intDefault) return true;
-        if (lhs.intDefault &gt; rhs.intDefault) return false;
-
-
-        if (lhs.floatParam &lt; rhs.floatParam) return true;
-        if (lhs.floatParam &gt; rhs.floatParam) return false;
-
-
-        if (lhs.floatDefault &lt; rhs.floatDefault) return true;
-        if (lhs.floatDefault &gt; rhs.floatDefault) return false;
-
-
-    return false;
-
-}
-
-  public static bool operator &gt; (Simple lhs, Simple rhs)
-  {
-    int ret;
-        ret = lhs.stringParam.CompareTo(rhs.stringParam);
-        if (ret &lt; 0) return false;
-        if (ret &gt; 0) return true;
-
-
-        ret = lhs.stringDefault.CompareTo(rhs.stringDefault);
-        if (ret &lt; 0) return false;
-        if (ret &gt; 0) return true;
-
-
-        ret = lhs.stringParamRw.CompareTo(rhs.stringParamRw);
-        if (ret &lt; 0) return false;
-        if (ret &gt; 0) return true;
-
-
-        if (lhs.intParam &lt; rhs.intParam) return false;
-        if (lhs.intParam &gt; rhs.intParam) return true;
-
-
-        if (lhs.intDefault &lt; rhs.intDefault) return false;
-        if (lhs.intDefault &gt; rhs.intDefault) return true;
-
-
-        if (lhs.floatParam &lt; rhs.floatParam) return false;
-        if (lhs.floatParam &gt; rhs.floatParam) return true;
-
-
-        if (lhs.floatDefault &lt; rhs.floatDefault) return false;
-        if (lhs.floatDefault &gt; rhs.floatDefault) return true;
-
-
-    return false;
-
-}
-
-  public static bool operator == (Simple lhs, Simple rhs)
-  {
-    return (lhs.stringParam == rhs.stringParam) &amp;&amp;
-        (lhs.stringDefault == rhs.stringDefault) &amp;&amp;
-        (lhs.stringParamRw == rhs.stringParamRw) &amp;&amp;
-        (lhs.intParam == rhs.intParam) &amp;&amp;
-        (lhs.intDefault == rhs.intDefault) &amp;&amp;
-        (lhs.floatParam == rhs.floatParam) &amp;&amp;
-        (lhs.floatDefault == rhs.floatDefault);
-}
-
-  public static bool operator != (Simple lhs, Simple rhs)
-  {
-        return !(lhs == rhs);
-}
-public int CompareTo (object obj)
-{
-  if (obj == null) return 1;
-    Simple other = obj as Simple;
-      if (this.stringParam.CompareTo(other.stringParam) != 0)
-        return (this.stringParam.CompareTo(other.stringParam));
-      if (this.stringDefault.CompareTo(other.stringDefault) != 0)
-        return (this.stringDefault.CompareTo(other.stringDefault));
-      if (this.stringParamRw.CompareTo(other.stringParamRw) != 0)
-        return (this.stringParamRw.CompareTo(other.stringParamRw));
-      if (this.intParam &lt; other.intParam) return -1;
-      if (this.intParam &gt; other.intParam) return 1;
-      if (this.intDefault &lt; other.intDefault) return -1;
-      if (this.intDefault &gt; other.intDefault) return 1;
-      if (this.floatParam &lt; other.floatParam) return -1;
-      if (this.floatParam &gt; other.floatParam) return 1;
-      if (this.floatDefault &lt; other.floatDefault) return -1;
-      if (this.floatDefault &gt; other.floatDefault) return 1;
-    return 0;
-}
-  public string stringParam { get; private set; }
-  public string stringDefault;
-  public string stringParamRw;
-  public int intParam { get; private set; }
-  public int intDefault;
-  public float floatParam { get; private set; }
-  public float floatDefault;
-
-}</pre></html>
+</pre><hr></hr><h2>TestADemoClass.cs</h2><pre></pre><hr></hr><h2>TestADemoClass.cs.new</h2><pre></pre></html>

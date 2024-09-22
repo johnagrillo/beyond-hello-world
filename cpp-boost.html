@@ -1,5 +1,190 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>cpp-boost</h1><hr></hr><h2>array03.cpp</h2><pre>#include &lt;string&gt;
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>C++(boost)</h1><hr></hr><h2>ademoclass.cpp</h2><pre>#include "ademoclass.h"
+
+ADemoClass::ADemoClass (std::string stringParam, std::string stringParamRw, int intParam, float floatParam):
+  string_param_ stringParam),
+  string_param_rw_ stringParamRw),
+  int_param_ intParam),
+  float_param_ floatParam)
+{
+  string_default_ = "string default";
+  int_default_ = 0;
+  float_default_ = 0.0;
+
+}
+
+ADemoClass::~ADemoClass ()
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+ostream &amp;
+operator &lt;&lt; (ostream &amp; o, ADemoClass * aDemoClass)
+{
+  return o &lt;&lt; aDemoClass-&gt;string_param_ &lt;&lt; "-"
+           &lt;&lt; aDemoClass-&gt;string_default_ &lt;&lt; "-"
+           &lt;&lt; aDemoClass-&gt;string_param_rw_ &lt;&lt; "-"
+           &lt;&lt; aDemoClass-&gt;int_param_ &lt;&lt; "-"
+           &lt;&lt; aDemoClass-&gt;int_default_ &lt;&lt; "-"
+           &lt;&lt; aDemoClass-&gt;float_param_ &lt;&lt; "-"
+           &lt;&lt; aDemoClass-&gt;float_default_ &lt;&lt; "-";
+}
+
+size_t 
+ADemoClass::getHash()
+{
+  return this-&gt;stringParam.length() +
+    this-&gt;stringDefault.length() +
+    this-&gt;stringParamRw.length() +
+    intParam +
+    intDefault +
+    floatParam +
+    floatDefault;
+}
+
+bool 
+ADemoClass::operator &lt;(ADemoClass &amp; aDemoClass) const
+{
+  if (string_param_ &lt; aDemoClass.string_param_) return true;
+  if (string_param_ &gt; aDemoClass.string_param_) return false;
+  //  string_param_ == aDemoClass.string_param_
+
+  if (string_default_ &lt; aDemoClass.string_default_) return true;
+  if (string_default_ &gt; aDemoClass.string_default_) return false;
+  //  string_default_ == aDemoClass.string_default_
+
+  if (string_param_rw_ &lt; aDemoClass.string_param_rw_) return true;
+  if (string_param_rw_ &gt; aDemoClass.string_param_rw_) return false;
+  //  string_param_rw_ == aDemoClass.string_param_rw_
+
+  if (int_param_ &lt; aDemoClass.int_param_) return true;
+  if (int_param_ &gt; aDemoClass.int_param_) return false;
+  //  int_param_ == aDemoClass.int_param_
+
+  if (int_default_ &lt; aDemoClass.int_default_) return true;
+  if (int_default_ &gt; aDemoClass.int_default_) return false;
+  //  int_default_ == aDemoClass.int_default_
+
+  if (float_param_ &lt; aDemoClass.float_param_) return true;
+  if (float_param_ &gt; aDemoClass.float_param_) return false;
+  //  float_param_ == aDemoClass.float_param_
+
+  if (float_default_ &lt; aDemoClass.float_default_) return true;
+  if (float_default_ &gt; aDemoClass.float_default_) return false;
+  //  float_default_ == aDemoClass.float_default_
+  return false;
+
+}
+
+bool 
+ADemoClass::operator &gt;(ADemoClass &amp; aDemoClass) const
+{
+  if ({to_member_s(m.name)} &lt; aDemoClass.string_param_) return false;
+  if ({to_member_s(m.name)} &gt; aDemoClass.string_param_) return true;
+  //  {to_member_s(m.name)} == aDemoClass.string_param_
+
+  if ({to_member_s(m.name)} &lt; aDemoClass.string_default_) return false;
+  if ({to_member_s(m.name)} &gt; aDemoClass.string_default_) return true;
+  //  {to_member_s(m.name)} == aDemoClass.string_default_
+
+  if ({to_member_s(m.name)} &lt; aDemoClass.string_param_rw_) return false;
+  if ({to_member_s(m.name)} &gt; aDemoClass.string_param_rw_) return true;
+  //  {to_member_s(m.name)} == aDemoClass.string_param_rw_
+
+  if ({to_member_s(m.name)} &lt; aDemoClass.int_param_) return false;
+  if ({to_member_s(m.name)} &gt; aDemoClass.int_param_) return true;
+  //  {to_member_s(m.name)} == aDemoClass.int_param_
+
+  if ({to_member_s(m.name)} &lt; aDemoClass.int_default_) return false;
+  if ({to_member_s(m.name)} &gt; aDemoClass.int_default_) return true;
+  //  {to_member_s(m.name)} == aDemoClass.int_default_
+
+  if ({to_member_s(m.name)} &lt; aDemoClass.float_param_) return false;
+  if ({to_member_s(m.name)} &gt; aDemoClass.float_param_) return true;
+  //  {to_member_s(m.name)} == aDemoClass.float_param_
+
+  if ({to_member_s(m.name)} &lt; aDemoClass.float_default_) return false;
+  if ({to_member_s(m.name)} &gt; aDemoClass.float_default_) return true;
+  //  {to_member_s(m.name)} == aDemoClass.float_default_
+  return false;
+
+}
+
+bool 
+ADemoClass::operator ==(ADemoClass &amp; aDemoClass) const
+{
+  return (string_param_ == aDemoClass.string_param_) &amp;&amp;
+    (string_default_ == aDemoClass.string_default_) &amp;&amp;
+    (string_param_rw_ == aDemoClass.string_param_rw_) &amp;&amp;
+    (int_param_ == aDemoClass.int_param_) &amp;&amp;
+    (int_default_ == aDemoClass.int_default_) &amp;&amp;
+    (float_param_ == aDemoClass.float_param_) &amp;&amp;
+    (float_default_ == aDemoClass.float_default_);
+}
+
+</pre><hr></hr><h2>ademoclass.h</h2><pre>#ifndef __ADEMOCLASS_H__
+#define __ADEMOCLASS_H__
+#include "pgutil.h"
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;vector&gt;
+#include &lt;assign.hpp&gt;
+using namespace std;
+using namespace boost;
+using namespace boost::assign;
+#include "factory.h"
+#include &lt;sstream&gt;
+#include &lt;map&gt;
+#include &lt;shared_ptr.hpp&gt;
+
+class ADemoClass {
+public:
+  ADemoClass (std::string stringParam, std::string stringParamRw, int intParam, float floatParam);
+
+  ~ADemoClass ();
+
+
+  std::string getStringParam(){return string_param_;}
+
+  std::string getStringParamRw(){return string_param_rw_;}  ADemoClass &amp; setStringParamRw(std::string val) { string_param_rw_=val; return *this;}
+
+  int getIntParam(){return int_param_;}
+
+  float getFloatParam(){return float_param_;}
+
+
+  friend ostream &amp; operator &lt;&lt; (ostream &amp; o, ADemoClass * aDemoClass);
+
+
+  size_t getHash();
+  bool operator &lt;(ADemoClass &amp; aDemoClass) const;
+  bool operator &gt;(ADemoClass &amp; aDemoClass) const;
+  bool operator ==(ADemoClass &amp; aDemoClass) const;
+
+private:
+  std::string stringParam;
+  std::string stringDefault;
+  std::string stringParamRw;
+  int intParam;
+  int intDefault;
+  float floatParam;
+  float floatDefault;
+
+};
+
+
+#endif /* __ADEMOCLASS_H_ */
+</pre><hr></hr><h2>array03.cpp</h2><pre>#include &lt;string&gt;
 #include &lt;iostream&gt;
 using namespace std;
 
@@ -55,191 +240,6 @@ int main(int argc, char * arg[])
     std::cout &lt;&lt; array &lt;&lt; std::endl;
     return 0;
 }
-</pre><hr></hr><h2>democlass.cpp</h2><pre>#include "democlass.h"
-
-Democlass::Democlass (std::string stringParam, std::string stringParamRw, int intParam, float floatParam):
-  string_param_ stringParam),
-  string_param_rw_ stringParamRw),
-  int_param_ intParam),
-  float_param_ floatParam)
-{
-  string_default_ = "string default";
-  int_default_ = 0;
-  float_default_ = 0.0;
-
-}
-
-Democlass::~Democlass ()
-{
-
-}
-
-
-
-
-
-
-
-
-
-
-ostream &amp;
-operator &lt;&lt; (ostream &amp; o, Democlass * democlass)
-{
-  return o &lt;&lt; democlass-&gt;string_param_ &lt;&lt; "-"
-           &lt;&lt; democlass-&gt;string_default_ &lt;&lt; "-"
-           &lt;&lt; democlass-&gt;string_param_rw_ &lt;&lt; "-"
-           &lt;&lt; democlass-&gt;int_param_ &lt;&lt; "-"
-           &lt;&lt; democlass-&gt;int_default_ &lt;&lt; "-"
-           &lt;&lt; democlass-&gt;float_param_ &lt;&lt; "-"
-           &lt;&lt; democlass-&gt;float_default_ &lt;&lt; "-";
-}
-
-size_t 
-Democlass::getHash()
-{
-  return this-&gt;stringParam.length() +
-    this-&gt;stringDefault.length() +
-    this-&gt;stringParamRw.length() +
-    intParam +
-    intDefault +
-    floatParam +
-    floatDefault;
-}
-
-bool 
-Democlass::operator &lt;(Democlass &amp; democlass) const
-{
-  if (string_param_ &lt; democlass.string_param_) return true;
-  if (string_param_ &gt; democlass.string_param_) return false;
-  //  string_param_ == democlass.string_param_
-
-  if (string_default_ &lt; democlass.string_default_) return true;
-  if (string_default_ &gt; democlass.string_default_) return false;
-  //  string_default_ == democlass.string_default_
-
-  if (string_param_rw_ &lt; democlass.string_param_rw_) return true;
-  if (string_param_rw_ &gt; democlass.string_param_rw_) return false;
-  //  string_param_rw_ == democlass.string_param_rw_
-
-  if (int_param_ &lt; democlass.int_param_) return true;
-  if (int_param_ &gt; democlass.int_param_) return false;
-  //  int_param_ == democlass.int_param_
-
-  if (int_default_ &lt; democlass.int_default_) return true;
-  if (int_default_ &gt; democlass.int_default_) return false;
-  //  int_default_ == democlass.int_default_
-
-  if (float_param_ &lt; democlass.float_param_) return true;
-  if (float_param_ &gt; democlass.float_param_) return false;
-  //  float_param_ == democlass.float_param_
-
-  if (float_default_ &lt; democlass.float_default_) return true;
-  if (float_default_ &gt; democlass.float_default_) return false;
-  //  float_default_ == democlass.float_default_
-  return false;
-
-}
-
-bool 
-Democlass::operator &gt;(Democlass &amp; democlass) const
-{
-  if ({to_member_s(m.name)} &lt; democlass.string_param_) return false;
-  if ({to_member_s(m.name)} &gt; democlass.string_param_) return true;
-  //  {to_member_s(m.name)} == democlass.string_param_
-
-  if ({to_member_s(m.name)} &lt; democlass.string_default_) return false;
-  if ({to_member_s(m.name)} &gt; democlass.string_default_) return true;
-  //  {to_member_s(m.name)} == democlass.string_default_
-
-  if ({to_member_s(m.name)} &lt; democlass.string_param_rw_) return false;
-  if ({to_member_s(m.name)} &gt; democlass.string_param_rw_) return true;
-  //  {to_member_s(m.name)} == democlass.string_param_rw_
-
-  if ({to_member_s(m.name)} &lt; democlass.int_param_) return false;
-  if ({to_member_s(m.name)} &gt; democlass.int_param_) return true;
-  //  {to_member_s(m.name)} == democlass.int_param_
-
-  if ({to_member_s(m.name)} &lt; democlass.int_default_) return false;
-  if ({to_member_s(m.name)} &gt; democlass.int_default_) return true;
-  //  {to_member_s(m.name)} == democlass.int_default_
-
-  if ({to_member_s(m.name)} &lt; democlass.float_param_) return false;
-  if ({to_member_s(m.name)} &gt; democlass.float_param_) return true;
-  //  {to_member_s(m.name)} == democlass.float_param_
-
-  if ({to_member_s(m.name)} &lt; democlass.float_default_) return false;
-  if ({to_member_s(m.name)} &gt; democlass.float_default_) return true;
-  //  {to_member_s(m.name)} == democlass.float_default_
-  return false;
-
-}
-
-bool 
-Democlass::operator ==(Democlass &amp; democlass) const
-{
-  return (string_param_ == democlass.string_param_) &amp;&amp;
-    (string_default_ == democlass.string_default_) &amp;&amp;
-    (string_param_rw_ == democlass.string_param_rw_) &amp;&amp;
-    (int_param_ == democlass.int_param_) &amp;&amp;
-    (int_default_ == democlass.int_default_) &amp;&amp;
-    (float_param_ == democlass.float_param_) &amp;&amp;
-    (float_default_ == democlass.float_default_);
-}
-
-</pre><hr></hr><h2>democlass.h</h2><pre>#ifndef __DEMOCLASS_H__
-#define __DEMOCLASS_H__
-#include "pgutil.h"
-#include &lt;string&gt;
-#include &lt;iostream&gt;
-#include &lt;iomanip&gt;
-#include &lt;vector&gt;
-#include &lt;assign.hpp&gt;
-using namespace std;
-using namespace boost;
-using namespace boost::assign;
-#include "factory.h"
-#include &lt;sstream&gt;
-#include &lt;map&gt;
-#include &lt;shared_ptr.hpp&gt;
-
-class Democlass {
-public:
-  Democlass (std::string stringParam, std::string stringParamRw, int intParam, float floatParam);
-
-  ~Democlass ();
-
-
-  std::string getStringParam(){return string_param_;}
-
-  std::string getStringParamRw(){return string_param_rw_;}  Democlass &amp; setStringParamRw(std::string val) { string_param_rw_=val; return *this;}
-
-  int getIntParam(){return int_param_;}
-
-  float getFloatParam(){return float_param_;}
-
-
-  friend ostream &amp; operator &lt;&lt; (ostream &amp; o, Democlass * democlass);
-
-
-  size_t getHash();
-  bool operator &lt;(Democlass &amp; democlass) const;
-  bool operator &gt;(Democlass &amp; democlass) const;
-  bool operator ==(Democlass &amp; democlass) const;
-
-private:
-  std::string stringParam;
-  std::string stringDefault;
-  std::string stringParamRw;
-  int intParam;
-  int intDefault;
-  float floatParam;
-  float floatDefault;
-
-};
-
-
-#endif /* __DEMOCLASS_H_ */
 </pre><hr></hr><h2>hash10.cpp</h2><pre>#include &lt;string&gt;
 #include &lt;iostream&gt;
 using namespace std;
@@ -247,7 +247,7 @@ using namespace std;
 
 int main(int argc, char * arg[])
 {
-    map &lt; int,string &gt; * hashf=map &lt; int,string &gt; (boost::assign::map_list_of (1,"string1")  (2,"string2")  (3,"string3")  (4,"string4")  (5,"string5")  (6,"string6")  (7,"string7")  (8,"string8")  (9,"string9")  (10,"string10").convert_to_container&lt; map &lt; int,string &gt;  &gt; ());
+    map &lt; int,std::string &gt; * hashf=map &lt; int,std::string &gt; (boost::assign::map_list_of (1,"string1")  (2,"string2")  (3,"string3")  (4,"string4")  (5,"string5")  (6,"string6")  (7,"string7")  (8,"string8")  (9,"string9")  (10,"string10").convert_to_container&lt; map &lt; int,std::string &gt;  &gt; ());
 
     std::cout &lt;&lt; hashf &lt;&lt; std::endl;
     return 0;
@@ -291,206 +291,21 @@ using namespace std;
 
 int main(int argc, char * arg[])
 {
-    list &lt; list &lt; string &gt;  &gt; * listOfListV=vector  &lt; vector &lt; string &gt; &gt; 
+    list &lt; list &lt; std::string &gt;  &gt; * listOfListV=vector  &lt; vector &lt; std::string &gt; &gt; 
 (list_of
-(vector &lt; string &gt; (list_of("1")("2").convert_to_container &lt; vector &lt; string  &gt; &gt; ()))
-(vector &lt; string &gt; (list_of("3")("4").convert_to_container &lt; vector &lt; string  &gt; &gt; ()))
-(vector &lt; string &gt; (list_of("5")("6").convert_to_container &lt; vector &lt; string  &gt; &gt; ()))
-.convert_to_container&lt; vector  &lt; vector &lt; string &gt; &gt;  &gt; ());
-    list &lt; map &lt; string,string &gt;  &gt; * listOfHashV=vector &lt; map &lt; string,string &gt;  &gt; (list_of(map &lt; string,string &gt; (boost::assign::map_list_of ("1","1")  ("2","2").convert_to_container&lt; map &lt; string,string &gt;  &gt; ()))(map &lt; string,string &gt; (boost::assign::map_list_of ("3","3")  ("4","4").convert_to_container&lt; map &lt; string,string &gt;  &gt; ()))(map &lt; string,string &gt; (boost::assign::map_list_of ("5","5")  ("6","6").convert_to_container&lt; map &lt; string,string &gt;  &gt; ())).convert_to_container &lt; vector &lt; map &lt; string,string &gt;   &gt; &gt; ());
-    list &lt; list &lt; map &lt; string,map &lt; string,string &gt;  &gt;  &gt;  &gt; * mapListOfListOfHashOfHashV=vector  &lt; vector &lt; map &lt; string,map &lt; string,string &gt;  &gt;  &gt; &gt; 
+(vector &lt; std::string &gt; (list_of("1")("2").convert_to_container &lt; vector &lt; std::string  &gt; &gt; ()))
+(vector &lt; std::string &gt; (list_of("3")("4").convert_to_container &lt; vector &lt; std::string  &gt; &gt; ()))
+(vector &lt; std::string &gt; (list_of("5")("6").convert_to_container &lt; vector &lt; std::string  &gt; &gt; ()))
+.convert_to_container&lt; vector  &lt; vector &lt; std::string &gt; &gt;  &gt; ());
+    list &lt; map &lt; std::string,std::string &gt;  &gt; * listOfHashV=vector &lt; map &lt; std::string,std::string &gt;  &gt; (list_of(map &lt; std::string,std::string &gt; (boost::assign::map_list_of ("1","1")  ("2","2").convert_to_container&lt; map &lt; std::string,std::string &gt;  &gt; ()))(map &lt; std::string,std::string &gt; (boost::assign::map_list_of ("3","3")  ("4","4").convert_to_container&lt; map &lt; std::string,std::string &gt;  &gt; ()))(map &lt; std::string,std::string &gt; (boost::assign::map_list_of ("5","5")  ("6","6").convert_to_container&lt; map &lt; std::string,std::string &gt;  &gt; ())).convert_to_container &lt; vector &lt; map &lt; std::string,std::string &gt;   &gt; &gt; ());
+    list &lt; list &lt; map &lt; std::string,map &lt; std::string,std::string &gt;  &gt;  &gt;  &gt; * mapListOfListOfHashOfHashV=vector  &lt; vector &lt; map &lt; std::string,map &lt; std::string,std::string &gt;  &gt;  &gt; &gt; 
 (list_of
-(vector &lt; map &lt; string,map &lt; string,string &gt;  &gt;  &gt; (list_of(map &lt; string,map &lt; string,string &gt;  &gt; (boost::assign::map_list_of ("hello1",map &lt; string,string &gt; (boost::assign::map_list_of ("hello2","hello4").convert_to_container&lt; map &lt; string,string &gt;  &gt; ())).convert_to_container&lt; map &lt; string,map &lt; string,string &gt;  &gt;  &gt; ())).convert_to_container &lt; vector &lt; map &lt; string,map &lt; string,string &gt;  &gt;   &gt; &gt; ()))
-.convert_to_container&lt; vector  &lt; vector &lt; map &lt; string,map &lt; string,string &gt;  &gt;  &gt; &gt;  &gt; ());
+(vector &lt; map &lt; std::string,map &lt; std::string,std::string &gt;  &gt;  &gt; (list_of(map &lt; std::string,map &lt; std::string,std::string &gt;  &gt; (boost::assign::map_list_of ("hello1",map &lt; std::string,std::string &gt; (boost::assign::map_list_of ("hello2","hello4").convert_to_container&lt; map &lt; std::string,std::string &gt;  &gt; ())).convert_to_container&lt; map &lt; std::string,map &lt; std::string,std::string &gt;  &gt;  &gt; ())).convert_to_container &lt; vector &lt; map &lt; std::string,map &lt; std::string,std::string &gt;  &gt;   &gt; &gt; ()))
+.convert_to_container&lt; vector  &lt; vector &lt; map &lt; std::string,map &lt; std::string,std::string &gt;  &gt;  &gt; &gt;  &gt; ());
 
     std::cout &lt;&lt; listOfListV &lt;&lt; std::endl;
     std::cout &lt;&lt; listOfHashV &lt;&lt; std::endl;
     std::cout &lt;&lt; mapListOfListOfHashOfHashV &lt;&lt; std::endl;
     return 0;
 }
-</pre><hr></hr><h2>simple.cpp</h2><pre>#include "simple.h"
-
-Simple::Simple (std::string stringParam, std::string stringParamRw, int intParam, float floatParam):
-  string_param_ stringParam),
-  string_param_rw_ stringParamRw),
-  int_param_ intParam),
-  float_param_ floatParam)
-{
-  string_default_ = "string default";
-  int_default_ = 0;
-  float_default_ = 0.0;
-
-}
-
-Simple::~Simple ()
-{
-
-}
-
-
-
-
-
-
-
-
-
-
-ostream &amp;
-operator &lt;&lt; (ostream &amp; o, Simple * simple)
-{
-  return o &lt;&lt; simple-&gt;string_param_ &lt;&lt; "-"
-           &lt;&lt; simple-&gt;string_default_ &lt;&lt; "-"
-           &lt;&lt; simple-&gt;string_param_rw_ &lt;&lt; "-"
-           &lt;&lt; simple-&gt;int_param_ &lt;&lt; "-"
-           &lt;&lt; simple-&gt;int_default_ &lt;&lt; "-"
-           &lt;&lt; simple-&gt;float_param_ &lt;&lt; "-"
-           &lt;&lt; simple-&gt;float_default_ &lt;&lt; "-";
-}
-
-size_t 
-Simple::getHash()
-{
-  return this-&gt;stringParam.length() +
-    this-&gt;stringDefault.length() +
-    this-&gt;stringParamRw.length() +
-    intParam +
-    intDefault +
-    floatParam +
-    floatDefault;
-}
-
-bool 
-Simple::operator &lt;(Simple &amp; simple) const
-{
-  if (string_param_ &lt; simple.string_param_) return true;
-  if (string_param_ &gt; simple.string_param_) return false;
-  //  string_param_ == simple.string_param_
-
-  if (string_default_ &lt; simple.string_default_) return true;
-  if (string_default_ &gt; simple.string_default_) return false;
-  //  string_default_ == simple.string_default_
-
-  if (string_param_rw_ &lt; simple.string_param_rw_) return true;
-  if (string_param_rw_ &gt; simple.string_param_rw_) return false;
-  //  string_param_rw_ == simple.string_param_rw_
-
-  if (int_param_ &lt; simple.int_param_) return true;
-  if (int_param_ &gt; simple.int_param_) return false;
-  //  int_param_ == simple.int_param_
-
-  if (int_default_ &lt; simple.int_default_) return true;
-  if (int_default_ &gt; simple.int_default_) return false;
-  //  int_default_ == simple.int_default_
-
-  if (float_param_ &lt; simple.float_param_) return true;
-  if (float_param_ &gt; simple.float_param_) return false;
-  //  float_param_ == simple.float_param_
-
-  if (float_default_ &lt; simple.float_default_) return true;
-  if (float_default_ &gt; simple.float_default_) return false;
-  //  float_default_ == simple.float_default_
-  return false;
-
-}
-
-bool 
-Simple::operator &gt;(Simple &amp; simple) const
-{
-  if ({to_member_s(m.name)} &lt; simple.string_param_) return false;
-  if ({to_member_s(m.name)} &gt; simple.string_param_) return true;
-  //  {to_member_s(m.name)} == simple.string_param_
-
-  if ({to_member_s(m.name)} &lt; simple.string_default_) return false;
-  if ({to_member_s(m.name)} &gt; simple.string_default_) return true;
-  //  {to_member_s(m.name)} == simple.string_default_
-
-  if ({to_member_s(m.name)} &lt; simple.string_param_rw_) return false;
-  if ({to_member_s(m.name)} &gt; simple.string_param_rw_) return true;
-  //  {to_member_s(m.name)} == simple.string_param_rw_
-
-  if ({to_member_s(m.name)} &lt; simple.int_param_) return false;
-  if ({to_member_s(m.name)} &gt; simple.int_param_) return true;
-  //  {to_member_s(m.name)} == simple.int_param_
-
-  if ({to_member_s(m.name)} &lt; simple.int_default_) return false;
-  if ({to_member_s(m.name)} &gt; simple.int_default_) return true;
-  //  {to_member_s(m.name)} == simple.int_default_
-
-  if ({to_member_s(m.name)} &lt; simple.float_param_) return false;
-  if ({to_member_s(m.name)} &gt; simple.float_param_) return true;
-  //  {to_member_s(m.name)} == simple.float_param_
-
-  if ({to_member_s(m.name)} &lt; simple.float_default_) return false;
-  if ({to_member_s(m.name)} &gt; simple.float_default_) return true;
-  //  {to_member_s(m.name)} == simple.float_default_
-  return false;
-
-}
-
-bool 
-Simple::operator ==(Simple &amp; simple) const
-{
-  return (string_param_ == simple.string_param_) &amp;&amp;
-    (string_default_ == simple.string_default_) &amp;&amp;
-    (string_param_rw_ == simple.string_param_rw_) &amp;&amp;
-    (int_param_ == simple.int_param_) &amp;&amp;
-    (int_default_ == simple.int_default_) &amp;&amp;
-    (float_param_ == simple.float_param_) &amp;&amp;
-    (float_default_ == simple.float_default_);
-}
-
-</pre><hr></hr><h2>simple.h</h2><pre>#ifndef __SIMPLE_H__
-#define __SIMPLE_H__
-#include "pgutil.h"
-#include &lt;string&gt;
-#include &lt;iostream&gt;
-#include &lt;iomanip&gt;
-#include &lt;vector&gt;
-#include &lt;assign.hpp&gt;
-using namespace std;
-using namespace boost;
-using namespace boost::assign;
-#include "factory.h"
-#include &lt;sstream&gt;
-#include &lt;map&gt;
-#include &lt;shared_ptr.hpp&gt;
-
-class Simple {
-public:
-  Simple (std::string stringParam, std::string stringParamRw, int intParam, float floatParam);
-
-  ~Simple ();
-
-
-  std::string getStringParam(){return string_param_;}
-
-  std::string getStringParamRw(){return string_param_rw_;}  Simple &amp; setStringParamRw(std::string val) { string_param_rw_=val; return *this;}
-
-  int getIntParam(){return int_param_;}
-
-  float getFloatParam(){return float_param_;}
-
-
-  friend ostream &amp; operator &lt;&lt; (ostream &amp; o, Simple * simple);
-
-
-  size_t getHash();
-  bool operator &lt;(Simple &amp; simple) const;
-  bool operator &gt;(Simple &amp; simple) const;
-  bool operator ==(Simple &amp; simple) const;
-
-private:
-  std::string stringParam;
-  std::string stringDefault;
-  std::string stringParamRw;
-  int intParam;
-  int intDefault;
-  float floatParam;
-  float floatDefault;
-
-};
-
-
-#endif /* __SIMPLE_H_ */
-</pre></html>
+</pre><hr></hr><h2>testademoclass.cpp</h2><pre></pre><hr></hr><h2>testademoclass.cpp.new</h2><pre></pre></html>

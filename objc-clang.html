@@ -1,47 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>objc-clang</h1><hr></hr><h2>Array03.m</h2><pre>#include &lt;Foundation/Foundation.h&gt;
-    
-
-int main(int argc, char * arg[])
-{
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    NSArray *  array3=@[@[@[[NSNumber numberWithInt : 0], [NSNumber numberWithInt : 1], [NSNumber numberWithInt : 2]], @[[NSNumber numberWithInt : 10], [NSNumber numberWithInt : 11], [NSNumber numberWithInt : 12]], @[[NSNumber numberWithInt : 20], [NSNumber numberWithInt : 21], [NSNumber numberWithInt : 22]]], @[@[[NSNumber numberWithInt : 100], [NSNumber numberWithInt : 101], [NSNumber numberWithInt : 102]], @[[NSNumber numberWithInt : 110], [NSNumber numberWithInt : 111], [NSNumber numberWithInt : 112]], @[[NSNumber numberWithInt : 120], [NSNumber numberWithInt : 121], [NSNumber numberWithInt : 122]]], @[@[[NSNumber numberWithInt : 200], [NSNumber numberWithInt : 201], [NSNumber numberWithInt : 202]], @[[NSNumber numberWithInt : 210], [NSNumber numberWithInt : 211], [NSNumber numberWithInt : 212]], @[[NSNumber numberWithInt : 220], [NSNumber numberWithInt : 221], [NSNumber numberWithInt : 222]]]];
-
-    printf("%s\n", [[ array3 description ] cString] );
-    [pool drain];
-    return 0;
-}
-</pre><hr></hr><h2>Array10.m</h2><pre>#include &lt;Foundation/Foundation.h&gt;
-    
-
-int main(int argc, char * arg[])
-{
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    NSArray *  array=@[[NSNumber numberWithInt : 1], [NSNumber numberWithInt : 2], [NSNumber numberWithInt : 3], [NSNumber numberWithInt : 4], [NSNumber numberWithInt : 5], [NSNumber numberWithInt : 6], [NSNumber numberWithInt : 7], [NSNumber numberWithInt : 8], [NSNumber numberWithInt : 9], [NSNumber numberWithInt : 10]];
-
-    printf("%s\n", [[ array description ] cString] );
-    [pool drain];
-    return 0;
-}
-</pre><hr></hr><h2>Array20.m</h2><pre>#include &lt;Foundation/Foundation.h&gt;
-    
-
-int main(int argc, char * arg[])
-{
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    NSArray *  array=@[[NSNumber numberWithInt : 1], [NSNumber numberWithInt : 2], [NSNumber numberWithInt : 3], [NSNumber numberWithInt : 4], [NSNumber numberWithInt : 5], [NSNumber numberWithInt : 6], [NSNumber numberWithInt : 7], [NSNumber numberWithInt : 8], [NSNumber numberWithInt : 9], [NSNumber numberWithInt : 10], [NSNumber numberWithInt : 11], [NSNumber numberWithInt : 12], [NSNumber numberWithInt : 13], [NSNumber numberWithInt : 14], [NSNumber numberWithInt : 15], [NSNumber numberWithInt : 16], [NSNumber numberWithInt : 17], [NSNumber numberWithInt : 18], [NSNumber numberWithInt : 19], [NSNumber numberWithInt : 20]];
-
-    printf("%s\n", [[ array description ] cString] );
-    [pool drain];
-    return 0;
-}
-</pre><hr></hr><h2>Democlass.h</h2><pre>#ifndef __DEMOCLASS_H__
-#define __DEMOCLASS_H__
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>ObjectiveC(Clang)</h1><hr></hr><h2>ADemoClass.h</h2><pre>#ifndef __ADEMOCLASS_H__
+#define __ADEMOCLASS_H__
 #include &lt;Foundation/Foundation.h&gt;
 
 #include &lt;Foundation/NSCharacterSet.h&gt;
 #include &lt;Foundation/NSValue.h&gt;
-@interface Democlass : NSObject {
+@interface ADemoClass : NSObject {
   NSString * stringParam;
   NSString * stringDefault;
   NSString * stringParamRw;
@@ -68,13 +32,13 @@ int main(int argc, char * arg[])
 -(NSInteger) hash;
 -(id) copyWithZone:(NSZone *) _zone;
 
--(BOOL) isEqual:(Democlass * ) _other;
--(NSComparisonResult) localizedCompare:(Democlass * ) _other;
+-(BOOL) isEqual:(ADemoClass * ) _other;
+-(NSComparisonResult) localizedCompare:(ADemoClass * ) _other;
 
 @end
-#endif /* __DEMOCLASS_H_ */
-</pre><hr></hr><h2>Democlass.m</h2><pre>#include "Democlass.h"
-@implementation Democlass
+#endif /* __ADEMOCLASS_H_ */
+</pre><hr></hr><h2>ADemoClass.m</h2><pre>#include "ADemoClass.h"
+@implementation ADemoClass
 
 -(id) init    :(NSString *) _stringParam
               :(NSString *) _stringParamRw
@@ -142,11 +106,11 @@ return [[NSString alloc]initWithFormat: @"%s-%s-%s-%4d-%4d-%f-%f",[[stringParam 
 }
 -(id) copyWithZone:(NSZone *) _zone
 {
-Democlass*democlass = [[Democlass allocWithZone:_zone] init:stringParam:stringParamRw:intParam:floatParam];
-return democlass;
+ADemoClass*aDemoClass = [[ADemoClass allocWithZone:_zone] init:stringParam:stringParamRw:intParam:floatParam];
+return aDemoClass;
 }
 
--(BOOL) isEqual:(Democlass * ) _other
+-(BOOL) isEqual:(ADemoClass * ) _other
 {
   return ([stringParam isEqual: _other-&gt;stringParam]) &amp;&amp; 
         ([stringDefault isEqual: _other-&gt;stringDefault]) &amp;&amp; 
@@ -156,7 +120,7 @@ return democlass;
         (floatParam == _other-&gt;floatParam) &amp;&amp; 
         (floatDefault == _other-&gt;floatDefault);
 }
--(NSComparisonResult) localizedCompare:(Democlass * ) _other
+-(NSComparisonResult) localizedCompare:(ADemoClass * ) _other
 {
     if ([stringParam localizedCompare : _other-&gt;stringParam]!=NSOrderedSame){
         return [stringParam localizedCompare : _other-&gt;stringParam];
@@ -180,6 +144,42 @@ return democlass;
 }
 
 @end
+</pre><hr></hr><h2>Array03.m</h2><pre>#include &lt;Foundation/Foundation.h&gt;
+    
+
+int main(int argc, char * arg[])
+{
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    NSArray *  array3=@[@[@[[NSNumber numberWithInt : 0], [NSNumber numberWithInt : 1], [NSNumber numberWithInt : 2]], @[[NSNumber numberWithInt : 10], [NSNumber numberWithInt : 11], [NSNumber numberWithInt : 12]], @[[NSNumber numberWithInt : 20], [NSNumber numberWithInt : 21], [NSNumber numberWithInt : 22]]], @[@[[NSNumber numberWithInt : 100], [NSNumber numberWithInt : 101], [NSNumber numberWithInt : 102]], @[[NSNumber numberWithInt : 110], [NSNumber numberWithInt : 111], [NSNumber numberWithInt : 112]], @[[NSNumber numberWithInt : 120], [NSNumber numberWithInt : 121], [NSNumber numberWithInt : 122]]], @[@[[NSNumber numberWithInt : 200], [NSNumber numberWithInt : 201], [NSNumber numberWithInt : 202]], @[[NSNumber numberWithInt : 210], [NSNumber numberWithInt : 211], [NSNumber numberWithInt : 212]], @[[NSNumber numberWithInt : 220], [NSNumber numberWithInt : 221], [NSNumber numberWithInt : 222]]]];
+
+    printf("%s\n", [[ array3 description ] cString] );
+    [pool drain];
+    return 0;
+}
+</pre><hr></hr><h2>Array10.m</h2><pre>#include &lt;Foundation/Foundation.h&gt;
+    
+
+int main(int argc, char * arg[])
+{
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    NSArray *  array=@[[NSNumber numberWithInt : 1], [NSNumber numberWithInt : 2], [NSNumber numberWithInt : 3], [NSNumber numberWithInt : 4], [NSNumber numberWithInt : 5], [NSNumber numberWithInt : 6], [NSNumber numberWithInt : 7], [NSNumber numberWithInt : 8], [NSNumber numberWithInt : 9], [NSNumber numberWithInt : 10]];
+
+    printf("%s\n", [[ array description ] cString] );
+    [pool drain];
+    return 0;
+}
+</pre><hr></hr><h2>Array20.m</h2><pre>#include &lt;Foundation/Foundation.h&gt;
+    
+
+int main(int argc, char * arg[])
+{
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+    NSArray *  array=@[[NSNumber numberWithInt : 1], [NSNumber numberWithInt : 2], [NSNumber numberWithInt : 3], [NSNumber numberWithInt : 4], [NSNumber numberWithInt : 5], [NSNumber numberWithInt : 6], [NSNumber numberWithInt : 7], [NSNumber numberWithInt : 8], [NSNumber numberWithInt : 9], [NSNumber numberWithInt : 10], [NSNumber numberWithInt : 11], [NSNumber numberWithInt : 12], [NSNumber numberWithInt : 13], [NSNumber numberWithInt : 14], [NSNumber numberWithInt : 15], [NSNumber numberWithInt : 16], [NSNumber numberWithInt : 17], [NSNumber numberWithInt : 18], [NSNumber numberWithInt : 19], [NSNumber numberWithInt : 20]];
+
+    printf("%s\n", [[ array description ] cString] );
+    [pool drain];
+    return 0;
+}
 </pre><hr></hr><h2>Hash10.m</h2><pre>#include &lt;Foundation/Foundation.h&gt;
     
 
@@ -230,149 +230,4 @@ int main(int argc, char * arg[])
     [pool drain];
     return 0;
 }
-</pre><hr></hr><h2>Simple.h</h2><pre>#ifndef __SIMPLE_H__
-#define __SIMPLE_H__
-#include &lt;Foundation/Foundation.h&gt;
-
-#include &lt;Foundation/NSCharacterSet.h&gt;
-#include &lt;Foundation/NSValue.h&gt;
-@interface Simple : NSObject {
-  NSString * stringParam;
-  NSString * stringDefault;
-  NSString * stringParamRw;
-  NSNumber * intParam;
-  NSNumber * intDefault;
-  NSNumber * floatParam;
-  NSNumber * floatDefault;
-
-}
-
--(id) init    :(NSString *) _stringParam
-              :(NSString *) _stringParamRw
-              :(NSNumber *) _intParam
-              :(NSNumber *) _floatParam;
-
--(NSString *) getStringParam;
--(NSString *) getStringParamRw;
--(id) setStringParamRw:(NSString *) _stringParamRw;
--(NSNumber *) getIntParam;
--(NSNumber *) getFloatParam;
-
--(NSString *) description;
-
--(NSInteger) hash;
--(id) copyWithZone:(NSZone *) _zone;
-
--(BOOL) isEqual:(Simple * ) _other;
--(NSComparisonResult) localizedCompare:(Simple * ) _other;
-
-@end
-#endif /* __SIMPLE_H_ */
-</pre><hr></hr><h2>Simple.m</h2><pre>#include "Simple.h"
-@implementation Simple
-
--(id) init    :(NSString *) _stringParam
-              :(NSString *) _stringParamRw
-              :(NSNumber *) _intParam
-              :(NSNumber *) _floatParam
-{
-  stringParam = _stringParam;
-  stringParamRw = _stringParamRw;
-  intParam = _intParam;
-  floatParam = _floatParam;
-  stringDefault = @"string default";
-  intDefault = [NSNumber numberWithInt : 0];
-  floatDefault = [NSNumber numberWithFloat : 0.0];
-  return self;
-}
-
--(NSString *) getStringParam
-{
-  return self-&gt;stringParam;
-}
--(NSString *) getStringParamRw
-{
-  return self-&gt;stringParamRw;
-}
--(id) setStringParamRw:(NSString *) _stringParamRw
-{
-  self-&gt;stringParamRw = _stringParamRw;
-  return self;
-}
--(NSNumber *) getIntParam
-{
-  return self-&gt;intParam;
-}
--(NSNumber *) getFloatParam
-{
-  return self-&gt;floatParam;
-}
-
--(NSString *) description
-{
-return [[NSString alloc]initWithFormat: @"%s-%s-%s-%4d-%4d-%f-%f",[[stringParam description]UTF8String],
-[[stringDefault description]UTF8String],
-[[stringParamRw description]UTF8String],
-[intParam intValue],
-[intDefault intValue],
-[floatParam floatValue],
-[floatDefault floatValue]];
-}
-
--(NSInteger) hash
-{
- return [stringParam hash]
-          +
-        [stringDefault hash]
-          +
-        [stringParamRw hash]
-          +
-        [intParam hash]
-          +
-        [intDefault hash]
-          +
-        [floatParam hash]
-          +
-        [floatDefault hash];
-}
--(id) copyWithZone:(NSZone *) _zone
-{
-Simple*simple = [[Simple allocWithZone:_zone] init:stringParam:stringParamRw:intParam:floatParam];
-return simple;
-}
-
--(BOOL) isEqual:(Simple * ) _other
-{
-  return ([stringParam isEqual: _other-&gt;stringParam]) &amp;&amp; 
-        ([stringDefault isEqual: _other-&gt;stringDefault]) &amp;&amp; 
-        ([stringParamRw isEqual: _other-&gt;stringParamRw]) &amp;&amp; 
-        (intParam == _other-&gt;intParam) &amp;&amp; 
-        (intDefault == _other-&gt;intDefault) &amp;&amp; 
-        (floatParam == _other-&gt;floatParam) &amp;&amp; 
-        (floatDefault == _other-&gt;floatDefault);
-}
--(NSComparisonResult) localizedCompare:(Simple * ) _other
-{
-    if ([stringParam localizedCompare : _other-&gt;stringParam]!=NSOrderedSame){
-        return [stringParam localizedCompare : _other-&gt;stringParam];
-    }
-    if ([stringDefault localizedCompare : _other-&gt;stringDefault]!=NSOrderedSame){
-        return [stringDefault localizedCompare : _other-&gt;stringDefault];
-    }
-    if ([stringParamRw localizedCompare : _other-&gt;stringParamRw]!=NSOrderedSame){
-        return [stringParamRw localizedCompare : _other-&gt;stringParamRw];
-    }
-    if (intParam &lt; _other-&gt;intParam) return NSOrderedAscending;
-    if (intParam &gt; _other-&gt;intParam) return NSOrderedDescending;
-    if (intDefault &lt; _other-&gt;intDefault) return NSOrderedAscending;
-    if (intDefault &gt; _other-&gt;intDefault) return NSOrderedDescending;
-    if (floatParam &lt; _other-&gt;floatParam) return NSOrderedAscending;
-    if (floatParam &gt; _other-&gt;floatParam) return NSOrderedDescending;
-    if (floatDefault &lt; _other-&gt;floatDefault) return NSOrderedAscending;
-    if (floatDefault &gt; _other-&gt;floatDefault) return NSOrderedDescending;
-    return NSOrderedSame;
-
-}
-
-@end
-</pre></html>
+</pre><hr></hr><h2>TestADemoClass.m</h2><pre></pre><hr></hr><h2>TestADemoClass.m.new</h2><pre></pre></html>

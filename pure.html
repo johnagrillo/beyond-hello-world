@@ -1,5 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><h1>pure</h1><hr></hr><h2>Array03.pure</h2><pre>using system;    
+<html xmlns="http://www.w3.org/1999/xhtml"><h1>Pure</h1><hr></hr><h2>ADemoClass.pure</h2><pre>using system,dict,set;
+type aDemoClass( ADemoClass stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault);
+
+aDemoClass stringParam stringParamRw intParam floatParam = ADemoClass (stringParam) ("string default") (stringParamRw) (intParam) (0) (floatParam) (0.0);
+
+to_string (ADemoClass stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault) =
+        join "-" [sprintf "%s" stringParam,
+                  sprintf "%s" stringDefault,
+                  sprintf "%s" stringParamRw,
+                  sprintf "%4d" intParam,
+                  sprintf "%4d" intDefault,
+                  sprintf "%f" floatParam,
+                  sprintf "%f" floatDefault];</pre><hr></hr><h2>Array03.pure</h2><pre>using system;    
 
 
 let array3 = [
@@ -32,19 +44,7 @@ let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 
 
 puts array;
  
-</pre><hr></hr><h2>Democlass.pure</h2><pre>using system,dict,set;
-type democlass( Democlass stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault);
-
-democlass stringParam stringParamRw intParam floatParam = Democlass (stringParam) ("string default") (stringParamRw) (intParam) (0) (floatParam) (0.0);
-
-to_string (Democlass stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault) =
-        join "-" [sprintf "%s" stringParam,
-                  sprintf "%s" stringDefault,
-                  sprintf "%s" stringParamRw,
-                  sprintf "%4d" intParam,
-                  sprintf "%4d" intDefault,
-                  sprintf "%f" floatParam,
-                  sprintf "%f" floatDefault];</pre><hr></hr><h2>Hash10.pure</h2><pre>using system;    
+</pre><hr></hr><h2>Hash10.pure</h2><pre>using system;    
 
 
 let hashf = dict [1=&gt;"string1",2=&gt;"string2",3=&gt;"string3",4=&gt;"string4",5=&gt;"string5",6=&gt;"string6",7=&gt;"string7",8=&gt;"string8",9=&gt;"string9",10=&gt;"string10"];
@@ -93,16 +93,4 @@ puts listOfListV;
 puts listOfHashV;
 puts mapListOfListOfHashOfHashV;
  
-</pre><hr></hr><h2>Simple.pure</h2><pre>using system,dict,set;
-type simple( Simple stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault);
-
-simple stringParam stringParamRw intParam floatParam = Simple (stringParam) ("string default") (stringParamRw) (intParam) (0) (floatParam) (0.0);
-
-to_string (Simple stringParam stringDefault stringParamRw intParam intDefault floatParam floatDefault) =
-        join "-" [sprintf "%s" stringParam,
-                  sprintf "%s" stringDefault,
-                  sprintf "%s" stringParamRw,
-                  sprintf "%4d" intParam,
-                  sprintf "%4d" intDefault,
-                  sprintf "%f" floatParam,
-                  sprintf "%f" floatDefault];</pre></html>
+</pre><hr></hr><h2>TestADemoClass.pure</h2><pre></pre><hr></hr><h2>TestADemoClass.pure.new</h2><pre></pre></html>
