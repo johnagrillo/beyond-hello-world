@@ -105,12 +105,12 @@ module BHW
       func = "    init"
       
       if pg_class.members_param.slice(0) != nil
-        func = func + ": " + to_variable_s(pg_class.members_param.slice(0)) + "_"
+        func = func + ": " + to_variable_s(pg_class.members_param.slice(0).name) + "_"
       end
       
       if pg_class.members_param.length &gt; 0
         pg_class.members_param[1..-1].each_with_index do|a,i| 
-          func = func +  " " + to_variable_s(a) + ":" + to_variable_s(a) + "_ "
+          func = func +  " " + to_variable_s(a.name) + ":" + to_variable_s(a.name) + "_ "
         end
       end
         
@@ -118,8 +118,8 @@ module BHW
       
       [
        func + "[",
-       pg_class.members_param.map {|a| "        " + to_variable_s(a) + ":= " + to_variable_s(a) + "_."},
-       pg_class.members_default.select{|a| a.scope == Instance}.map {|a|  "        " + to_variable_s(a) + ":= " + to_value(a.type) + "."}.compact,     "    ]"
+       pg_class.members_param.map {|a| "        " + to_variable_s(a.name) + ":= " + to_variable_s(a.name) + "_."},
+       pg_class.members_default.select{|a| a.scope == Instance}.map {|a|  "        " + to_variable_s(a.name) + ":= " + to_value(a.type) + "."}.compact,     "    ]"
       ].join("\n") 
       
     end
@@ -143,7 +143,7 @@ module BHW
       def self.initialize(vars)
         vars.map do |var| 
           [
-           self.to_variable_s(var),
+           self.to_variable_s(var.name),
              ":=",
            self.to_value(var.type),
            "."
@@ -154,7 +154,7 @@ module BHW
       def self.print_vars(vars)
         vars.map do |var| 
           [
-           self.to_variable_s(var),
+           self.to_variable_s(var.name),
            " ",
            "displayNl ",
            "."

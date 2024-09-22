@@ -10,7 +10,7 @@ module BHW
     
     directory       "e" 
     source_file_ext "emaker"
-    option          "e"
+    option          "emaker"
     formal_name     "E" 
 
 
@@ -25,7 +25,7 @@ module BHW
     
     self.types={
       Primitive =&gt; {
-        format:      -&gt;(a){ to_variable_s(a)},
+        format:      -&gt;(a){ to_variable_s(a.name)},
         to_value:   proc{|a| a.to_s},
       },
       Default=&gt; {
@@ -53,7 +53,7 @@ module BHW
       String=&gt; {
         type:       "String",
         default:       "\"\"",
-        format:      -&gt;(v,a){ to_variable_s(a)},
+        format:      -&gt;(v,a){ to_variable_s(a.name)},
         to_value:    proc{|a| "\"#{a}\""},
       },
       Integer=&gt; {
@@ -61,7 +61,7 @@ module BHW
         type:       "int",
         default:       "0", 
         format:      -&gt;(v,a){ 
-          "&lt;import:java.lang.makeLong&gt;.toString(#{to_variable_s(a)})"
+          "&lt;import:java.lang.makeLong&gt;.toString(#{to_variable_s(a.name)})"
           #"&lt;this:Util&gt;.right(#{a.width()},&lt;import:java.lang.makeLong&gt;.toString(#{to_variable_s(a)}))"
           #if a.pad() == false
           #else
@@ -73,7 +73,7 @@ module BHW
         primitive:     true,
         type:          "float",
         default:       "0.0",
-        format:        -&gt;(v,a) {"&lt;import:java.lang.makeFloat&gt;.toString(#{to_variable_s(a)})"}
+        format:        -&gt;(v,a) {"&lt;import:java.lang.makeFloat&gt;.toString(#{to_variable_s(a.name)})"}
       }
     }.merge([[Array, :square_bracket_list_s ],
              [List,  :square_bracket_list_s ],
@@ -104,36 +104,36 @@ module BHW
     
     
     def self.render_start_of_class(pg_class, file_type=SourceExt)
-      class_name = to_class_s(pg_class)
+      class_name = to_class_s(pg_class.name)
       #"import java.util.*;\n"
       #includes {|i| "import #{i};\n"}
-      "def make#{class_name}(" + pg_class.members_param.map{|p|  "_"+to_variable_s(p)}.join(",") + ") : any {\n" + 
-        pg_class.members_param.map{|m| "   var "+to_member_s(m) + " := _" + to_variable_s(m) + ";\n" }.join +
-        pg_class.members_default.map{|p|  indent + "var " + to_variable_s(p) + ":= " + to_value(p.type) }.join("\n")
+      "def make#{class_name}(" + pg_class.members_param.map{|p|  "_"+to_variable_s(p.name)}.join(",") + ") : any {\n" + 
+        pg_class.members_param.map{|m| "   var "+to_member_s(m.name) + " := _" + to_variable_s(m.name) + ";\n" }.join +
+        pg_class.members_default.map{|p|  indent + "var " + to_variable_s(p.name) + ":= " + to_value(p.type) }.join("\n")
     end
     
     
     def self.render_constructor(pg_class, file_type=SourceExt)
-      indent + "def #{to_class_s(pg_class)}{"
+      indent + "def #{to_class_s(pg_class.name)}{"
     end
     
     def self.render_end_of_class(pg_class, file_type=SourceExt)
-      class_name = to_class_s(pg_class)
+      class_name = to_class_s(pg_class.name)
       "    }\n    return #{class_name}\n}\n"
     end
     
     
     def self.render_accessors(pg_class, file_type=SourceExt)
       pg_class.members.map do |m|
-        pname = to_variable_s(m)
+        pname = to_variable_s(m.name)
         [
          if m.has_reader? 
-           indent * 2&lt;&lt; "to #{to_reader_s(m)}() : any {return #{pname}}" 	
+           indent * 2&lt;&lt; "to #{to_reader_s(m.name)}() : any {return #{pname}}" 	
          end,
          
          if m.has_writer?
            [
-    	    indent*2 + "to " + to_writer_s(m) + "(#{pname}_) {",
+    	    indent*2 + "to " + to_writer_s(m.name) + "(#{pname}_) {",
     	    "#{pname}:=#{pname}_}",
     	    #"return this.#{E.to_variable_s(m.name)}}",
            ].join

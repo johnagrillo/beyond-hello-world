@@ -126,8 +126,8 @@
     def self.render_constructor(pg_class, file_type=SourceExt)
       pg_class.members_param.ergo do |mems|
         [
-         "  constructor: " + "(" + mems.map {|m| "@" + to_variable_s(m)}.join(",") + ") -&gt;\n",
-         pg_class.members_instance_default.map{|m| "  " + to_variable_s(m) + " : " + to_value(m.type) },
+         "  constructor: " + "(" + mems.map {|m| "@" + to_variable_s(m.name)}.join(",") + ") -&gt;\n",
+         pg_class.members_instance_default.map{|m| "  " + to_variable_s(m.name) + " : " + to_value(m.type) },
          "",
          ""
         ] * "\n"
@@ -140,7 +140,7 @@
     def self.render_to_string(pg_class, file_type=SourceExt)
       [
        "  toString: -&gt; ",
-       "    " + pg_class.members_to_str.map{|m| "@" + to_variable_s(m)}.unshift('""').join(" + \",\" + ")
+       "    " + pg_class.members_to_str.map{|m| "@" + to_variable_s(m.name)}.unshift('""').join(" + \",\" + ")
       ] * "\n" + "\n"
     end
     

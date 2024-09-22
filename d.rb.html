@@ -329,8 +329,8 @@ MAIN
     def self.render_to_string(pg_class, file_type=SourceExt)
       render_get_key(pg_class) + "\n" + 
         render_method(Variable.new("ret",""), "toString", [], true) {
-        indent + indent + "return(" + to_class_s(pg_class) + ".getKey(" + 
-        pg_class.members.map {|m| "m_" + to_variable_s(m) }.join(",") + "));";
+        indent + indent + "return(" + to_class_s(pg_class.name) + ".getKey(" + 
+        pg_class.members.map {|m| "m_" + to_variable_s(m.name) }.join(",") + "));";
       }
       
     end
@@ -341,7 +341,7 @@ MAIN
          indent * 2,
          "return std.string.format(",
          pg_class.members_to_str.reduce([[],[]]) do |l,m| 
-           [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m))]
+           [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m.name))]
          end.each_with_index.map do |m,i| 
            (i == 0) ? ("\"" + m.join("-") + "\"") : (m.join(","))
          end.join(","),
@@ -398,7 +398,7 @@ MAIN
       unless pg_class.main
         [
          "private:",
-         pg_class.members.map {|m| "#{indent}#{to_type(m.type)} m_#{to_variable_s(m)};"}.join("\n"),
+         pg_class.members.map {|m| "#{indent}#{to_type(m.type)} m_#{to_variable_s(m.name)};"}.join("\n"),
         ].join("\n")
       end
     end

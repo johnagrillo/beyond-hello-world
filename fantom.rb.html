@@ -27,7 +27,7 @@ module BHW
     
     self.types = {
       Default=&gt; {
-        format:     -&gt;(a,b){ "#{to_variable_s(b)}.toStr"},
+        format:     -&gt;(a,b){ "#{to_variable_s(b.name)}.toStr"},
         define:    -&gt;(v,n){ self.to_type(v) + " " + self.to_variable_s(n)},
         to_value: proc{|a| a.to_s},
         
@@ -109,7 +109,7 @@ public class #{to_class_s(pg_class)}
        
        pg_class.members.map do |m| 
          [
-    	  indent + "private " + (pg_class.hashable ? "const " : " ") + to_type(m.type) + " " + to_variable_s(m),
+    	  indent + "private " + (pg_class.hashable ? "const " : " ") + to_type(m.type) + " " + to_variable_s(m.name),
     	  #if m.type.user_defined? == false
           ":=" + to_value(m.type)
           #end
@@ -133,13 +133,13 @@ public class #{to_class_s(pg_class)}
       str = "#{indent}new make("
       [
        str + 
-       pg_class.members_param.map{|p| to_type(p.type) + " _" + to_variable_s(p)}.join(",") + ")",
+       pg_class.members_param.map{|p| to_type(p.type) + " _" + to_variable_s(p.name)}.join(",") + ")",
        "#{indent}{",
        pg_class.members_param.map do |m|
-         (indent*2) &lt;&lt; to_variable_s(m) &lt;&lt; " = _" &lt;&lt; to_variable_s(m)
+         (indent*2) &lt;&lt; to_variable_s(m.name) &lt;&lt; " = _" &lt;&lt; to_variable_s(m.name)
        end.join("\n"),
        pg_class.members_default.map do |m|
-         (indent*2) &lt;&lt; to_variable_s(m) &lt;&lt; " = " &lt;&lt; to_value(m.type)
+         (indent*2) &lt;&lt; to_variable_s(m.name) &lt;&lt; " = " &lt;&lt; to_value(m.type)
        end.join("\n"),
        "\n#{indent}}\n"
       ].join("\n") + "\n"
@@ -156,7 +156,7 @@ public class #{to_class_s(pg_class)}
          indent + "override public Int hash()\n    {\n",
          indent * 2 &lt;&lt; "return ",
          pg_class.members_to_str.map do |m| 
-           to_variable_s(m) +  ".hash"
+           to_variable_s(m.name) +  ".hash"
          end.join("+"),
          "\n#{indent}}\n",
         ].join
@@ -173,7 +173,7 @@ public class #{to_class_s(pg_class)}
          indent * 2 + "#{class_name} #{class_var} := (#{class_name})obj\n",
          indent * 2 &lt;&lt; "return ",
          pg_class.members_to_str.map do |m| 
-           var = to_variable_s(m)
+           var = to_variable_s(m.name)
            "#{var}.equals(#{class_var}.#{var})"
          end.join(" &amp;&amp;\n" + (indent * 3)),
          "\n#{indent}}\n"
@@ -198,7 +198,7 @@ public class #{to_class_s(pg_class)}
          (indent * 2) + "that := (#{class_name})obj\n",
          (indent * 2) + "Int ret\n",
          pg_class.members_to_str.map do |m| 
-           var = to_variable_s(m)
+           var = to_variable_s(m.name)
            indent * 2 + "ret = #{var} &lt;=&gt; that.#{var}" + "\n" + indent * 2 + "if (ret !=0) return ret"
          end.join("\n") + "\n",
          indent * 2 + "return ret\n#{indent}}\n"

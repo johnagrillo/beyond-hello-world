@@ -119,10 +119,7 @@
       def self.define_vars(vars)
 
         vars.map do |v|
-          print v.type.class, " ="
           @lookup_type[v.class].each do |a|
-            print a.class
-            puts
           end
             
           [
@@ -149,7 +146,7 @@
        end,
        "BEGIN{",
        self.define_vars(vars),
-       #self.print_vars(vars),
+       self.print_vars(vars),
        "}",
       ] * "\n"
     end

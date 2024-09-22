@@ -82,7 +82,7 @@ module BHW
        "",
        render_main_vars(vars,""),
        "\n",
-       vars.map{|v| "print(" + to_variable_s(v) + ")\n"}
+       vars.map{|v| "print(" + to_variable_s(v.name) + ")\n"}
       ] * ""
     end
     
@@ -107,8 +107,8 @@ module BHW
       
       args = []
       
-      pg_class.members_param.map{|m| args.push(to_variable_s(m) + " = " + to_parameter_s(m))}
-      pg_class.members_default.select{|a| a.scope == Instance }.map{|m| args.push(to_variable_s(m) + " = " + to_value(m.type))}
+      pg_class.members_param.map{|m| args.push(to_variable_s(m.name) + " = " + to_parameter_s(m))}
+      pg_class.members_default.select{|a| a.scope == Instance }.map{|m| args.push(to_variable_s(m.name) + " = " + to_value(m.type))}
       
       [
        str,

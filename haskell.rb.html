@@ -33,7 +33,7 @@ module BHW
         include:   -&gt;(a){ a.type.name.camel_case_capitalize },
         format:    "%s",
         default:      -&gt;(a){ "(#{a.type.name.camel_case_capitalize}.new)" },
-        to_s:      -&gt;(a){ "(show #{to_variable_s(a)})"},
+        to_s:      -&gt;(a){ "(show #{to_variable_s(a.name)})"},
         to_value:   -&gt;(v){
           [
            to_class_s(v.class_name),
@@ -188,11 +188,11 @@ MAIN
       [
        render_get_key(pg_class),
        [
-        "instance Show #{to_class_s(pg_class)} where",
-        "  show #{to_variable_s(pg_class)} =",
-        "    #{to_class_s(pg_class)}.getKey " + 
+        "instance Show #{to_class_s(pg_class.name)} where",
+        "  show #{to_variable_s(pg_class.name)} =",
+        "    #{to_class_s(pg_class.name)}.getKey " + 
         pg_class.members_to_str.map {|m| 
-          "(#{to_variable_s(m)} #{to_variable_s(pg_class)})"
+          "(#{to_variable_s(m.name)} #{to_variable_s(pg_class.name)})"
         }.join("\n           ")
        ].join("\n")
       ].join("\n")
@@ -210,9 +210,9 @@ MAIN
       [
        "getKey :: " + pg_class.members_to_str.map{|p| to_type(p.type)}.push("String").join(" -&gt; "),
        
-       "getKey " + pg_class.members_to_str.map{|p| to_variable_s(p)}.join(" ") + "=",
-       (indent*2) + "printf " + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
-         [l[0].push(to_format(m.type,m)), l[1].push(to_string(m.type,m))]
+       "getKey " + pg_class.members_to_str.map{|p| to_variable_s(p.name)}.join(" ") + "=",
+       (indent*2) + "printf " + pg_class.members_to_str.reduce([[],[]]) do |l,m|
+         [l[0].push(to_format(m.type,m)), l[1].push(to_string(m.type,m.name))]
        end.each_with_index.map do |m,i| 
          (i == 0) ? ("\"" + m.join("-") + "\"") : (m.join(" "))
        end.join(" "),

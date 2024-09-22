@@ -111,7 +111,7 @@ MAIN
           "#{indent}{",
           
           "#{indent*2}return String.format(" + pg_class.members_to_str.reduce([[],[]]) do |l,m| 
-           [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m))]
+           [l[0].push(to_format(m.type,m)), l[1].push(to_variable_s(m.name))]
          end.ergo do |(f,v)| 
            [
             "\"" + f.join("-") + "\"",

@@ -22,11 +22,11 @@ module BHW
         Default =&gt; {
           format:  -&gt;(v,m){ "self~" + to_variable_s(m.name)},
           to_h:   -&gt;(a){ a.lang_name + "~hashCode"},
-          define:  -&gt;(v,n){ self.to_variable_s(n)},
+          define:  -&gt;(v,n){ self.to_variable_s(n.name)},
           to_value: -&gt;(a){ a.to_s},
         },
         BHW::Class =&gt; {
-          format:  -&gt;(a){ "self~" + to_variable_s(a)},
+          format:  -&gt;(a){ "self~" + to_variable_s(a.name)},
           to_h:   -&gt;(a){ a.lang_name + "~hashCode"},
           to_value:   -&gt;(v){  
             [
@@ -153,7 +153,7 @@ MAIN
         [
           "::class #{to_class_s(pg_class)} public inherit Comparable",
           "",
-          pg_class.members.map { |m| "::attribute " + to_variable_s(m)}.join("\n")
+          pg_class.members.map { |m| "::attribute " + to_variable_s(m.name)}.join("\n")
         ].join("\n") + "\n"
       end
     
@@ -168,15 +168,15 @@ MAIN
         [
          str, 
          if pg_class.members_to_str.size &gt; 0
-           "expose " + pg_class.members_to_str.map{|p| to_variable_s(p)}.join(" ")
+           "expose " + pg_class.members_to_str.map{|p| to_variable_s(p.name)}.join(" ")
          end,
          if pg_class.members_param.size &gt; 0
-           "use arg " + pg_class.members_param.map{|p| to_variable_s(p)}.join(",")
+           "use arg " + pg_class.members_param.map{|p| to_variable_s(p.name)}.join(",")
          end,
-         pg_class.members_param.map do |m|	"   self~" &lt;&lt; to_member_s(m) &lt;&lt; " = " &lt;&lt; to_variable_s(m)
+         pg_class.members_param.map do |m|	"   self~" &lt;&lt; to_member_s(m.name) &lt;&lt; " = " &lt;&lt; to_variable_s(m.name)
           end.join("\n"),
           pg_class.members_default.map do |m|
-           "   self~" &lt;&lt; to_member_s(m) &lt;&lt; " = " &lt;&lt; to_value(m.type)
+           "   self~" &lt;&lt; to_member_s(m.name) &lt;&lt; " = " &lt;&lt; to_value(m.type)
          end.join("\n"),
          "\n#{indent}\n"
         ].compact.join("\n") + "\n"
@@ -191,7 +191,7 @@ MAIN
           [
     	"::method hashCode",
     	"   return " + pg_class.members_to_str.map do |m| 
-    	  "self~" + to_variable_s(m) +  "~hashCode()"
+    	  "self~" + to_variable_s(m.name) +  "~hashCode()"
     	end.join(" || ")
           ].join("\n") + "\n"
         end
@@ -203,7 +203,7 @@ MAIN
     	"::method '=='",
     	"   use arg other",
     	"   return " + pg_class.members_to_str.map do |m| 
-    	  var = to_variable_s(m)
+    	  var = to_variable_s(m.name)
     	  "self~#{var} == other~#{var}"
     	end.join(" &amp; "),
           ].join("\n") + "\n"
@@ -223,7 +223,7 @@ MAIN
     	"::method compareTo",
     	"   use arg other",
     	pg_class.members_to_str.map do |m| 
-    	  var = to_variable_s(m)
+    	  var = to_variable_s(m.name)
     	  if m.type == Integer
     	    w = m.width
     	    "   ret = (translate(format(self~#{var},#{w}),0,' '))~compareTo(translate(format(other~#{var},#{w}),0,' '))" + "\n   " + "if (ret &lt;&gt; 0) then return ret"

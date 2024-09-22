@@ -179,7 +179,7 @@ MAIN
         pg_class.members_instance.map{|p| to_parameter_s(p)}.join(" ") + 
         ") =\n    " + 
         '    join "-" [' + 
-        pg_class.members_to_str.map {|m|  'sprintf "' + to_format(m.type, m)  + '"'  + " " + to_variable_s(m)} * (",\n" + " " * 18) + "];"
+        pg_class.members_to_str.map {|m|  'sprintf "' + to_format(m.type, m)  + '"'  + " " + to_variable_s(m.name)} * (",\n" + " " * 18) + "];"
     
     end
     

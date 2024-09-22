@@ -130,7 +130,7 @@ MAIN
     start &lt;&lt; "("
     [
      start,
-     pg_class.members_instance.map {|m| "var " + to_variable_s(m) + ":" + to_type(m.type)}.join(",\n" + (" " * start.length)),
+     pg_class.members_instance.map {|m| "var " + to_variable_s(m.name) + ":" + to_type(m.type)}.join(",\n" + (" " * start.length)),
      ") \n",
      if pg_class.comparable == true
        " extends Ordered[#{to_class_s(pg_class)}]"
@@ -139,7 +139,7 @@ MAIN
      if pg_class.members_instance.length &gt; pg_class.members_param.length 
        [
         "  def this (",
-        pg_class.members_instance_param.map {|m| to_variable_s(m) + ":" + to_type(m.type)}.join(",\n           "),
+        pg_class.members_instance_param.map {|m| to_variable_s(m.name) + ":" + to_type(m.type)}.join(",\n           "),
         ")\n  {\n",
         "    this(",
         pg_class.members_instance.map do |m| 
@@ -164,7 +164,7 @@ MAIN
      indent + "override def compare(rhs:#{class_name}) : Int = {\n",
      (indent * 2).to_s + "var ret:Int=0\n",
      pg_class.members_to_str.map do |m| 
-       var = to_variable_s(m)
+       var = to_variable_s(m.name)
        compare = if m.type == Kernel::Char
                    "compareTo"
                  elsif m.type == Date

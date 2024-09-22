@@ -46,7 +46,7 @@ module BHW
        "\n",
        render_main_vars(vars,""),
        "\n",
-       vars.map{|v| to_variable_s(v) + " print\n\"\\n\" print\n\n"}
+       vars.map{|v| to_variable_s(v.name) + " print\n\"\\n\" print\n\n"}
       ] * ""
     end
     
@@ -63,9 +63,9 @@ module BHW
       [
        to_class_s(pg_class) + " := Object clone",
        to_class_s(pg_class) + " init " + " := method(" + pg_class.members_param.map{|p| to_parameter_s(p) + ","} * "",
-       pg_class.members_param.map{|m| "    self " + to_variable_s(m) + " := " + to_parameter_s(m) + ";"},
+       pg_class.members_param.map{|m| "    self " + to_variable_s(m.name) + " := " + to_parameter_s(m) + ";"},
        pg_class.members_instance_default.map{|m| 
-         "    self " + to_variable_s(m) + " := " + to_value(m.type) + ";"
+         "    self " + to_variable_s(m.name) + " := " + to_value(m.type) + ";"
        },
        
        "    return(self);",

@@ -243,7 +243,7 @@ module BHW
        "#{indent}return &amp;#{to_class_s(pg_class)}{",
        pg_class.members.select {|m|  m.scope == Instance}.map {|m| 
          (indent*2) + to_variable_s(m.name) + ":" + if m.is_param?
-                                                 to_variable_s(m.to_s) + ","
+                                                 to_variable_s(m.name) + ","
                                                else
                                                  to_value(m.type) + ","
                                                end

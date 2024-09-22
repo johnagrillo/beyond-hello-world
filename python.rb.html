@@ -53,7 +53,7 @@ module BHW
        "",
        render_main_vars(vars,""),
        "\n",
-       vars.map{|v| "print(" + to_variable_s(v) + ")\n"}
+       vars.map{|v| "print(" + to_variable_s(v.name) + ")\n"}
       ] * ""
     end
     
@@ -66,7 +66,7 @@ module BHW
          }.join + "    return ret\n"
        },
        render_method("", "__eq__", [Variable.new("rhs", "")]) {
-         "    " &lt;&lt; "return " &lt;&lt; pg_class.members_instance.map{|m| "self.#{to_variable_s(m)} == rhs.#{to_variable_s(m)}"}.join(" and ")
+         "    " &lt;&lt; "return " &lt;&lt; pg_class.members_instance.map{|m| "self.#{to_variable_s(m.name)} == rhs.#{to_variable_s(m.name)}"}.join(" and ")
        },
        render_method("", "__hash__", []) {
          "    " &lt;&lt; "return " &lt;&lt; pg_class.members_instance.map{|m,i| to_hash(m.type,m.name)}.join(" + ")
@@ -129,16 +129,16 @@ module BHW
     	  if m.has_reader? 
     	    [
              "  @property",
-             "  def #{to_variable_s(m)}(self):",
-             "    return #{to_member_s(m)}" 	
+             "  def #{to_variable_s(m.name)}(self):",
+             "    return #{to_member_s(m.name)}" 	
     	    ].join("\n")  + "\n"
     	  end,
     	  
     	  if m.has_writer?	
     	    [
-             "  @#{to_variable_s(m)}.setter",
-             "  def #{to_variable_s(m)}(self, _#{to_variable_s(m)}):",
-             "    #{to_member_s(m)} = _#{to_variable_s(m)}",
+             "  @#{to_variable_s(m.name)}.setter",
+             "  def #{to_variable_s(m.name)}(self, _#{to_variable_s(m.name)}):",
+             "    #{to_member_s(m.name)} = _#{to_variable_s(m.name)}",
     	    ].join("\n") + "\n"
     	  end,
           

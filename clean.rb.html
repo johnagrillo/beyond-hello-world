@@ -159,8 +159,8 @@
        "module " + to_file_s(pg_class.name),
 
        vars.select{|v| v.type.class == BHW::Class}.map{|v| "import " + to_file_s(v.type.class_name) + "\n"} * "",
-       "Start = \n" + vars.map {|v| ["    let", to_define(v,v.name), "=",  to_value(v.type) + " in" ] * " "} * "\n",
-       "    (" + vars.map{|v| to_variable_s(v) } * "," + ")"
+       "Start = \n" + vars.map {|v| ["    let", to_define(v.name,v.name), "=",  to_value(v.type) + " in" ] * " "} * "\n",
+       "    (" + vars.map{|v| to_variable_s(v.name) } * "," + ")"
       ] * "\n"
     end
     
@@ -171,7 +171,7 @@
       if file_type == HeaderExt
         [
          "definition module #{lang_name}\n",
-         "::  #{to_class_s(pg_class)}\n"
+         "::  #{to_class_s(pg_class.name)}"
         ] * "\n"
       else
         [
@@ -181,7 +181,7 @@
          "\n",
          [
           "::  #{to_class_s(pg_class)} =  {\n",
-          pg_class.members_instance.map {|m|  "  #{to_member_s(m)} :: #{to_type(m.type)}"}.join(",\n"),
+          pg_class.members_instance.map {|m|  "  #{to_member_s(m.name)} :: #{to_type(m.type)}"}.join(",\n"),
           "}",
           "\n"
          ] * ""
@@ -210,8 +210,8 @@
       else
         [
          declare,
-         "new" + to_class_s(pg_class) + " " + pg_class.members_param.map{|p| to_parameter_s(p)}.join(" ") + " = {" + to_class_s(pg_class) + "|",
-         pg_class.members_instance.map{|m| "  " + to_variable_s(m) + " = " + (m.is_param? ? to_parameter_s(m)  : to_value(m.type)) }.join(",\n") + "}",
+         "new" + to_class_s(pg_class) + " " + pg_class.members_param.map{|p| to_parameter_s(p)}.join(" ") + " = {" + to_class_s(pg_class.name) + "|",
+         pg_class.members_instance.map{|m| "  " + to_variable_s(m.name) + " = " + (m.is_param? ? to_parameter_s(m)  : to_value(m.type)) }.join(",\n") + "}",
          "\n\n",
         ]
       end

@@ -106,15 +106,15 @@ module BHW
        [
     	
         "class #{Falcon.to_class_s(pg_class.name)}(",
-        pg_class.members_param.map{|p| to_variable_s(p)}.join(","),
+        pg_class.members_param.map{|p| to_variable_s(p.name)}.join(","),
         ")"
        ].join,
        pg_class.members.map do |p|
-         @indent + "_" +  to_variable_s(p) + " = " +
+         @indent + "_" +  to_variable_s(p.name) + " = " +
            if p.is_default?
              to_value(p.type)
            else
-             to_variable_s(p) 
+             to_variable_s(p.name) 
            end
        end.join("\n")
       ].join("\n") + "\n"
@@ -159,7 +159,7 @@ module BHW
          
          [
           "$(self._",
-          to_variable_s(m),
+          to_variable_s(m.name),
           
           if m.width &gt; 0
             ":" + m.width.to_s + "r"

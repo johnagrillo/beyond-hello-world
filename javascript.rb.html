@@ -125,8 +125,8 @@
          to_class_s(pg_class) + ".prototype = {",
          mems.map do |m|
            [
-            ("  get " + to_variable_s(m) + "(){ return this." + to_member_s(m)  + ";}" if m.has_reader?),
-            ("  set " + to_variable_s(m) + "(arg){ this." + to_member_s(m)  + "=arg;}" if m.has_writer?),
+            ("  get " + to_variable_s(m.name) + "(){ return this." + to_member_s(m.name)  + ";}" if m.has_reader?),
+            ("  set " + to_variable_s(m.name) + "(arg){ this." + to_member_s(m.name)  + "=arg;}" if m.has_writer?),
            ]
          end.flatten.compact * ",\n",
          "}",
