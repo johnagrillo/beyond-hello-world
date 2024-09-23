@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <h1>Beyond Hello World (updated 09/22/2024)</h1>
+
+    <h3>This project uses ruby to generate src code for arrays, dictionaries and classes in 46 different languages.</h3>
+
+    <h3>This project started in 2004 as a way to learn new programming languages. I added new generators as I learned new languages.  </h3>
+
+    <h3>As the statistician for our local swim team in 2005,
+      I wrote many scripts in Perl to process and analyze the data from their meets.
+    </h3>
+    
+    <a href="https://johnagrillo.github.io/rsst/"><h1>Mock Meet Simulator for FSSL 2024(100% Ruby)</h1></a>
+    </h3>
+
+    <h3>
+      I started learning Ruby and rewrote the software.
+
+      I have programmed with C++, Perl, Java, Python and emacs lisp in my
+      day job as a computer programmer.
+    </h3>
+
+    <h3>
+      After Ruby, I started learning other languages  D, Objective C and Smalltalk.  I started re writing the scripts in these other languages as well.
+    </h3>    
+
+    <h3>        
+      Each time I learned a new language, I had to recreate the classes and data structures from scratch in
+      the new language.   Instead of repeating this process with every language,  I created a Ruby library to generate source code for each new language.
+    </h3>
+
+    
+    
+
+   
+    <h3>Each language is generated with a ruby module defined for each language</h3><h3>Some example modules are as follows:</h3>
+
+    <a href="c.rb.html"><h1>C Generator</h1></a>
+    <a href="cpp-c11-clang.rb.html"><h1>Cpp Generator</h1></a>
+
+
+    <h1>46 Languages</h1>
+
+
+
+
+
+  <h1>1 Awk</h1><a href="awk.html"><h1>code examples</h1></a><a href="https://www.gnu.org/software/gawk/manual/gawk.html"><h1>https://www.gnu.org/software/gawk/manual/gawk.html</h1></a><h1>2 Bash4</h1><a href="bash4.html"><h1>code examples</h1></a><a href="http://www.gnu.org/software/bash/"><h1>http://www.gnu.org/software/bash/</h1></a><h1>3 C(K&amp;R)</h1><a href="ckr.html"><h1>code examples</h1></a><a href=""><h1></h1></a><h1>4 C89(AnsiC)</h1><a href="c89.html"><h1>code examples</h1></a><a href=""><h1></h1></a><h1>5 C90(ISO C)</h1><a href="c90.html"><h1>code examples</h1></a><a href=""><h1></h1></a><h1>6 C99</h1><a href="c99.html"><h1>code examples</h1></a><a href=""><h1></h1></a><h1>7 C11</h1><a href="c11.html"><h1>code examples</h1></a><a href=""><h1></h1></a><h1>8 C++(boost)</h1><a href="cpp-boost.html"><h1>code examples</h1></a><a href=""><h1></h1></a><h1>9 C++(C11,Clang)</h1><a href="cpp-c11-clang.html"><h1>code examples</h1></a><a href=""><h1></h1></a><h1>10 C#</h1><a href="csharp.html"><h1>code examples</h1></a><a href="https://dotnet.microsoft.com/en-us/languages/csharp"><h1>https://dotnet.microsoft.com/en-us/languages/csharp</h1></a><h1>11 Clean</h1><a href="clm.html"><h1>code examples</h1></a><a href="http://clean.cs.ru.nl/"><h1>http://clean.cs.ru.nl/</h1></a><h1>12 Clojure</h1><a href="clojure.html"><h1>code examples</h1></a><a href="http://clojure.org/"><h1>http://clojure.org/</h1></a><h1>13 CoffeeScript</h1><a href="coffee.html"><h1>code examples</h1></a><a href="https://coffeescript.org"><h1>https://coffeescript.org</h1></a><h1>14 DMD</h1><a href="d.html"><h1>code examples</h1></a><a href="https://dlang.org"><h1>https://dlang.org</h1></a><h1>15 E</h1><a href="e.html"><h1>code examples</h1></a><a href="http://www.erights.org/"><h1>http://www.erights.org/</h1></a><h1>16 Eiffel(SmartEiffel)</h1><a href="eiffel.html"><h1>code examples</h1></a><a href="https://git.savannah.gnu.org/cgit/liberty-eiffel.git/"><h1>https://git.savannah.gnu.org/cgit/liberty-eiffel.git/</h1></a><h1>17 Erlang</h1><a href="erlang.html"><h1>code examples</h1></a><a href="http://www.erlang.org"><h1>http://www.erlang.org</h1></a><h1>18 Falcon</h1><a href="falcon.html"><h1>code examples</h1></a><a href="http://www.falconpl.org/"><h1>http://www.falconpl.org/</h1></a><h1>19 Fantom</h1><a href="fantom.html"><h1>code examples</h1></a><a href="http://www.fantom.org/"><h1>http://www.fantom.org/</h1></a><h1>20 Free Pascal</h1><a href="fpc.html"><h1>code examples</h1></a><a href="http://www.freepascal.org/"><h1>http://www.freepascal.org/</h1></a><h1>21 Lisp(Gnu Common Lisp)</h1><a href="gcl.html"><h1>code examples</h1></a><a href="http://savannah.gnu.org/projects/gcl"><h1>http://savannah.gnu.org/projects/gcl</h1></a><h1>22 Go</h1><a href="go.html"><h1>code examples</h1></a><a href="http://golang.org/"><h1>http://golang.org/</h1></a><h1>23 Groovy</h1><a href="groovy.html"><h1>code examples</h1></a><a href="https://www.groovy-lang.org/"><h1>https://www.groovy-lang.org/</h1></a><h1>24 (GNU)Smalltalk</h1><a href="gst.html"><h1>code examples</h1></a><a href="https://www.gnu.org/software/smalltalk/"><h1>https://www.gnu.org/software/smalltalk/</h1></a><h1>25 Haskell</h1><a href="haskell.html"><h1>code examples</h1></a><a href="https://www.haskell.org/"><h1>https://www.haskell.org/</h1></a><h1>26 io</h1><a href="io.html"><h1>code examples</h1></a><a href="https://iolanguage.org/"><h1>https://iolanguage.org/</h1></a><h1>27 Java</h1><a href="java.html"><h1>code examples</h1></a><a href="https://www.java.com/en/"><h1>https://www.java.com/en/</h1></a><h1>28 JavaScript</h1><a href="javascript.html"><h1>code examples</h1></a><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><h1>https://developer.mozilla.org/en-US/docs/Web/JavaScript</h1></a><h1>29 Lua</h1><a href="lua.html"><h1>code examples</h1></a><a href="https://www.lua.org/"><h1>https://www.lua.org/</h1></a><h1>30 Nasm</h1><a href="nasm.html"><h1>code examples</h1></a><a href=""><h1></h1></a><h1>31 Oberon2</h1><a href="oberon2.html"><h1>code examples</h1></a><a href="https://en.wikipedia.org/wiki/Oberon-2"><h1>https://en.wikipedia.org/wiki/Oberon-2</h1></a><h1>32 ObjectiveC(Clang)</h1><a href="objc-clang.html"><h1>code examples</h1></a><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html"><h1>https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html</h1></a><h1>33 ObjectiveC(Gcc)</h1><a href="objc-gcc.html"><h1>code examples</h1></a><a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html"><h1>https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html</h1></a><h1>34 OCaml</h1><a href="ocaml.html"><h1>code examples</h1></a><a href="https://ocaml.org/"><h1>https://ocaml.org/</h1></a><h1>35 OORex</h1><a href="oorexx.html"><h1>code examples</h1></a><a href="https://oorexx.org/"><h1>https://oorexx.org/</h1></a><h1>36 Perl</h1><a href="perl.html"><h1>code examples</h1></a><a href="https:/www.perl.org"><h1>https:/www.perl.org</h1></a><h1>37 Pure</h1><a href="pure.html"><h1>code examples</h1></a><a href="https://purelang.bitbucket.io/"><h1>https://purelang.bitbucket.io/</h1></a><h1>38 Python</h1><a href="python.html"><h1>code examples</h1></a><a href="https://www.python.org/"><h1>https://www.python.org/</h1></a><h1>39 Ruby</h1><a href="ruby.html"><h1>code examples</h1></a><a href="https://www.ruby-lang.org/en/"><h1>https://www.ruby-lang.org/en/</h1></a><h1>40 Rust</h1><a href="rust.html"><h1>code examples</h1></a><a href="https://www.rust-lang.org/"><h1>https://www.rust-lang.org/</h1></a><h1>41 Sather</h1><a href="sather.html"><h1>code examples</h1></a><a href="https://www.gnu.org/software/sather/"><h1>https://www.gnu.org/software/sather/</h1></a><h1>42 Scala</h1><a href="scala.html"><h1>code examples</h1></a><a href="https://www.scala-lang.org/"><h1>https://www.scala-lang.org/</h1></a><h1>43 Self</h1><a href="self.html"><h1>code examples</h1></a><a href="https://selflanguage.org/"><h1>https://selflanguage.org/</h1></a><h1>44 Swift</h1><a href="swift.html"><h1>code examples</h1></a><a href="http://swift.org/"><h1>http://swift.org/</h1></a><h1>45 TCL(8.6)</h1><a href="tcl_8_6.html"><h1>code examples</h1></a><a href="https://www.tcl-lang.org/"><h1>https://www.tcl-lang.org/</h1></a><h1>46 Unicon</h1><a href="unicon.html"><h1>code examples</h1></a><a href="http://www.unicon.org/"><h1>http://www.unicon.org/</h1></a></html>
