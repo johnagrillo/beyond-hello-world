@@ -1,0 +1,222 @@
+Random Number Programs in Various Languages
+If I could code a project in any language what language would I choose? Generates 100 random numbers between 0 and 9, counts the occurrences of each number, and then sums the keys (numbers) multiplied by number of times it occurs.
+My original answer was ruby. I still like ruby, but now that c++ has ranges you can do the same thing in c++ well almost
+Ruby
+
+
+out = 100.times.map{Random.rand(10)}.reduce(Hash.new{|h,k| h[k] = 0}) do |accum,val|
+  accum.merge({val =>  accum[val]+1})
+end.reduce(0) do |accum, (key,value)|
+accum + key*value
+
+	
+	
+
+Python
+
+
+	import random
+from collections import Counter
+from functools import reduce
+
+weighted_sum = reduce(lambda acc, item: acc + item[0] * item[1], Counter([random.randint(0, 9) for _ in range(100)]).items(), 0)
+
+print(weighted_sum)
+
+	
+	
+
+C++
+
+
+
+int main()
+{
+	// Set up random number generation
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution dist(0, 9);
+
+	auto values = std::views::iota(0, 100) | std::views::transform([&](int) { return dist(gen); });
+
+	// Count frequencies using accumulate
+
+	auto freq = std::accumulate(values.begin(),
+		values.end(),
+		std::unordered_map{},
+		[](std::unordered_map accum, const int val) {
+			accum[val]++;
+			return accum; // Return the updated accumulator
+		});
+
+	// Reduce the values in the map (sum them up in this case)
+	int sum = std::accumulate(
+		freq.begin(), freq.end(), 0,
+		[](int acc, const std::pair& p) {
+			return acc + p.first * p.second;  // accumulate only the values (p.second)
+		});
+	std::cout << sum << "\n";
+
+	return 0;
+}	  
+    
+
+Haskell
+
+
+import System.Random (randomRIO)
+import Data.List (group, sort)
+
+main :: IO ()
+main = do
+    numbers <- replicateM 100 (randomRIO (0, 9))
+    let weightedSum = sum [x * length g | g <- group (sort numbers), let x = head g]
+    print weightedSum
+    
+
+C#
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program {
+    static void Main() {
+        var rand = new Random();
+        var weightedSum = Enumerable.Range(0, 100)
+            .Select(_ => rand.Next(0, 10))
+            .GroupBy(n => n)
+            .Select(g => g.Key * g.Count())
+            .Sum();
+        
+        Console.WriteLine("Weighted sum: " + weightedSum);
+    }
+}
+    
+
+D
+
+
+import std.random : uniform;
+import std.array : array;
+import std.algorithm : sum, group;
+import std.range : iota;
+import std.stdio : writeln;
+
+void main() {
+    auto weightedSum = iota(100).map!(i => uniform(0, 10)).group!((a, b) => a == b).map!(g => g[0] * g.length).sum();
+    writeln("Weighted sum: ", weightedSum);
+}
+    
+
+Java
+
+
+import java.util.*;
+import java.util.stream.*;
+
+public class Main {
+    public static void main(String[] args) {
+        int weightedSum = new Random().ints(100, 0, 10) // Generate 100 random numbers
+            .boxed()
+            .collect(Collectors.groupingBy(n -> n, Collectors.counting()))
+            .entrySet()
+            .stream()
+            .mapToLong(e -> e.getKey() * e.getValue())
+            .sum();
+        System.out.println("Weighted sum: " + weightedSum);
+    }
+}
+    
+
+JavaScript
+
+
+const weightedSum = Array.from({ length: 100 }, () => Math.floor(Math.random() * 10))
+    .reduce((acc, val) => {
+        acc[val] = (acc[val] || 0) + 1; // Count frequencies
+        return acc;
+    }, {})
+    .entries()
+    .reduce((sum, [key, count]) => sum + key * count, 0); // Compute weighted sum
+
+console.log("Weighted sum:", weightedSum);
+    
+
+OCaml
+
+
+let random_numbers = Array.init 100 (fun _ -> Random.int 10)
+
+let count_frequencies nums =
+    let tbl = Hashtbl.create 10 in
+    Array.iter (fun n -> Hashtbl.replace tbl n (1 + (try Hashtbl.find tbl n with Not_found -> 0))) nums;
+    tbl
+
+let weighted_sum tbl =
+    Hashtbl.fold (fun key count acc -> acc + key * count) tbl 0
+
+let () =
+    Random.self_init ();
+    let freqs = count_frequencies random_numbers in
+    Printf.printf "Weighted sum: %d\n" (weighted_sum freqs)
+    
+
+Rust
+
+
+use rand::Rng; // Import the random number generator
+use std::collections::HashMap;
+
+fn main() {
+    let mut rng = rand::thread_rng(); // Create a random number generator
+
+    // Generate 100 random numbers between 0 and 9
+    let weighted_sum: i32 = (0..100)
+        .map(|_| rng.gen_range(0..10)) // Generate random numbers
+        .fold(HashMap::new(), |mut acc, num| {
+            *acc.entry(num).or_insert(0) += 1; // Count frequencies
+            acc
+        })
+        .iter()
+        .map(|(&key, &count)| key * count) // Multiply each number by its frequency
+        .sum(); // Sum all the products
+
+    println!("Weighted sum: {}", weighted_sum); // Output the weighted sum
+}
+    
+
+Clojure
+
+
+(ns random-sum.core)
+
+(defn random-number []
+  (rand-int 10))
+
+(defn weighted-sum []
+  (let [numbers (repeatedly 100 random-number)
+        frequencies (frequencies numbers)]
+    (reduce + (map (fn [[k v]] (* k v)) frequencies))))
+
+(println "Weighted sum:" (weighted-sum))
+    
+
+Scala
+
+
+import scala.util.Random
+
+object Main extends App {
+    val random = new Random
+    val weightedSum = (0 until 100)
+        .map(_ => random.nextInt(10)) // Generate 100 random numbers
+        .groupBy(identity) // Count frequencies
+        .map { case (num, counts) => num * counts.length } // Compute weighted sum
+        .sum
+
+    println(s"Weighted sum: $weightedSum") // Output the weighted sum
+}
+
+  
