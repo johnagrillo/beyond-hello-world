@@ -1,59 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Number Programs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-        }
-        pre {
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-radius: 5px;
-            overflow: auto;
-        }
-        code {
-            font-family: "Courier New", Courier, monospace;
-        }
-    </style>
-</head>
-<body>
-    <h1>Random Number Programs in Various Languages</h1>
-
-    <h2>
-      If I could code a project in any language what language would I choose?
-      Generates 100 random numbers between 0 and 9,
-      counts the occurrences of each number,
-      and then sums the keys (numbers) multiplied by number of times it occurs.
-    </h2>
-    
-    <h2>
-      My original answer was ruby.   
-      I still like ruby, but now that c++ has ranges you can do the same thing in c++
-      well almost
-    </h2>
+Random Number Programs in Various Languages
+If I could code a project in any language what language would I choose? Generates 100 random numbers between 0 and 9, counts the occurrences of each number, and then sums the keys (numbers) multiplied by number of times it occurs.
+My original answer was ruby. I still like ruby, but now that c++ has ranges you can do the same thing in c++ well almost
+Ruby
 
 
-    <h2>Ruby</h2>
-
-      <pre><code>
 out = 100.times.map{Random.rand(10)}.reduce(Hash.new{|h,k| h[k] = 0}) do |accum,val|
   accum.merge({val =>  accum[val]+1})
 end.reduce(0) do |accum, (key,value)|
 accum + key*value
 
-	</code>
-	</pre>
+	
+	
+
+Python
 
 
-
-
-    <h2>Python</h2>
-    <pre><code>
 	import random
 from collections import Counter
 from functools import reduce
@@ -62,21 +23,19 @@ weighted_sum = reduce(lambda acc, item: acc + item[0] * item[1], Counter([random
 
 print(weighted_sum)
 
-	</code>
-	</pre>
+	
+	
 
-    
-      
-    <h2>C++</h2>
+C++
 
-      <pre><code>
+
 
 int main()
 {
 	// Set up random number generation
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<int> dist(0, 9);
+	std::uniform_int_distribution dist(0, 9);
 
 	auto values = std::views::iota(0, 100) | std::views::transform([&](int) { return dist(gen); });
 
@@ -84,8 +43,8 @@ int main()
 
 	auto freq = std::accumulate(values.begin(),
 		values.end(),
-		std::unordered_map<int, int>{},
-		[](std::unordered_map<int, int> accum, const int val) {
+		std::unordered_map{},
+		[](std::unordered_map accum, const int val) {
 			accum[val]++;
 			return accum; // Return the updated accumulator
 		});
@@ -93,18 +52,18 @@ int main()
 	// Reduce the values in the map (sum them up in this case)
 	int sum = std::accumulate(
 		freq.begin(), freq.end(), 0,
-		[](int acc, const std::pair<int, int>& p) {
+		[](int acc, const std::pair& p) {
 			return acc + p.first * p.second;  // accumulate only the values (p.second)
 		});
 	std::cout << sum << "\n";
 
 	return 0;
 }	  
-    </code></pre>
-
     
-    <h2>Haskell</h2>
-    <pre><code>
+
+Haskell
+
+
 import System.Random (randomRIO)
 import Data.List (group, sort)
 
@@ -113,10 +72,11 @@ main = do
     numbers <- replicateM 100 (randomRIO (0, 9))
     let weightedSum = sum [x * length g | g <- group (sort numbers), let x = head g]
     print weightedSum
-    </code></pre>
+    
 
-    <h2>C#</h2>
-    <pre><code>
+C#
+
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,10 +93,11 @@ class Program {
         Console.WriteLine("Weighted sum: " + weightedSum);
     }
 }
-    </code></pre>
+    
 
-    <h2>D</h2>
-    <pre><code>
+D
+
+
 import std.random : uniform;
 import std.array : array;
 import std.algorithm : sum, group;
@@ -147,10 +108,11 @@ void main() {
     auto weightedSum = iota(100).map!(i => uniform(0, 10)).group!((a, b) => a == b).map!(g => g[0] * g.length).sum();
     writeln("Weighted sum: ", weightedSum);
 }
-    </code></pre>
+    
 
-    <h2>Java</h2>
-    <pre><code>
+Java
+
+
 import java.util.*;
 import java.util.stream.*;
 
@@ -166,10 +128,11 @@ public class Main {
         System.out.println("Weighted sum: " + weightedSum);
     }
 }
-    </code></pre>
+    
 
-    <h2>JavaScript</h2>
-    <pre><code>
+JavaScript
+
+
 const weightedSum = Array.from({ length: 100 }, () => Math.floor(Math.random() * 10))
     .reduce((acc, val) => {
         acc[val] = (acc[val] || 0) + 1; // Count frequencies
@@ -179,10 +142,11 @@ const weightedSum = Array.from({ length: 100 }, () => Math.floor(Math.random() *
     .reduce((sum, [key, count]) => sum + key * count, 0); // Compute weighted sum
 
 console.log("Weighted sum:", weightedSum);
-    </code></pre>
+    
 
-    <h2>OCaml</h2>
-    <pre><code>
+OCaml
+
+
 let random_numbers = Array.init 100 (fun _ -> Random.int 10)
 
 let count_frequencies nums =
@@ -197,10 +161,11 @@ let () =
     Random.self_init ();
     let freqs = count_frequencies random_numbers in
     Printf.printf "Weighted sum: %d\n" (weighted_sum freqs)
-    </code></pre>
+    
 
-    <h2>Rust</h2>
-    <pre><code>
+Rust
+
+
 use rand::Rng; // Import the random number generator
 use std::collections::HashMap;
 
@@ -220,10 +185,11 @@ fn main() {
 
     println!("Weighted sum: {}", weighted_sum); // Output the weighted sum
 }
-    </code></pre>
+    
 
-    <h2>Clojure</h2>
-    <pre><code>
+Clojure
+
+
 (ns random-sum.core)
 
 (defn random-number []
@@ -235,10 +201,11 @@ fn main() {
     (reduce + (map (fn [[k v]] (* k v)) frequencies))))
 
 (println "Weighted sum:" (weighted-sum))
-    </code></pre>
+    
 
-    <h2>Scala</h2>
-    <pre><code>
+Scala
+
+
 import scala.util.Random
 
 object Main extends App {
@@ -251,7 +218,5 @@ object Main extends App {
 
     println(s"Weighted sum: $weightedSum") // Output the weighted sum
 }
-    </code></pre>
 
-</body>
-</html>
+  
