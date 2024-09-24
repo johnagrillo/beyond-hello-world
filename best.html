@@ -28,9 +28,13 @@
       If I could code a project in any language what language would I choose?
     </h2>
     
-    <h2>      
-      Generate 100 random numbers between 0 and 9 counts the occurrences of each number,
-      and then sums the keys (numbers) multiplied by number of times it occurs.
+    <h2>
+      <ol>
+	<li>Generate 100 random numbers between 0 and 9</li>
+	<li>Count the freqquency of each number</li>
+	<li>Sums the keys (numbers) multiplied by its frequency.</li>
+      </ol>	
+	
     </h2>
     
     <h2>
@@ -236,7 +240,7 @@ fn main() {
         frequencies (frequencies numbers)]
     (reduce + (map (fn [[k v]] (* k v)) frequencies))))
 
-(println "Weighted sum:" (weighted-sum))
+(println "Weighted sum:" (weighted-sum))`>
     </code></pre>
 
     <h2>Scala</h2>
