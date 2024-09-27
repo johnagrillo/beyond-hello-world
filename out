@@ -1,0 +1,35 @@
+def generate_objective_c_class(class_name, methods)
+  # Create the class interface using join
+  interface_lines = [
+    "@interface #{class_name} : NSObject",
+    *methods.map { |method| "    - (void)#{method}();" },
+    "@end\n"
+  ]
+  class_code = interface_lines.join("\n") + "\n\n"
+
+  # Create the class implementation using join
+  implementation_lines = [
+    "@implementation #{class_name}"
+  ] + methods.map { |method| 
+    "    - (void)#{method} {\n        NSLog(@\"#{class_name} is executing #{method}\");\n    }"
+  } + [
+    "@end"
+  ]
+  class_code += implementation_lines.join("\n")
+
+  class_code
+end
+
+# Specify the class name and methods
+class_name = "MyClass"
+methods = ["method1", "method2"]
+
+# Generate the Objective-C code
+objective_c_code = generate_objective_c_class(class_name, methods)
+
+# Save the generated code to a file
+File.open("#{class_name}.m", "w") do |file|
+  file.write(objective_c_code)
+end
+
+puts "Generated #{class_name}.m successfully!"
